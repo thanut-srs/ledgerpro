@@ -1,3 +1,5 @@
+import { ProfilePage } from './../pages/profile/profile';
+import { WalletPage } from './../pages/wallet/wallet';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -13,7 +15,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   declarations: [
     MyApp,
     HomePage,
-    ListPage
+    ListPage,
+    WalletPage,
+    ProfilePage
   ],
   imports: [
     BrowserModule,
@@ -23,7 +27,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   entryComponents: [
     MyApp,
     HomePage,
-    ListPage
+    ListPage,
+    WalletPage,
+    ProfilePage
   ],
   providers: [
     StatusBar,

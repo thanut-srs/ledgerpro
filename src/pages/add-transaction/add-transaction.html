@@ -1,0 +1,50 @@
+<!--
+  Generated template for the AddTransactionPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-buttons left>
+      <button ion-button icon-only (click)="viewCtrl.dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Add Transaction</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  
+  <ion-item>
+      <ion-label>Type</ion-label>
+      <ion-select [(ngModel)]="type">
+        <ion-option value="income">Income</ion-option>
+        <ion-option value="expense">Expense</ion-option>
+        <ion-option value="saving">Saving</ion-option>
+      </ion-select>
+    </ion-item>
+  <ion-item>
+      <ion-label>Tag</ion-label>
+      <ion-select [(ngModel)]="tag">
+        <ion-option value="food">Food <ion-icon name="food"></ion-icon></ion-option>
+        <ion-option value="shopping">Shoping <ion-icon name="cart"></ion-icon></ion-option>
+      </ion-select>
+    </ion-item>
+  
+  <form [formGroup]="transaction" (ngSubmit)="logForm()">
+      <ion-item>
+        <ion-label>Amount</ion-label>
+        <ion-input type="number" formControlName="amount"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Memo</ion-label>
+        <ion-textarea formControlName="memo" placeholder="(Optional)"></ion-textarea>
+      </ion-item>
+      <button ion-button type="submit" [disabled]="!transaction.valid">Submit</button>
+    </form>
+  
+
+</ion-content>

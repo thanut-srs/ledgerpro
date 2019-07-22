@@ -1,6 +1,17 @@
 // http://ionicframework.com/docs/theming/
 
-
+.selectType{
+    .IncomeBtn{
+        color:rgb(67, 202, 74);
+        
+    }
+    .SavingBtn{
+        color: rgb(252, 159, 54);
+    }
+    .ExpenseBtn{
+        color: rgb(248, 55, 65);
+    }
+}
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These

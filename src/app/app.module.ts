@@ -1,3 +1,6 @@
+import { GoalDetailPage } from './../pages/goal-detail/goal-detail';
+import { AddTransactionPage } from './../pages/add-transaction/add-transaction';
+import { ComponentsModule } from './../components/components.module';
 import { ProfilePage } from './../pages/profile/profile';
 import { WalletPage } from './../pages/wallet/wallet';
 import { BrowserModule } from '@angular/platform-browser';
@@ -17,11 +20,14 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     HomePage,
     ListPage,
     WalletPage,
-    ProfilePage
+    ProfilePage,
+    AddTransactionPage,
+    GoalDetailPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    ComponentsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -29,7 +35,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     HomePage,
     ListPage,
     WalletPage,
-    ProfilePage
+    ProfilePage,
+    AddTransactionPage,
+    GoalDetailPage,
   ],
   providers: [
     StatusBar,

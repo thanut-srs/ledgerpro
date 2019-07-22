@@ -1,5 +1,9 @@
+import { GoalDetailPage } from './../goal-detail/goal-detail';
+import { AddTransactionPage } from './../add-transaction/add-transaction';
+
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, ModalController } from 'ionic-angular';
+import { WalletPage } from '../wallet/wallet';
 
 @Component({
   selector: 'page-home',
@@ -7,7 +11,10 @@ import { NavController } from 'ionic-angular';
 })
 export class HomePage {
   public collection = [];
-  constructor(public navCtrl: NavController) {
+  constructor(
+    public navCtrl: NavController,
+    public modalCtrl: ModalController,
+  ) {
 
   }
   ngOnInit() {
@@ -17,14 +24,25 @@ export class HomePage {
     // }
   }
 
-  setDate(){
+  setDate() {
     let date = new Date();
     let year = date.getFullYear();
     let month = date.getMonth();
     let day = date.getDate();
     let monthList = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
+      "July", "August", "September", "October", "November", "December"
+    ];
     document.getElementById("date").innerHTML = day + " " + monthList[month] + " " + year;
+  }
+
+  onAddTransaction() {
+    const modal = this.modalCtrl.create(AddTransactionPage);
+    modal.present();
+  }
+
+
+  onViewGoal() {
+    console.log("click onViewGoal");
+    this.navCtrl.push(GoalDetailPage);
   }
 }

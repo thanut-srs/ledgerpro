@@ -1,5 +1,7 @@
 {
   "name": "ledger",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "ionic-angular"
 }

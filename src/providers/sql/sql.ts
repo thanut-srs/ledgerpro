@@ -31,5 +31,6 @@ export class SqlProvider {
     //     .then(() => console.log('DROP FINISHED'))
     //     .catch(e => console.log(e));
     // }
+    return 'drop table successfully.'
   }
 }

@@ -4,6 +4,7 @@ import { AddTransactionPage } from './../add-transaction/add-transaction';
 import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
 import { WalletPage } from '../wallet/wallet';
+import { SqlProvider } from '../../providers/sql/sql';
 
 @Component({
   selector: 'page-home',
@@ -14,11 +15,13 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     public modalCtrl: ModalController,
+    public sql:SqlProvider
   ) {
 
   }
   ngOnInit() {
     this.setDate();
+    this.sql.openDB();
     // for(let i =0; i<2; i++){
     //   this.collection.push('H'+i);
     // }

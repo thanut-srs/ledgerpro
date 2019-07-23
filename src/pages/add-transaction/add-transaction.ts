@@ -1,3 +1,4 @@
+import { SqlProvider } from './../../providers/sql/sql';
 import { Component, NgModule } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, ActionSheetController } from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup, NgModel } from '@angular/forms';
@@ -24,7 +25,9 @@ export class AddTransactionPage {
     public navParams: NavParams,
     public viewCtrl: ViewController,
     public actionSheetCtrl:ActionSheetController,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private sql: SqlProvider
+    ) {
       
       this.transaction = this.formBuilder.group({
         amount: ['', Validators.required],
@@ -41,5 +44,6 @@ export class AddTransactionPage {
   }
   logForm(){
     console.log(this.transaction.value,"||",this.tag, "||",this.type);
+    
   }
 }

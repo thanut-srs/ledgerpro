@@ -1,3 +1,4 @@
+import { SQLite } from '@ionic-native/sqlite';
 import { GoalDetailPage } from './../pages/goal-detail/goal-detail';
 import { AddTransactionPage } from './../pages/add-transaction/add-transaction';
 import { ComponentsModule } from './../components/components.module';
@@ -45,6 +46,7 @@ import { SqlProvider } from '../providers/sql/sql';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     SqlProvider,
+    SQLite
   
   ]
 })

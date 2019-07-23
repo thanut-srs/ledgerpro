@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+
 import { Injectable } from '@angular/core';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
 
@@ -12,12 +12,23 @@ import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
 export class SqlProvider {
   public db: SQLiteObject;
   public list = [];
+
   constructor(
-    public http: HttpClient,
     public sqlite: SQLite,
     ) {
     console.log('Hello SqlProvider Provider');
   }
+
+checkFirstTime(){
+  this.db.executeSql(`
+    SELECT * FROM User 
+    `, [])
+      .then(() => {
+        console.log("Table existed !!!");
+        }
+      )
+      .catch(() => this.createTable());
+}
 
 openDB(){
   this.sqlite.create({
@@ -25,6 +36,7 @@ openDB(){
     location: 'default'
   }).then((database: SQLiteObject) => {
     this.db = database;
+    this.checkFirstTime();
   });
   return 'Opened Database'
 }
@@ -59,6 +71,7 @@ selectTable(){
 }
 
 createTable(){
+  console.log("H!!!!")
   this.db.executeSql(`
   CREATE TABLE User(
     name VARCHAR(32),

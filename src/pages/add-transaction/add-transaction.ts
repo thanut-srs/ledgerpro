@@ -46,4 +46,10 @@ export class AddTransactionPage {
     console.log(this.transaction.value,"||",this.tag, "||",this.type);
     
   }
+  onDeleteTable(){
+    this.sql.dropTable();
+  }
+  onAddTable(){
+    this.sql.createTable();
+  }
 }

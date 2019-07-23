@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 
 /*
   Generated class for the SqlProvider provider.
@@ -9,10 +10,9 @@ import { Injectable } from '@angular/core';
 */
 @Injectable()
 export class SqlProvider {
-
-  constructor(
-    public http: HttpClient,
-
+  public db: SQLiteObject;
+  constructor( 
+    private sqlite: SQLite,
   ) {
     console.log('Hello SqlProvider Provider');
   }
@@ -22,6 +22,14 @@ export class SqlProvider {
   }
   selctTable() {
     return ['result']
+  }
+  openDB(){
+    this.sqlite.create({
+      name: 'data.db',
+      location: 'default'
+    }).then((database: SQLiteObject) => {
+      this.db = database;
+    });
   }
 
   dropTable() {

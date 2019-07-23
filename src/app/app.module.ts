@@ -44,7 +44,8 @@ import { SqlProvider } from '../providers/sql/sql';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    SqlProvider
+    SqlProvider,
+  
   ]
 })
 export class AppModule {}

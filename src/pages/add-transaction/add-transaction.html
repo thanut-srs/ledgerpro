@@ -16,34 +16,40 @@
 </ion-header>
 
 <ion-content padding>
-  
+
   <ion-item>
-      <ion-label>Type</ion-label>
-      <ion-select [(ngModel)]="type">
-        <ion-option value="income">Income</ion-option>
-        <ion-option value="expense">Expense</ion-option>
-        <ion-option value="saving">Saving</ion-option>
-      </ion-select>
-    </ion-item>
+    <ion-label>Type</ion-label>
+    <ion-select [(ngModel)]="type">
+      <ion-option value="income">Income</ion-option>
+      <ion-option value="expense">Expense</ion-option>
+      <ion-option value="saving">Saving</ion-option>
+    </ion-select>
+  </ion-item>
   <ion-item>
-      <ion-label>Tag</ion-label>
-      <ion-select [(ngModel)]="tag">
-        <ion-option value="food">Food <ion-icon name="food"></ion-icon></ion-option>
-        <ion-option value="shopping">Shoping <ion-icon name="cart"></ion-icon></ion-option>
-      </ion-select>
-    </ion-item>
-  
+    <ion-label>Tag</ion-label>
+    <ion-select [(ngModel)]="tag">
+      <ion-option value="food">Food <ion-icon name="food"></ion-icon>
+      </ion-option>
+      <ion-option value="shopping">Shoping <ion-icon name="cart"></ion-icon>
+      </ion-option>
+    </ion-select>
+  </ion-item>
+
   <form [formGroup]="transaction" (ngSubmit)="logForm()">
-      <ion-item>
-        <ion-label>Amount</ion-label>
-        <ion-input type="number" formControlName="amount"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label>Memo</ion-label>
-        <ion-textarea formControlName="memo" placeholder="(Optional)"></ion-textarea>
-      </ion-item>
-      <button ion-button type="submit" [disabled]="!transaction.valid">Submit</button>
-    </form>
-  
+    <ion-item>
+      <ion-label>Amount</ion-label>
+      <ion-input type="number" formControlName="amount"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Memo</ion-label>
+      <ion-textarea formControlName="memo" placeholder="(Optional)"></ion-textarea>
+    </ion-item>
+    <div class="submitBtn" >
+      <button  ion-button type="submit" [disabled]="!transaction.valid">Submit</button>
+      <button  ion-button (click)="onAddTable()">Add Table</button>
+      <button  ion-button (click)="onDeleteTable()">Delete Table</button>
+    </div>
+  </form>
+
 
 </ion-content>

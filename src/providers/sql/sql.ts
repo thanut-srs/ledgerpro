@@ -18,7 +18,7 @@ export class SqlProvider {
   }
 
   createTable() {
-
+    return 'create table success'
   }
   selctTable() {
     return ['result']

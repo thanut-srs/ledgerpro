@@ -9,26 +9,27 @@ import { Injectable } from '@angular/core';
 */
 @Injectable()
 export class SqlProvider {
-  
+
   constructor(
     public http: HttpClient,
-    
-    ) {
+
+  ) {
     console.log('Hello SqlProvider Provider');
   }
 
-  createTable(){
+  createTable() {
 
   }
-  selctTable(){
-
+  selctTable() {
+    return ['result']
   }
 
-  dropTable(){
-  //   this.db.executeSql(`
-  //   DROP TABLE User;
-  //   `, [])
-  //     .then(() => console.log('DROP FINISHED'))
-  //     .catch(e => console.log(e));
-  // }
+  dropTable() {
+    //   this.db.executeSql(`
+    //   DROP TABLE User;
+    //   `, [])
+    //     .then(() => console.log('DROP FINISHED'))
+    //     .catch(e => console.log(e));
+    // }
+  }
 }

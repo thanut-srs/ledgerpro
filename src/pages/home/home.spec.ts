@@ -47,5 +47,11 @@ describe('HomePage', () => {
     expect(dateHeader.innerText).toEqual(today);
   })
 
+  it('should has message when no collection',() => {
+    component.collection = []
+    let textNoCollection: HTMLElement = fixture.debugElement.query(By.css('h4')).nativeElement;
+    expect(textNoCollection.innerText).toEqual("There no transaction here, add one!");
+  })
+
 
 });

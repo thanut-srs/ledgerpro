@@ -4,7 +4,7 @@ import { By }           from '@angular/platform-browser';
 import { HomePage } from './home';
 import { NavController, ModalController, IonicModule } from 'ionic-angular';
 
-let component = undefined;
+//let component = undefined;
 
 describe('HomePage', () => {
   let component: HomePage;

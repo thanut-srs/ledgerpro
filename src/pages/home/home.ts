@@ -15,7 +15,7 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     public modalCtrl: ModalController,
-    public sql:SqlProvider
+    public sql: SqlProvider
   ) {
 
   }
@@ -40,10 +40,20 @@ export class HomePage {
 
   onAddTransaction() {
     const modal = this.modalCtrl.create(AddTransactionPage);
+    modal.onDidDismiss(() => {
+      this.updateTransaction();
+    });
     modal.present();
   }
 
-
+  updateTransaction() {
+    let result = this.sql.selectTable();
+    for(let i = 0 ; i < result.length ; i++){
+      this.collection.push(result[i]);
+    }
+    console.log('update transaction !');
+    console.log("THE RESULT IS ",result.length);
+  }
   onViewGoal() {
     console.log("click onViewGoal");
     this.navCtrl.push(GoalDetailPage);

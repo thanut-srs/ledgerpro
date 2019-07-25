@@ -11,8 +11,7 @@ import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
 @Injectable()
 export class SqlProvider {
   public db: SQLiteObject;
-  public list = [];
-
+  public result =[];
   constructor(
     public sqlite: SQLite,
     ) {
@@ -21,7 +20,7 @@ export class SqlProvider {
 
 checkFirstTime(){
   this.db.executeSql(`
-    SELECT * FROM User 
+    SELECT * FROM Transactions 
     `, [])
       .then(() => {
         console.log("Table existed !!!");
@@ -43,7 +42,7 @@ openDB(){
 
 dropTable(){
   this.db.executeSql(`
-  DROP TABLE User;
+  DROP TABLE Transactions;
   `, [])
     .then(() => console.log('DROP FINISHED'))
     .catch(e => console.log(e));
@@ -51,38 +50,42 @@ dropTable(){
 }
 
 selectTable(){
-  let result =[];
   this.db.executeSql(`
-    SELECT * FROM User 
+    SELECT * FROM Transactions 
     `, [])
       .then((data) => {
         console.log(data)
         console.log(data.rows.length);
         for (let i = 0; i < data.rows.length; i++) {
-          let name = data.rows.item(i).name;
-          let age = data.rows.item(i).age;
-          let resultObj ={name,age};
-          result.push(resultObj);
+          let type = data.rows.item(i).type;
+          let tag = data.rows.item(i).tag;
+          let amount = data.rows.item(i).amount;
+          let memo = data.rows.item(i).memo;
+          let resultObj ={type,tag,amount,memo};
+          this.result.push(resultObj);
         }
+        console.log("Added data to array");
+        return this.result
       })
       .catch(e => console.log(e));
-      console.log("Add data to array");
-      return result
+      console.log('selectTable(sql) result is ',this.result)
 }
 
 createTable(){
   console.log("H!!!!")
   this.db.executeSql(`
-  CREATE TABLE User(
-    name VARCHAR(32),
-    age VARCHAR(32)
+  CREATE TABLE Transactions(
+    type VARCHAR(32),
+    tag VARCHAR(32),
+    amount INTEGER,
+    memo VARCHAR(100)
     );
   `, [])
     .then(() => console.log('TABLE CREATED'))
     .catch(e => console.log(e));
     return 'Created Table'
 }
-  createTable2() {
+  createTables() {
     this.db.executeSql(`
     create table User(
     ID VARCHAR(32), 
@@ -126,14 +129,18 @@ createTable(){
       return 'Created Table'
   }
 
-  insertTable(name: string, age: string){
+  insertTable(transaction: any){
+    let type = transaction.type;
+    let tag = transaction.tag;
+    let amount = transaction.amount;
+    let memo = transaction.memo;
+    console.log(type,tag,amount,memo);
     this.db.executeSql(`
-    INSERT INTO User(name,age)
-    VALUES ("`+name+`","`+age+`")
+    INSERT INTO Transactions(type,tag,amount,memo)
+    VALUES ("`+type+`","`+tag+`","`+amount+`","`+memo+`")
     `, [])
       .then(() => console.log('INSERT FINISHED'))
       .catch(e => console.log(e));
-
       return 'Inserted Table'
   }
 }

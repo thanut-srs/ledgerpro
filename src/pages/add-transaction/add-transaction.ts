@@ -19,7 +19,6 @@ export class AddTransactionPage {
   public transaction: FormGroup;
   public tag: NgModel;
   public type: NgModel;
-
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -34,17 +33,19 @@ export class AddTransactionPage {
         memo: [''],
       });
   }
-
   ngOnInit() {
   
   }
-  
   ionViewDidLoad() {
     console.log('ionViewDidLoad AddTransactionPage');
   }
-  logForm(){
-    console.log(this.transaction.value,"||",this.tag, "||",this.type);
-    
+  onInsertTable(){
+    let transactionObj = {type: this.type,tag: this.tag,
+       amount: this.transaction.controls['amount'].value,
+       memo: this.transaction.controls['memo'].value
+      };
+      this.sql.insertTable(transactionObj);
+      this.viewCtrl.dismiss();
   }
   onDeleteTable(){
     this.sql.dropTable();

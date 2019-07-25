@@ -35,7 +35,7 @@
     </ion-select>
   </ion-item>
 
-  <form [formGroup]="transaction" (ngSubmit)="logForm()">
+  <form [formGroup]="transaction" (ngSubmit)="onInsertTable()">
     <ion-item>
       <ion-label>Amount</ion-label>
       <ion-input type="number" formControlName="amount"></ion-input>

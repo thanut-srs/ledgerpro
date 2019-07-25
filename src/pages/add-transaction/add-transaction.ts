@@ -1,6 +1,6 @@
 import { SqlProvider } from './../../providers/sql/sql';
-import { Component, NgModule } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, ActionSheetController } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { IonicPage, ViewController } from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup, NgModel } from '@angular/forms';
 import { DatePicker } from '@ionic-native/date-picker';
 /**
@@ -23,10 +23,7 @@ export class AddTransactionPage {
   public date = null;
   public currentTime = null;
   constructor(
-    public navCtrl: NavController, 
-    public navParams: NavParams,
     public viewCtrl: ViewController,
-    public actionSheetCtrl:ActionSheetController,
     private formBuilder: FormBuilder,
     private sql: SqlProvider,
     private datepick: DatePicker,

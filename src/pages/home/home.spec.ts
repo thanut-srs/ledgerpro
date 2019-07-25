@@ -1,4 +1,3 @@
-import { SQLite } from '@ionic-native/sqlite';
 import { SqlProvider } from './../../providers/sql/sql';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
@@ -37,11 +36,8 @@ describe('HomePage', () => {
     expect(component instanceof HomePage).toBeTruthy()
   });
 
-  it('share text should share' ,() => {
-    expect(textShare).toEqual('share')
-  })
-
  
+
   it('should have <h1> with id=date display today date',() => {
     let date = new Date();
     let year = date.getFullYear();
@@ -56,6 +52,7 @@ describe('HomePage', () => {
   })
 
   it('should get user from service and update userlist',() => {
+    
     expect(true).toBeTruthy()
   })
 
@@ -73,16 +70,5 @@ describe('HomePage', () => {
     let textNoCollection: HTMLElement = fixture.debugElement.query(By.css('h4')).nativeElement;
     expect(textNoCollection.innerText).toEqual("There no transaction here, add one!");
   })
-  describe('nested inside',() => {
-    let shareInside=''
-    beforeEach(function() {
-      shareInside = 'share';
-    });
-
-    it("can reference both scopes as needed", function() {
-      expect(shareInside).toEqual(textShare);
-    });
-  })
-
-
+  
 });

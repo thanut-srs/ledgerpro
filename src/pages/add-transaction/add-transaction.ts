@@ -17,8 +17,6 @@ import { FormBuilder, Validators, FormGroup, NgModel } from '@angular/forms';
 })
 export class AddTransactionPage {
   public transaction: FormGroup;
-  public tag: NgModel;
-  public type: NgModel;
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -30,6 +28,8 @@ export class AddTransactionPage {
       
       this.transaction = this.formBuilder.group({
         amount: ['', Validators.required],
+        tag: ['', Validators.required],
+        type: ['', Validators.required],
         memo: [''],
       });
   }
@@ -41,7 +41,8 @@ export class AddTransactionPage {
   }
   onInsertTable(){
     console.log("onInsertTable #1")
-    let transactionObj = {type: this.type,tag: this.tag,
+    let transactionObj = {type: this.transaction.controls['type'].value,
+       tag: this.transaction.controls['tag'].value,
        amount: this.transaction.controls['amount'].value,
        memo: this.transaction.controls['memo'].value
       };

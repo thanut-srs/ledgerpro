@@ -17,25 +17,26 @@
 
 <ion-content padding>
 
-  <ion-item>
-    <ion-label>Type</ion-label>
-    <ion-select [(ngModel)]="type">
-      <ion-option value="income">Income</ion-option>
-      <ion-option value="expense">Expense</ion-option>
-      <ion-option value="saving">Saving</ion-option>
-    </ion-select>
-  </ion-item>
-  <ion-item>
-    <ion-label>Tag</ion-label>
-    <ion-select [(ngModel)]="tag">
-      <ion-option value="food">Food <ion-icon name="food"></ion-icon>
-      </ion-option>
-      <ion-option value="shopping">Shoping <ion-icon name="cart"></ion-icon>
-      </ion-option>
-    </ion-select>
-  </ion-item>
+ 
 
   <form [formGroup]="transaction" (ngSubmit)="onInsertTable()">
+      <ion-item>
+          <ion-label>Type</ion-label>
+          <ion-select formControlName="type">
+              <ion-option value="Income">Income</ion-option>
+              <ion-option value="Expense">Expense</ion-option>
+              <ion-option value="Saving">Saving</ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label>Tag</ion-label>
+          <ion-select formControlName="tag">
+              <ion-option value="Food">Food</ion-option>
+              <ion-option value="Shopping">Shopping</ion-option>
+              <ion-option value="Drinks">Drinks</ion-option>
+            </ion-select>
+        </ion-item>
+
     <ion-item>
       <ion-label>Amount</ion-label>
       <ion-input type="number" formControlName="amount"></ion-input>

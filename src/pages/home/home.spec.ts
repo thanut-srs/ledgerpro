@@ -1,9 +1,11 @@
+import { SQLite } from '@ionic-native/sqlite';
+import { SqlProvider } from './../../providers/sql/sql';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By }           from '@angular/platform-browser';
 import { HomePage } from './home';
 import { NavController, ModalController, IonicModule } from 'ionic-angular';
-
+import { SqlProviderMock } from '../../mocks/sqlprovider.mocks'
 //let component = undefined;
 
 describe('HomePage', () => {
@@ -16,7 +18,8 @@ describe('HomePage', () => {
     TestBed.configureTestingModule({
       declarations: [ HomePage ],
       imports: [IonicModule.forRoot(HomePage)],
-      providers: [ NavController,ModalController],
+      providers: [ NavController,ModalController,
+        {provide: SqlProvider, useClass: SqlProviderMock},SQLite],
 
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })

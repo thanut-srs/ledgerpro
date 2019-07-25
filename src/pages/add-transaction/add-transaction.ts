@@ -40,6 +40,7 @@ export class AddTransactionPage {
     console.log('ionViewDidLoad AddTransactionPage');
   }
   onInsertTable(){
+    console.log("onInsertTable #1")
     let transactionObj = {type: this.type,tag: this.tag,
        amount: this.transaction.controls['amount'].value,
        memo: this.transaction.controls['memo'].value

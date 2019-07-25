@@ -19,9 +19,10 @@ export class HomePage {
   ) {
 
   }
-  ngOnInit() {
+  async ngOnInit() {
     this.setDate();
-    this.sql.openDB();
+    await this.sql.openDB();
+    this.updateTransaction();
     // for(let i =0; i<2; i++){
     //   this.collection.push('H'+i);
     // }
@@ -41,19 +42,24 @@ export class HomePage {
   onAddTransaction() {
     const modal = this.modalCtrl.create(AddTransactionPage);
     modal.onDidDismiss(() => {
+      console.log("Modal is dismissed! #3");
       this.updateTransaction();
     });
     modal.present();
   }
 
-  updateTransaction() {
-    let result = this.sql.selectTable();
-    for(let i = 0 ; i < result.length ; i++){
+  async updateTransaction() {
+    console.log("Update Transaction #4");
+    let result = await this.sql.selectTable();
+    console.log("let result has value #8");
+    this.collection = [];
+    for (let i = 0; i < result.length; i++) {
       this.collection.push(result[i]);
     }
     console.log('update transaction !');
-    console.log("THE RESULT IS ",result.length);
+    console.log("THE RESULT IS ", result.length);
   }
+
   onViewGoal() {
     console.log("click onViewGoal");
     this.navCtrl.push(GoalDetailPage);

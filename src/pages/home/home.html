@@ -12,7 +12,7 @@
     <h1 class="date" id="date"></h1>
   </div>
   <div class="slideDiv" *ngIf="collection.length != 0" >
-    <ion-slides class="tranSlide" pager>
+    <ion-slides class="tranSlide" >
       <ion-slide>
         <ion-card *ngFor="let item of collection">
           <ion-card-header>
@@ -40,8 +40,8 @@
   <ion-fab right bottom>
     <button ion-fab color="light"><ion-icon name="arrow-dropleft-circle"></ion-icon></button>
     <ion-fab-list side="left">
-      <button ion-fab><ion-icon name="add-circle" (click)="onAddTransaction()" ></ion-icon></button>
-      <button ion-fab><ion-icon name="clipboard" (click)="onViewGoal()"></ion-icon></button>
+      <button ion-fab (click)="onAddTransaction()" ><ion-icon name="add-circle" ></ion-icon></button>
+      <button ion-fab (click)="onViewGoal()" ><ion-icon name="clipboard" ></ion-icon></button>
     </ion-fab-list>
   </ion-fab>
 </ion-content>

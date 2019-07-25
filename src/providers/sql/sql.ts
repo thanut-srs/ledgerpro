@@ -96,6 +96,7 @@ export class SqlProvider {
     console.log("H!!!!")
     this.db.executeSql(`
   CREATE TABLE Transactions(
+    date DATE,
     type VARCHAR(32),
     tag VARCHAR(32),
     amount INTEGER,
@@ -156,10 +157,11 @@ export class SqlProvider {
     let tag = transaction.tag;
     let amount = transaction.amount;
     let memo = transaction.memo;
+    let date = transaction.date;
     console.log(type, tag, amount, memo);
     this.db.executeSql(`
-    INSERT INTO Transactions(type,tag,amount,memo)
-    VALUES ("`+ type + `","` + tag + `","` + amount + `","` + memo + `")
+    INSERT INTO Transactions(date,type,tag,amount,memo)
+    VALUES ("`+ date + `","`+ type + `","` + tag + `","` + amount + `","` + memo + `")
     `, [])
       .then(() => console.log('INSERT FINISHED'))
       .catch(e => console.log(e));

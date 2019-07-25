@@ -20,7 +20,7 @@ dropTable(){
 }
 
 selectTable(){
-  let result =[];
+  let result =['res'];
   return result
 }
 

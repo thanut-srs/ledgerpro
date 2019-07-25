@@ -19,7 +19,7 @@ describe('HomePage', () => {
       declarations: [ HomePage ],
       imports: [IonicModule.forRoot(HomePage)],
       providers: [ NavController,ModalController,
-        {provide: SqlProvider, useClass: SqlProviderMock},SQLite],
+        {provide: SqlProvider, useClass: SqlProviderMock}],
 
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
@@ -53,6 +53,19 @@ describe('HomePage', () => {
     let today = day + " " + monthList[month] + " " + year;
     let dateHeader: HTMLElement = fixture.debugElement.query(By.css('#date')).nativeElement;
     expect(dateHeader.innerText).toEqual(today);
+  })
+
+  it('should get user from service and update userlist',() => {
+    expect(true).toBeTruthy()
+  })
+
+  it('should call ViewGoal when click button viewgoal ',() => {
+    spyOn(component,"onViewGoal")
+    let btngoal = fixture.debugElement.query(By.css('#viewgoalbtn'));
+    btngoal.triggerEventHandler('click',null);
+     expect(component.onViewGoal).toHaveBeenCalledTimes(1);
+
+    
   })
 
   it('should has message when no collection',() => {

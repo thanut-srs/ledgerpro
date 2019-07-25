@@ -38,10 +38,10 @@
     <h4 text-center>There no transaction here, add one!</h4>
   </div>
   <ion-fab right bottom>
-    <button ion-fab color="light"><ion-icon name="arrow-dropleft-circle"></ion-icon></button>
+    <button id="menu-button" ion-fab color="light"><ion-icon name="arrow-dropleft-circle"></ion-icon></button>
     <ion-fab-list side="left">
       <button ion-fab><ion-icon name="add-circle" (click)="onAddTransaction()" ></ion-icon></button>
-      <button ion-fab><ion-icon name="clipboard" (click)="onViewGoal()"></ion-icon></button>
+      <button ion-fab id="viewgoalbtn" (click)="onViewGoal()"><ion-icon name="clipboard" ></ion-icon></button>
     </ion-fab-list>
   </ion-fab>
 </ion-content>

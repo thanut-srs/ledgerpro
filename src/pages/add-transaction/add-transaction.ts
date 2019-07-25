@@ -1,6 +1,6 @@
 import { SqlProvider } from './../../providers/sql/sql';
-import { Component, NgModule } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, ActionSheetController } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { IonicPage, ViewController } from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup, NgModel } from '@angular/forms';
 
 /**
@@ -20,10 +20,7 @@ export class AddTransactionPage {
   public tag: NgModel;
   public type: NgModel;
   constructor(
-    public navCtrl: NavController, 
-    public navParams: NavParams,
     public viewCtrl: ViewController,
-    public actionSheetCtrl:ActionSheetController,
     private formBuilder: FormBuilder,
     private sql: SqlProvider
     ) {

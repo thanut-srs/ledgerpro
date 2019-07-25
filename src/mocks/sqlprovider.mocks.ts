@@ -4,31 +4,31 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class SqlProviderMock {
   constructor(
-    ) {
+  ) {
   }
 
-checkFirstTime(){
-  return true
-}
+  checkFirstTime() {
+    return true
+  }
 
-openDB(){
-  return 'Opened Database'
-}
+  openDB() {
+    return 'Opened Database'
+  }
 
-dropTable(){
+  dropTable() {
     return 'Dropped Table'
-}
+  }
 
-selectTable(){
-  let result =['res'];
-  return result
-}
+  selectTable() {
+    let result = ['res'];
+    return result
+  }
 
-createTable(){
+  createTable() {
     return 'Created Table'
-}
-  
-createTable2() {
+  }
+
+  createTable2() {
     return 'Inserted Table'
-}
+  }
 }

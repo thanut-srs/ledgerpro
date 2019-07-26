@@ -3,7 +3,6 @@ import { ModalController } from 'ionic-angular';
 
 import { Injectable } from '@angular/core';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
-import { AddTransactionPage } from '../../pages/add-transaction/add-transaction';
 
 /*
   Generated class for the SqlProvider provider.
@@ -15,6 +14,7 @@ import { AddTransactionPage } from '../../pages/add-transaction/add-transaction'
 export class SqlProvider {
   public db: SQLiteObject;
   public result = [];
+  public date =[];
   constructor(
     public sqlite: SQLite,
     public modalCtrl: ModalController,
@@ -71,6 +71,12 @@ export class SqlProvider {
     return this.result
   }
 
+  async selectDistinctdate() {
+    await this.selectDate();
+    console.log('the distinct date are ',this.date);
+    return this.date
+  }
+
   async selectTransactionTable() {
     return this.db.executeSql(`
     SELECT * FROM Transactions 
@@ -78,16 +84,34 @@ export class SqlProvider {
       .then((data) => {
         console.log(data)
         console.log(data.rows.length);
-        this.result = []
+        this.result = [];
         for (let i = 0; i < data.rows.length; i++) {
+          let date = data.rows.item(i).date;
           let type = data.rows.item(i).type;
           let tag = data.rows.item(i).tag;
           let amount = data.rows.item(i).amount;
           let memo = data.rows.item(i).memo;
-          let resultObj = { type, tag, amount, memo };
+          let resultObj = { date, type, tag, amount, memo };
           this.result.push(resultObj);
         }
         console.log("SelectTransactiontable is doing (sql) #6");
+      })
+      .catch(e => console.log(e));
+  }
+
+  async selectDate(){
+    return this.db.executeSql(`
+    SELECT DISTINCT date FROM Transactions 
+    `, [])
+      .then((data) => {
+        console.log(data)
+        console.log(data.rows.length);
+        this.date = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          let date = data.rows.item(i).date;
+          this.date.push(date);
+        }
+        console.log("Select distinct date");
       })
       .catch(e => console.log(e));
   }

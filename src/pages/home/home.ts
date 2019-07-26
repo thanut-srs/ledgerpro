@@ -12,6 +12,7 @@ import { SqlProvider } from '../../providers/sql/sql';
 })
 export class HomePage {
   public collection = [];
+  public date =[];
   constructor(
     public navCtrl: NavController,
     public modalCtrl: ModalController,
@@ -20,9 +21,9 @@ export class HomePage {
 
   }
   async ngOnInit() {
-    this.setDate();
     await this.sql.openDB();
     this.updateTransaction();
+    console.log(this.date);
     // for(let i =0; i<2; i++){
     //   this.collection.push('H'+i);
     // }
@@ -36,7 +37,8 @@ export class HomePage {
     let monthList = ["January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"
     ];
-    document.getElementById("date").innerHTML = day + " " + monthList[month] + " " + year;
+    // document.getElementById("date").innerHTML = day + " " + monthList[month] + " " + year;
+    // document.getElementById("date").innerHTML = this.date[0];
   }
 
   onAddTransaction() {
@@ -51,13 +53,16 @@ export class HomePage {
   async updateTransaction() {
     console.log("Update Transaction #4");
     let result = await this.sql.selectTable();
+    let date = await this.sql.selectDistinctdate();
     console.log("let result has value #8");
     this.collection = [];
+    this.date = date;
     for (let i = 0; i < result.length; i++) {
       this.collection.push(result[i]);
     }
     console.log('update transaction !');
     console.log("THE RESULT IS ", result.length);
+    console.log('date list is ',date);
   }
 
   onViewGoal() {

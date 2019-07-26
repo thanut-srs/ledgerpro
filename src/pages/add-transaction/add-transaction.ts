@@ -1,6 +1,6 @@
 import { SqlProvider } from './../../providers/sql/sql';
-import { Component } from '@angular/core';
-import { IonicPage, ViewController } from 'ionic-angular';
+import { Component, NgModule } from '@angular/core';
+import { IonicPage, NavController, NavParams, ViewController, ActionSheetController } from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup, NgModel } from '@angular/forms';
 import { DatePicker } from '@ionic-native/date-picker';
 /**
@@ -23,7 +23,10 @@ export class AddTransactionPage {
   public date = null;
   public currentTime = null;
   constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams,
     public viewCtrl: ViewController,
+    public actionSheetCtrl:ActionSheetController,
     private formBuilder: FormBuilder,
     private sql: SqlProvider,
     private datepick: DatePicker,
@@ -33,7 +36,7 @@ export class AddTransactionPage {
         date: ['', Validators.required],
         amount: ['', Validators.required],
         tag: ['', Validators.required],
-        type: [this.year+' '+this.month+' '+this.date, Validators.required],
+        type: ['', Validators.required],
         memo: [''],
       });
   }
@@ -43,7 +46,7 @@ export class AddTransactionPage {
     this.month = this.currentTime.getMonth();
     this.date = this.currentTime.getDate();
     this.day = this.currentTime.getDay();
-    this.setDatePlaceholder()
+    // this.setDatePlaceholder()
   }
   setDatePlaceholder(){
     let monthList = ["January", "February", "March", "April", "May", "June",
@@ -58,12 +61,14 @@ export class AddTransactionPage {
   }
   onInsertTable(){
     console.log("onInsertTable #1")
-    let transactionObj = {type: this.transaction.controls['type'].value,
+    let transactionObj = {
+      type: this.transaction.controls['type'].value,
        tag: this.transaction.controls['tag'].value,
        amount: this.transaction.controls['amount'].value,
        memo: this.transaction.controls['memo'].value,
        date: this.transaction.controls['date'].value,
       };
+      console.log("Date is ",this.transaction.controls['date'].value);
       this.sql.insertTable(transactionObj);
       this.viewCtrl.dismiss();
   }

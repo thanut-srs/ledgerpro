@@ -11,18 +11,17 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SqlProvider } from '../providers/sql/sql';
 import { DatePicker } from '@ionic-native/date-picker';
+import { DateProvider } from '../providers/date/date';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
-    ListPage,
     WalletPage,
     ProfilePage,
     AddTransactionPage,
@@ -38,7 +37,6 @@ import { DatePicker } from '@ionic-native/date-picker';
   entryComponents: [
     MyApp,
     HomePage,
-    ListPage,
     WalletPage,
     ProfilePage,
     AddTransactionPage,
@@ -51,7 +49,8 @@ import { DatePicker } from '@ionic-native/date-picker';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     SqlProvider,
     SQLite,
-    DatePicker
+    DatePicker,
+    DateProvider
   
   ]
 })

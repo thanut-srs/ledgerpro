@@ -22,13 +22,13 @@
           <ion-label>Date</ion-label>
           <ion-datetime displayFormat="DDDD DD MMMM YYYY" formControlName="date" 
           pickerFormat=" DD MMMM YYYY" min="2000" max="{{year}}" 
-         >
+         placeholder="Select date">
           </ion-datetime>
      </ion-item>
 
       <ion-item>
           <ion-label>Type</ion-label>
-          <ion-select formControlName="type">
+          <ion-select formControlName="type" placeholder="Select">
               <ion-option value="Income">Income</ion-option>
               <ion-option value="Expense">Expense</ion-option>
               <ion-option value="Saving">Saving</ion-option>
@@ -36,7 +36,7 @@
         </ion-item>
         <ion-item>
           <ion-label>Tag</ion-label>
-          <ion-select formControlName="tag">
+          <ion-select formControlName="tag" placeholder="Select">
               <ion-option value="Food">Food</ion-option>
               <ion-option value="Shopping">Shopping</ion-option>
               <ion-option value="Drinks">Drinks</ion-option>
@@ -45,7 +45,7 @@
 
     <ion-item>
       <ion-label>Amount</ion-label>
-      <ion-input type="number" formControlName="amount"></ion-input>
+      <ion-input type="number" formControlName="amount" placeholder="Fill amount"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>Memo</ion-label>

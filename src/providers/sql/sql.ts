@@ -86,12 +86,13 @@ export class SqlProvider {
         console.log(data.rows.length);
         this.result = [];
         for (let i = 0; i < data.rows.length; i++) {
+          let tID = data.rows.item(i).tID;
           let date = data.rows.item(i).date;
           let type = data.rows.item(i).type;
           let tag = data.rows.item(i).tag;
           let amount = data.rows.item(i).amount;
           let memo = data.rows.item(i).memo;
-          let resultObj = { date, type, tag, amount, memo };
+          let resultObj = { tID, date, type, tag, amount, memo };
           this.result.push(resultObj);
         }
         console.log("SelectTransactiontable is doing (sql) #6");
@@ -120,7 +121,8 @@ export class SqlProvider {
   createTable() {
     console.log("H!!!!")
     this.db.executeSql(`
-  CREATE TABLE Transactions(
+    CREATE TABLE Transactions(
+    tID INTEGER PRIMARY KEY AUTOINCREMENT,
     date DATE,
     type VARCHAR(32),
     tag VARCHAR(32),
@@ -142,7 +144,7 @@ export class SqlProvider {
     PRIMARY KEY (ID)
     );
     create table Wallet(
-      WltID VARCHAR(32),
+      wID INTEGER PRIMARY KEY AUTOINCREMENT,
       name VARCHAR(32),
       UID VARCHAR(32),
       balance INTEGER(32),
@@ -150,7 +152,7 @@ export class SqlProvider {
       FOREIGN KEY (UID) REFERENCES User(ID)
     );
     create table Goal(
-      ID VARCHAR(3),
+      gID INTEGER PRIMARY KEY AUTOINCREMENT,
       name VARCHAR(32),
       target INTEGER(32),
       amount INTEGER(32),
@@ -160,14 +162,13 @@ export class SqlProvider {
       FOREIGN KEY (UID) REFERENCES User(ID)
     );
     create table Transactions(
-      tstID VARCHAR(4),
+      tID INTEGER PRIMARY KEY AUTOINCREMENT,
       wID VARCHAR(32),
       type VARCHAR(32),
       memo VARCHAR(250),
       tag VARCHAR(32),
       gID VARCHAR(3),
       date DATE,
-      PRIMARY KEY (tstID),
       FOREIGN KEY (wID) REFERENCES Wallet(WltID)
     );
   `, [])

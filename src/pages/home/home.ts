@@ -42,15 +42,6 @@ export class HomePage {
     // document.getElementById("date").innerHTML = day + " " + monthList[month] + " " + year;
     // document.getElementById("date").innerHTML = this.date[0];
   }
-  slideChanged() {
-    if(this.slides.isEnd()){
-      this.slides.lockSwipeToNext(true);
-    } else{
-      this.slides.lockSwipeToNext(false);
-    }
-    let currentIndex = this.slides.getActiveIndex();
-    console.log('Current index is', currentIndex);
-  }
   onAddTransaction() {
     const modal = this.modalCtrl.create(AddTransactionPage);
     modal.onDidDismiss(() => {
@@ -78,5 +69,15 @@ export class HomePage {
   onViewGoal() {
     console.log("click onViewGoal");
     this.navCtrl.push(GoalDetailPage);
+  }
+
+  onDetail(msg: string){
+    console.log('item id is ',msg);
+    const modal = this.modalCtrl.create(AddTransactionPage);
+    modal.onDidDismiss(() => {
+      console.log("Modal is dismissed! #3");
+      this.updateTransaction();
+    });
+    modal.present();
   }
 }

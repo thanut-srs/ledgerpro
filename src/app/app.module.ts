@@ -48,7 +48,7 @@ import { DateProvider } from '../providers/date/date';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     SqlProvider,
     SQLite,
-    DatePicker
+  
   
   ]
 })

@@ -14,16 +14,18 @@
     <!-- <h1 class="date"></h1> -->
   </div>
   <div class="slideDiv" *ngIf="collection.length != 0">
-    <ion-slides class="tranSlide" >
+    <ion-slides class="tranSlide">
       <ion-slide *ngFor="let day of date">
-        <ion-card *ngFor="let item of collection" >
-          <ion-card-header>
-            {{item.date}} {{item.type}}
-          </ion-card-header>
-          <ion-card-content>
-            {{item.tag}} {{item.amount}} Baht {{item.memo}}
-          </ion-card-content>
-        </ion-card>
+        <div *ngFor="let item of collection">
+          <ion-card *ngIf="(item.date) == (date[0])" >
+            <ion-card-header>
+              {{item.date}} {{item.type}}
+            </ion-card-header>
+            <ion-card-content>
+              {{item.tag}} {{item.amount}} Baht {{item.memo}}
+            </ion-card-content>
+          </ion-card>
+        </div>
       </ion-slide>
     </ion-slides>
   </div>

@@ -2,7 +2,6 @@ import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
 import { IonicPage, ViewController } from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup, NgModel } from '@angular/forms';
-import { DatePicker } from '@ionic-native/date-picker';
 /**
  * Generated class for the AddTransactionPage page.
  *
@@ -26,7 +25,6 @@ export class AddTransactionPage {
     public viewCtrl: ViewController,
     private formBuilder: FormBuilder,
     private sql: SqlProvider,
-    private datepick: DatePicker,
     ) {
       
       this.transaction = this.formBuilder.group({

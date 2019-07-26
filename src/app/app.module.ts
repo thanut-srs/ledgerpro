@@ -15,7 +15,6 @@ import { HomePage } from '../pages/home/home';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SqlProvider } from '../providers/sql/sql';
-import { DatePicker } from '@ionic-native/date-picker';
 import { DateProvider } from '../providers/date/date';
 
 @NgModule({
@@ -49,8 +48,7 @@ import { DateProvider } from '../providers/date/date';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     SqlProvider,
     SQLite,
-    DatePicker,
-    DateProvider
+    DatePicker
   
   ]
 })

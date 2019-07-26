@@ -1,3 +1,4 @@
+import { TransactionDetailPage } from './../transaction-detail/transaction-detail';
 import { GoalDetailPage } from './../goal-detail/goal-detail';
 import { AddTransactionPage } from './../add-transaction/add-transaction';
 
@@ -73,10 +74,9 @@ export class HomePage {
 
   onDetail(msg: string){
     console.log('item id is ',msg);
-    const modal = this.modalCtrl.create(AddTransactionPage);
+    const modal = this.modalCtrl.create(TransactionDetailPage);
     modal.onDidDismiss(() => {
-      console.log("Modal is dismissed! #3");
-      this.updateTransaction();
+      console.log("onDetail Modal is dismissed!");
     });
     modal.present();
   }

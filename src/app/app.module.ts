@@ -1,3 +1,4 @@
+import { TransactionDetailPage } from './../pages/transaction-detail/transaction-detail';
 import { FirstLoginPage } from './../pages/first-login/first-login';
 import { SQLite } from '@ionic-native/sqlite';
 import { GoalDetailPage } from './../pages/goal-detail/goal-detail';
@@ -25,7 +26,8 @@ import { DateProvider } from '../providers/date/date';
     ProfilePage,
     AddTransactionPage,
     GoalDetailPage,
-    FirstLoginPage
+    FirstLoginPage,
+    TransactionDetailPage
   ],
   imports: [
     BrowserModule,
@@ -40,7 +42,8 @@ import { DateProvider } from '../providers/date/date';
     ProfilePage,
     AddTransactionPage,
     GoalDetailPage,
-    FirstLoginPage
+    FirstLoginPage,
+    TransactionDetailPage
   ],
   providers: [
     StatusBar,

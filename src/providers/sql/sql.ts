@@ -100,6 +100,29 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
+  async selectTransactionTableById(tID: number){
+    return this.db.executeSql(`
+    SELECT * FROM Transactions WHERE tID = `+tID+`
+    `, [])
+      .then((data) => {
+        console.log(data)
+        console.log(data.rows.length);
+        this.result = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          let tID = data.rows.item(i).tID;
+          let date = data.rows.item(i).date;
+          let type = data.rows.item(i).type;
+          let tag = data.rows.item(i).tag;
+          let amount = data.rows.item(i).amount;
+          let memo = data.rows.item(i).memo;
+          let resultObj = { tID, date, type, tag, amount, memo };
+          this.result.push(resultObj);
+        }
+        console.log("SelectTransactiontable is doing (sql) #6");
+      })
+      .catch(e => console.log(e));
+  }
+
   async selectDate(){
     return this.db.executeSql(`
     SELECT DISTINCT date FROM Transactions 
@@ -193,4 +216,6 @@ export class SqlProvider {
       .catch(e => console.log(e));
     return 'Inserted Table'
   }
+
+
 }

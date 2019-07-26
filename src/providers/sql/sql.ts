@@ -102,7 +102,7 @@ export class SqlProvider {
   async selectDate(){
     return this.db.executeSql(`
     SELECT DISTINCT date FROM Transactions 
-    ORDER BY date ASC;
+    ORDER BY date DESC;
     `, [])
       .then((data) => {
         console.log(data)

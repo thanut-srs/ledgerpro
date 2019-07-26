@@ -9,29 +9,28 @@
 </ion-header>
 
 <ion-content>
-  <div class="dateBar">
-    <h1 class="date" id="date">{{currentDate}}</h1>
-    <!-- <h1 class="date"></h1> -->
-  </div>
-  <div class="slideDiv" *ngIf="collection.length != 0"> 
-    <ion-slides class="tranSlide" (ionSlideDidChange)="slideChanged()" pager>
-      <ion-slide *ngFor="let day of date">
-        <div *ngFor="let item of collection">
-          <ion-card *ngIf="(item.date) == (currentDate)" >
-            <ion-card-header>
-              {{item.date}} {{item.type}}
-            </ion-card-header>
-            <ion-card-content>
-              {{item.tag}} {{item.amount}} Baht {{item.memo}}
-            </ion-card-content>
-          </ion-card>
-        </div>
-      </ion-slide>
-    </ion-slides>
+  <div *ngFor="let day of date" >
+    <div class="dateBar">
+      <h1 class="date" id="date">{{day}}</h1>
+      <!-- <h1 class="date"></h1> -->
+    </div>
+    <div class="slideDiv" *ngIf="collection.length != 0">
+      <div *ngFor="let item of collection">
+        <ion-card *ngIf="(item.date) == day">
+          <ion-card-header>
+            {{item.date}} {{item.type}}
+          </ion-card-header>
+          <ion-card-content>
+            {{item.tag}} {{item.amount}} Baht {{item.memo}}
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
   </div>
   <div *ngIf="collection.length == 0">
     <h4 text-center>There no transaction here, add one!</h4>
   </div>
+
   <ion-fab right bottom>
     <button id="menu-button" ion-fab color="light">
       <ion-icon name="arrow-dropleft-circle"></ion-icon>

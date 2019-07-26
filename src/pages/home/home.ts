@@ -43,6 +43,11 @@ export class HomePage {
     // document.getElementById("date").innerHTML = this.date[0];
   }
   slideChanged() {
+    if(this.slides.isEnd()){
+      this.slides.lockSwipeToNext(true);
+    } else{
+      this.slides.lockSwipeToNext(false);
+    }
     let currentIndex = this.slides.getActiveIndex();
     console.log('Current index is', currentIndex);
   }

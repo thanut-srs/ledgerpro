@@ -10,14 +10,14 @@
 
 <ion-content>
   <div class="dateBar">
-    <h1 class="date" id="date">{{date[0]}}</h1>
+    <h1 class="date" id="date">{{currentDate}}</h1>
     <!-- <h1 class="date"></h1> -->
   </div>
-  <div class="slideDiv" *ngIf="collection.length != 0">
-    <ion-slides class="tranSlide">
+  <div class="slideDiv" *ngIf="collection.length != 0"> 
+    <ion-slides class="tranSlide" (ionSlideDidChange)="slideChanged()" pager>
       <ion-slide *ngFor="let day of date">
         <div *ngFor="let item of collection">
-          <ion-card *ngIf="(item.date) == (date[0])" >
+          <ion-card *ngIf="(item.date) == (currentDate)" >
             <ion-card-header>
               {{item.date}} {{item.type}}
             </ion-card-header>

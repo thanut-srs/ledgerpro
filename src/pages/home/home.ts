@@ -1,8 +1,8 @@
 import { GoalDetailPage } from './../goal-detail/goal-detail';
 import { AddTransactionPage } from './../add-transaction/add-transaction';
 
-import { Component } from '@angular/core';
-import { NavController, ModalController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavController, ModalController, Slides } from 'ionic-angular';
 import { WalletPage } from '../wallet/wallet';
 import { SqlProvider } from '../../providers/sql/sql';
 
@@ -11,36 +11,41 @@ import { SqlProvider } from '../../providers/sql/sql';
   templateUrl: 'home.html'
 })
 export class HomePage {
+  @ViewChild(Slides) slides: Slides;
   public collection = [];
   public date =[];
+  public currentDate;
   constructor(
     public navCtrl: NavController,
     public modalCtrl: ModalController,
-    public sql: SqlProvider
+    public sql: SqlProvider,
   ) {
 
   }
   async ngOnInit() {
+    this.setDate();
     await this.sql.openDB();
     this.updateTransaction();
     console.log(this.date);
-    // for(let i =0; i<2; i++){
-    //   this.collection.push('H'+i);
-    // }
   }
 
   setDate() {
     let date = new Date();
     let year = date.getFullYear();
-    let month = date.getMonth();
-    let day = date.getDate();
+    let month = ("0" + (date.getMonth() + 1)).slice(-2)
+    let day = ("0" + date.getDate()).slice(-2)
     let monthList = ["January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"
     ];
+    let currentDay = year+"-"+month+"-"+day;
+    this.currentDate = currentDay;
     // document.getElementById("date").innerHTML = day + " " + monthList[month] + " " + year;
     // document.getElementById("date").innerHTML = this.date[0];
   }
-
+  slideChanged() {
+    let currentIndex = this.slides.getActiveIndex();
+    console.log('Current index is', currentIndex);
+  }
   onAddTransaction() {
     const modal = this.modalCtrl.create(AddTransactionPage);
     modal.onDidDismiss(() => {

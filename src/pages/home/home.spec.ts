@@ -38,17 +38,12 @@ describe('HomePage', () => {
 
  
 
-  it('should have <h1> with id=date display today date',() => {
-    let date = new Date();
-    let year = date.getFullYear();
-    let month = date.getMonth();
-    let day = date.getDate();
-    let monthList = ["January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
-    let today = day + " " + monthList[month] + " " + year;
+  it('should have <h1> with id=date display date',async () => {
+    await component.updateTransaction()
     let dateHeader: HTMLElement = fixture.debugElement.query(By.css('#date')).nativeElement;
-    expect(dateHeader.innerText).toEqual(today);
+    console.info('date  ::::',component.date)
+    fixture.detectChanges();
+    expect(dateHeader.innerText).toEqual(component.date[0]);
   })
 
   it('should get user from service and update userlist',() => {

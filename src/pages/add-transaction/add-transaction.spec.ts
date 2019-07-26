@@ -4,7 +4,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { AddTransactionPage } from './add-transaction';
-import { IonicModule, ViewController } from 'ionic-angular';
+import { IonicModule, ViewController, NavController, NavParams } from 'ionic-angular';
 import { SqlProviderMock } from '../../mocks/sqlprovider.mocks'
 //let component = undefined;
 
@@ -48,6 +48,17 @@ describe('Add Trasaction page', () => {
 
   it('form should invalid when there no value in formfield', () => {
     expect(component.transaction.valid).toBeFalsy()
+  })
+
+  it('button should clickable when there is value in formfield', () => {
+    //let btngoal = fixture.debugElement.query(By.css('#viewgoalbtn'));
+    component.transaction.controls['type'].setValue('Income')
+    component.transaction.controls['tag'].setValue('Food')
+    component.transaction.controls['amount'].setValue(30)
+    component.transaction.controls['memo'].setValue('')
+    component.transaction.controls['date'].setValue('2019-07-22')
+
+    expect(component.transaction.valid).toBeTruthy()
   })
 
 

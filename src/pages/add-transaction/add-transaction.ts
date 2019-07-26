@@ -22,8 +22,6 @@ export class AddTransactionPage {
   public date = null;
   public currentTime = null;
   constructor(
-    public navCtrl: NavController, 
-    public navParams: NavParams,
     public viewCtrl: ViewController,
     public actionSheetCtrl:ActionSheetController,
     private formBuilder: FormBuilder,

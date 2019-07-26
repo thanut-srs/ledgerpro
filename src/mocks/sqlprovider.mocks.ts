@@ -24,6 +24,12 @@ export class SqlProviderMock {
     return result
   }
 
+
+  selectDistinctdate() {
+    let date = ['21-07-2019','22-07-2019','23-07-2019']
+    return date
+  }
+
   createTable() {
     return 'Created Table'
   }

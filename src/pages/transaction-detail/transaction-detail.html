@@ -25,12 +25,12 @@
 
 <ion-content padding>
   <div *ngFor="let item of collection">
-        <h1>{{item.date}} </h1>
-        <h3>{{item.type}}</h3>
-        <h4>{{item.tag}}</h4>
-        <h4> {{item.amount}} Baht</h4>
+        <h1> Date : {{item.date}} </h1><br>
+        <h3>Type : {{item.type}}</h3><br>
+        <h4>Tag : {{item.tag}}</h4><br>
+        <h4>Amount : {{item.amount}} Baht</h4>
         <div>
-          {{item.memo}}
+          Memo : {{item.memo}}
         </div>
   </div>
 </ion-content>

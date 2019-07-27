@@ -72,11 +72,12 @@ export class HomePage {
     this.navCtrl.push(GoalDetailPage);
   }
 
-  onDetail(msg: string){
-    console.log('item id is ',msg);
-    const modal = this.modalCtrl.create(TransactionDetailPage);
+  onDetail(tID: number){
+    console.log('item id is ',tID);
+    const modal = this.modalCtrl.create(TransactionDetailPage,{tranID: tID});
     modal.onDidDismiss(() => {
       console.log("onDetail Modal is dismissed!");
+      this.updateTransaction();
     });
     modal.present();
   }

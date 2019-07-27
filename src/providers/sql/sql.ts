@@ -14,7 +14,8 @@ import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
 export class SqlProvider {
   public db: SQLiteObject;
   public result = [];
-  public date =[];
+  public resultByID = [];
+  public date = [];
   constructor(
     public sqlite: SQLite,
     public modalCtrl: ModalController,
@@ -31,21 +32,21 @@ export class SqlProvider {
       }
       )
       .catch(() =>
-      this.allowToCreateTable()
+        this.allowToCreateTable()
       );
   }
 
-  allowToCreateTable(){
+  allowToCreateTable() {
     const modal = this.modalCtrl.create(FirstLoginPage);
     modal.onDidDismiss(() => {
       this.createTable()
     });
     modal.present();
-  
+
   }
 
   openDB() {
-   return this.sqlite.create({
+    return this.sqlite.create({
       name: 'data.db',
       location: 'default'
     }).then((database: SQLiteObject) => {
@@ -63,6 +64,14 @@ export class SqlProvider {
     return 'Dropped Table'
   }
 
+  deleteRowById(tID: number) {
+    this.db.executeSql(`
+  DELETE FROM Transactions WHERE tID = `+tID+`;
+  `, [])
+      .then(() => console.log('Delete transaction (tID: '+tID+')'))
+      .catch(e => console.log(e));
+  }
+
   async selectTable() {
     console.log("Select Table (sql) #5");
     await this.selectTransactionTable();
@@ -71,9 +80,16 @@ export class SqlProvider {
     return this.result
   }
 
+  async selectTablebyID(tID: number) {
+    console.log("Select transaction id : ", tID);
+    await this.selectTransactionTableById(tID);
+    console.log('selectTransactionTableById(sql) result is ', this.resultByID)
+    return this.resultByID
+  }
+
   async selectDistinctdate() {
     await this.selectDate();
-    console.log('the distinct date are ',this.date);
+    console.log('the distinct date are ', this.date);
     return this.date
   }
 
@@ -100,14 +116,15 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
-  async selectTransactionTableById(tID: number){
+  async selectTransactionTableById(tID: number) {
+    console.log("tID in selectTransactionTableById is ",tID)
     return this.db.executeSql(`
-    SELECT * FROM Transactions WHERE tID = `+tID+`
+    SELECT * FROM Transactions WHERE tID = `+ tID +`
     `, [])
       .then((data) => {
         console.log(data)
         console.log(data.rows.length);
-        this.result = [];
+        this.resultByID = [];
         for (let i = 0; i < data.rows.length; i++) {
           let tID = data.rows.item(i).tID;
           let date = data.rows.item(i).date;
@@ -116,14 +133,13 @@ export class SqlProvider {
           let amount = data.rows.item(i).amount;
           let memo = data.rows.item(i).memo;
           let resultObj = { tID, date, type, tag, amount, memo };
-          this.result.push(resultObj);
+          this.resultByID.push(resultObj);
         }
-        console.log("SelectTransactiontable is doing (sql) #6");
       })
       .catch(e => console.log(e));
   }
 
-  async selectDate(){
+  async selectDate() {
     return this.db.executeSql(`
     SELECT DISTINCT date FROM Transactions 
     ORDER BY date DESC;
@@ -210,7 +226,7 @@ export class SqlProvider {
     console.log(type, tag, amount, memo);
     this.db.executeSql(`
     INSERT INTO Transactions(date,type,tag,amount,memo)
-    VALUES ("`+ date + `","`+ type + `","` + tag + `","` + amount + `","` + memo + `")
+    VALUES ("`+ date + `","` + type + `","` + tag + `","` + amount + `","` + memo + `")
     `, [])
       .then(() => console.log('INSERT FINISHED'))
       .catch(e => console.log(e));

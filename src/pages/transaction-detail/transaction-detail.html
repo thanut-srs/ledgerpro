@@ -6,10 +6,31 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>TransactionDetailPage</ion-title>
+      <ion-buttons left>
+          <button ion-button icon-only (click)="viewCtrl.dismiss()">
+            <ion-icon name="close"></ion-icon>
+          </button>
+        </ion-buttons>
+    <ion-title>Transaction Detail</ion-title>
+    <ion-buttons right>
+      <button ion-button icon-only (click)="onEditTransaction()">
+        <ion-icon name="create"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="onDeleteTransaction()">
+        <ion-icon name="trash"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-
+  <div *ngFor="let item of collection">
+        <h1>{{item.date}} </h1>
+        <h3>{{item.type}}</h3>
+        <h4>{{item.tag}}</h4>
+        <h4> {{item.amount}} Baht</h4>
+        <div>
+          {{item.memo}}
+        </div>
+  </div>
 </ion-content>

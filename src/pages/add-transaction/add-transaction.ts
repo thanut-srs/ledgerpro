@@ -49,6 +49,7 @@ export class AddTransactionPage {
   }
   onInsertTable(){
     console.log("onInsertTable #1")
+    let insertFlage = true;
     let transactionObj = {
       type: this.transaction.controls['type'].value,
        tag: this.transaction.controls['tag'].value,
@@ -58,7 +59,7 @@ export class AddTransactionPage {
       };
       console.log("Date is ",this.transaction.controls['date'].value);
       this.sql.insertTable(transactionObj);
-      this.viewCtrl.dismiss();
+      this.viewCtrl.dismiss(insertFlage);
   }
   onDeleteTable(){
     this.sql.dropTable();

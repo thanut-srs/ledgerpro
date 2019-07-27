@@ -57,6 +57,7 @@ export class EditTransactionPage {
 
   onUpdateTable(){
     console.log("ononUpdateTable")
+    let editFlag = true;
     let transactionObj = {
       type: this.transaction.controls['type'].value,
        tag: this.transaction.controls['tag'].value,
@@ -66,7 +67,7 @@ export class EditTransactionPage {
       };
       console.log(" New data is ",transactionObj);
       this.sql.updateTableByID(transactionObj, this.transDetail[0].tID);
-      this.viewCtrl.dismiss();
+      this.viewCtrl.dismiss(editFlag);
   }
 
 }

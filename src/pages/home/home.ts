@@ -32,10 +32,12 @@ export class HomePage {
 
   onAddTransaction() {
     const modal = this.modalCtrl.create(AddTransactionPage);
-    modal.onDidDismiss(() => {
+    modal.onDidDismiss((data) => {
       console.log("Modal is dismissed! #3");
-      this.updateTransaction();
-      this.presentAddToast();
+      if (data) {
+        this.updateTransaction();
+        this.presentAddToast();
+      }
     });
     modal.present();
   }
@@ -63,13 +65,23 @@ export class HomePage {
   onDetail(tID: number) {
     console.log('item id is ', tID);
     const modal = this.modalCtrl.create(TransactionDetailPage, { tranID: tID });
-    modal.onDidDismiss(() => {
+    modal.onDidDismiss((data) => {
       console.log("onDetail Modal is dismissed!");
       this.updateTransaction();
+      if (data) {
+        this.presentDeleteToast();
+      }
     });
     modal.present();
   }
-
+  presentDeleteToast() {
+    let toast = this.toastCtrl.create({
+      message: 'Transaction deleted!',
+      duration: 1500,
+      position: 'bottom'
+    });
+    toast.present();
+  }
   presentAddToast() {
     let toast = this.toastCtrl.create({
       message: 'Transaction saved!',

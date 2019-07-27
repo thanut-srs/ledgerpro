@@ -16,18 +16,15 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 })
 export class AddTransactionPage {
   public transaction: FormGroup;
+  public currentDate = null;
   public year = null;
-  public month = null;
-  public day = null;
-  public date = null;
-  public currentTime = null;
   constructor(
     public viewCtrl: ViewController,
     private formBuilder: FormBuilder,
     private sql: SqlProvider,
     ) {
       this.transaction = this.formBuilder.group({
-        date: ['', Validators.required],
+        date: [this.currentDate, Validators.required],
         amount: ['', Validators.required],
         tag: ['', Validators.required],
         type: ['', Validators.required],
@@ -35,20 +32,17 @@ export class AddTransactionPage {
       });
   }
   ngOnInit() {
-    this.currentTime = new Date();
-    this.year = this.currentTime.getFullYear();
-    this.month = this.currentTime.getMonth();
-    this.date = this.currentTime.getDate();
-    this.day = this.currentTime.getDay();
-    // this.setDatePlaceholder()
+    this.setDate();
   }
-  setDatePlaceholder(){
-    let monthList = ["January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
-    let dayList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    this.month = monthList[this.month];
-    this.day = dayList[this.day];
+
+  setDate() {
+    let date = new Date();
+    let year = date.getFullYear();
+    this.year = year;
+    let month = ("0" + (date.getMonth() + 1)).slice(-2)
+    let day = ("0" + date.getDate()).slice(-2)
+    let currentDay = year+"-"+month+"-"+day;
+    this.currentDate = currentDay;
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad AddTransactionPage');

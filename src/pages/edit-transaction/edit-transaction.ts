@@ -17,11 +17,6 @@ import { SqlProvider } from '../../providers/sql/sql';
 })
 export class EditTransactionPage {
   public transaction: FormGroup;
-  public year = null;
-  public month = null;
-  public day = null;
-  public date = null;
-  public currentTime = null;
   public currentDate: string;
   public transDetail = [];
   constructor(
@@ -39,22 +34,14 @@ export class EditTransactionPage {
       memo: [this.transDetail[0].memo],
     });
   }
-  ngOnInit() {
-    this.currentTime = new Date();
-    this.year = this.currentTime.getFullYear();
-    this.month = this.currentTime.getMonth();
-    this.date = this.currentTime.getDate();
-    this.day = this.currentTime.getDay();
-    // this.setDatePlaceholder()
-  }
-  setDatePlaceholder(){
-    let monthList = ["January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
-    let dayList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    this.month = monthList[this.month];
-    this.day = dayList[this.day];
-  }
+  // setDatePlaceholder(){
+  //   let monthList = ["January", "February", "March", "April", "May", "June",
+  //     "July", "August", "September", "October", "November", "December"
+  //   ];
+  //   let dayList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  //   this.month = monthList[this.month];
+  //   this.day = dayList[this.day];
+  // }
 
   setDate() {
     let date = new Date();

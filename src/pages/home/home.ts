@@ -3,7 +3,7 @@ import { GoalDetailPage } from './../goal-detail/goal-detail';
 import { AddTransactionPage } from './../add-transaction/add-transaction';
 
 import { Component, ViewChild } from '@angular/core';
-import { NavController, ModalController, Slides } from 'ionic-angular';
+import { NavController, ModalController, Slides, ToastController } from 'ionic-angular';
 import { WalletPage } from '../wallet/wallet';
 import { SqlProvider } from '../../providers/sql/sql';
 
@@ -14,38 +14,28 @@ import { SqlProvider } from '../../providers/sql/sql';
 export class HomePage {
   @ViewChild(Slides) slides: Slides;
   public collection = [];
-  public date =[];
+  public date = [];
   public currentDate;
   constructor(
     public navCtrl: NavController,
     public modalCtrl: ModalController,
     public sql: SqlProvider,
+    public toastCtrl: ToastController,
   ) {
 
   }
   async ngOnInit() {
-    this.setDate();
     await this.sql.openDB();
     this.updateTransaction();
     console.log(this.date);
   }
 
-  setDate() {
-    let date = new Date();
-    let year = date.getFullYear();
-    let month = ("0" + (date.getMonth() + 1)).slice(-2)
-    let day = ("0" + date.getDate()).slice(-2)
-    let monthList = ["January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
-    let currentDay = year+"-"+month+"-"+day;
-    this.currentDate = currentDay;
-  }
   onAddTransaction() {
     const modal = this.modalCtrl.create(AddTransactionPage);
     modal.onDidDismiss(() => {
       console.log("Modal is dismissed! #3");
       this.updateTransaction();
+      this.presentAddToast();
     });
     modal.present();
   }
@@ -62,7 +52,7 @@ export class HomePage {
     }
     console.log('update transaction !');
     console.log("THE RESULT IS ", result.length);
-    console.log('date list is ',date);
+    console.log('date list is ', date);
   }
 
   onViewGoal() {
@@ -70,13 +60,23 @@ export class HomePage {
     this.navCtrl.push(GoalDetailPage);
   }
 
-  onDetail(tID: number){
-    console.log('item id is ',tID);
-    const modal = this.modalCtrl.create(TransactionDetailPage,{tranID: tID});
+  onDetail(tID: number) {
+    console.log('item id is ', tID);
+    const modal = this.modalCtrl.create(TransactionDetailPage, { tranID: tID });
     modal.onDidDismiss(() => {
       console.log("onDetail Modal is dismissed!");
       this.updateTransaction();
     });
     modal.present();
   }
+
+  presentAddToast() {
+    let toast = this.toastCtrl.create({
+      message: 'Transaction saved!',
+      duration: 1500,
+      position: 'bottom'
+    });
+    toast.present();
+  }
+
 }

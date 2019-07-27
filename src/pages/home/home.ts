@@ -40,8 +40,6 @@ export class HomePage {
     ];
     let currentDay = year+"-"+month+"-"+day;
     this.currentDate = currentDay;
-    // document.getElementById("date").innerHTML = day + " " + monthList[month] + " " + year;
-    // document.getElementById("date").innerHTML = this.date[0];
   }
   onAddTransaction() {
     const modal = this.modalCtrl.create(AddTransactionPage);

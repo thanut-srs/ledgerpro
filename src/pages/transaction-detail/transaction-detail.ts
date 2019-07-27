@@ -1,6 +1,7 @@
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage,ViewController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, ViewController, NavParams, AlertController, ModalController } from 'ionic-angular';
+import { EditTransactionPage } from '../edit-transaction/edit-transaction';
 
 /**
  * Generated class for the TransactionDetailPage page.
@@ -18,10 +19,11 @@ export class TransactionDetailPage {
   public tID: number;
   public collection = [];
   constructor(
-    public viewCtrl: ViewController,
-    public params: NavParams,
-    public sql : SqlProvider,
-    public alertCtrl : AlertController,
+    private viewCtrl: ViewController,
+    private params: NavParams,
+    private sql : SqlProvider,
+    private alertCtrl : AlertController,
+    private modalCtrl : ModalController
     ) {
       this.tID = params.get('tranID')
   }
@@ -45,7 +47,12 @@ export class TransactionDetailPage {
     console.log("THE RESULT IS ", result.length);
   }
   onEditTransaction(){
-
+    const modal = this.modalCtrl.create(EditTransactionPage ,{transDetail: this.collection});
+    modal.onDidDismiss(() => {
+      console.log("Modal is dismissed! #3");
+      this.updateTransaction();
+    });
+    modal.present();
   }
 
   onDeleteTransaction(){

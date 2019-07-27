@@ -1,9 +1,10 @@
-import { SqlProvider } from './../../providers/sql/sql';
-import { Component} from '@angular/core';
-import { IonicPage, ViewController } from 'ionic-angular';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { SqlProvider } from '../../providers/sql/sql';
+
 /**
- * Generated class for the AddTransactionPage page.
+ * Generated class for the EditTransactionPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -11,28 +12,32 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 @IonicPage()
 @Component({
-  selector: 'page-add-transaction',
-  templateUrl: 'add-transaction.html',
+  selector: 'page-edit-transaction',
+  templateUrl: 'edit-transaction.html',
 })
-export class AddTransactionPage {
+export class EditTransactionPage {
   public transaction: FormGroup;
   public year = null;
   public month = null;
   public day = null;
   public date = null;
   public currentTime = null;
+  public currentDate: string;
+  public transDetail = [];
   constructor(
     public viewCtrl: ViewController,
     private formBuilder: FormBuilder,
     private sql: SqlProvider,
-    ) {
-      this.transaction = this.formBuilder.group({
-        date: ['', Validators.required],
-        amount: ['', Validators.required],
-        tag: ['', Validators.required],
-        type: ['', Validators.required],
-        memo: [''],
-      });
+    private params: NavParams,
+  ) {
+    this.transDetail = params.get('transDetail')
+    this.transaction = this.formBuilder.group({
+      date: [this.transDetail[0].date, Validators.required],
+      amount: [this.transDetail[0].amount, Validators.required],
+      tag: [this.transDetail[0].tag, Validators.required],
+      type: [this.transDetail[0].type, Validators.required],
+      memo: [this.transDetail[0].memo],
+    });
   }
   ngOnInit() {
     this.currentTime = new Date();
@@ -50,11 +55,21 @@ export class AddTransactionPage {
     this.month = monthList[this.month];
     this.day = dayList[this.day];
   }
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad AddTransactionPage');
+
+  setDate() {
+    let date = new Date();
+    let year = date.getFullYear();
+    let month = ("0" + (date.getMonth() + 1)).slice(-2)
+    let day = ("0" + date.getDate()).slice(-2)
+    let currentDay = year+"-"+month+"-"+day;
+    this.currentDate = currentDay;
   }
-  onInsertTable(){
-    console.log("onInsertTable #1")
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad EditTransactionPage');
+  }
+
+  onUpdateTable(){
+    console.log("ononUpdateTable")
     let transactionObj = {
       type: this.transaction.controls['type'].value,
        tag: this.transaction.controls['tag'].value,
@@ -62,14 +77,9 @@ export class AddTransactionPage {
        memo: this.transaction.controls['memo'].value,
        date: this.transaction.controls['date'].value,
       };
-      console.log("Date is ",this.transaction.controls['date'].value);
-      this.sql.insertTable(transactionObj);
+      console.log(" New data is ",transactionObj);
+      this.sql.updateTableByID(transactionObj, this.transDetail[0].tID);
       this.viewCtrl.dismiss();
   }
-  onDeleteTable(){
-    this.sql.dropTable();
-  }
-  onAddTable(){
-    this.sql.createTable();
-  }
+
 }

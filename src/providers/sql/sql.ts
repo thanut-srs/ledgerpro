@@ -66,9 +66,9 @@ export class SqlProvider {
 
   deleteRowById(tID: number) {
     this.db.executeSql(`
-  DELETE FROM Transactions WHERE tID = `+tID+`;
+  DELETE FROM Transactions WHERE tID = `+ tID + `;
   `, [])
-      .then(() => console.log('Delete transaction (tID: '+tID+')'))
+      .then(() => console.log('Delete transaction (tID: ' + tID + ')'))
       .catch(e => console.log(e));
   }
 
@@ -117,9 +117,9 @@ export class SqlProvider {
   }
 
   async selectTransactionTableById(tID: number) {
-    console.log("tID in selectTransactionTableById is ",tID)
+    console.log("tID in selectTransactionTableById is ", tID)
     return this.db.executeSql(`
-    SELECT * FROM Transactions WHERE tID = `+ tID +`
+    SELECT * FROM Transactions WHERE tID = `+ tID + `
     `, [])
       .then((data) => {
         console.log(data)
@@ -226,12 +226,28 @@ export class SqlProvider {
     console.log(type, tag, amount, memo);
     this.db.executeSql(`
     INSERT INTO Transactions(date,type,tag,amount,memo)
-    VALUES ("`+ date + `","` + type + `","` + tag + `","` + amount + `","` + memo + `")
+    VALUES ("`+ date + `","` + type + `","` + tag + `",` + amount + `,"` + memo + `")
     `, [])
       .then(() => console.log('INSERT FINISHED'))
       .catch(e => console.log(e));
     return 'Inserted Table'
   }
 
+  updateTableByID(transaction: any, tID: number) {
+    console.log("updating table")
+    let type = transaction.type;
+    let tag = transaction.tag;
+    let amount = transaction.amount;
+    let memo = transaction.memo;
+    let date = transaction.date;
+    console.log("new data (sql) are ",type, tag, amount, memo);
+    this.db.executeSql(`
+    UPDATE Transactions
+    SET date = "`+date+`", type = "`+type+`", tag = "`+tag+`", amount = `+amount+`, memo = "`+memo+`"
+    WHERE tID = `+tID+`;
+    `, [])
+      .then(() => console.log('Transaction updated!'))
+      .catch(e => console.log(e));
+  }
 
 }

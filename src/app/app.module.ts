@@ -17,6 +17,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SqlProvider } from '../providers/sql/sql';
 import { DateProvider } from '../providers/date/date';
+import { EditTransactionPage } from '../pages/edit-transaction/edit-transaction';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { DateProvider } from '../providers/date/date';
     AddTransactionPage,
     GoalDetailPage,
     FirstLoginPage,
-    TransactionDetailPage
+    TransactionDetailPage,
+    EditTransactionPage
   ],
   imports: [
     BrowserModule,
@@ -43,7 +45,8 @@ import { DateProvider } from '../providers/date/date';
     AddTransactionPage,
     GoalDetailPage,
     FirstLoginPage,
-    TransactionDetailPage
+    TransactionDetailPage,
+    EditTransactionPage
   ],
   providers: [
     StatusBar,

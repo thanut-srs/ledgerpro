@@ -43,7 +43,6 @@ export class SqlProvider {
       this.createTables()
     });
     modal.present();
-
   }
 
   openDB() {
@@ -203,8 +202,8 @@ export class SqlProvider {
     create table Wallet(
     wID INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(32),
-    UID VARCHAR(32),
-    balance INTEGER(32),
+    UID INTEGER,
+    balance INTEGER,
     FOREIGN KEY (UID) REFERENCES Users(ID)
     );
   `, [])
@@ -218,7 +217,7 @@ export class SqlProvider {
     name VARCHAR(32),      
     target INTEGER(32),
     amount INTEGER(32),
-    UID VARCHAR(32),
+    UID INTEGER,
     deadline DATE,
     FOREIGN KEY (UID) REFERENCES Users(ID)
     );
@@ -231,12 +230,12 @@ export class SqlProvider {
     return this.db.executeSql(`
     create table Transactions(
     tID INTEGER PRIMARY KEY AUTOINCREMENT,
-    wID VARCHAR(32),
+    wID INTEGER,
     type VARCHAR(32),
     memo VARCHAR(100),
     amount INTEGER,
     tag VARCHAR(32),
-    gID VARCHAR(3),
+    gID INTEGER,
     date DATE,
     FOREIGN KEY (wID) REFERENCES Wallet(WltID)
     );
@@ -256,42 +255,42 @@ export class SqlProvider {
 
   // createTables() {
   //   this.db.executeSql(`
-  //   create table User(
-  //   ID VARCHAR(32) PRIMARY KEY, 
-  //   PW VARCHAR(32),
-  //   name VARCHAR(32),
-  //   picUrl VARCHAR,
-  //   );
-  //   create table Wallet(
-  //     wID INTEGER PRIMARY KEY AUTOINCREMENT,
-  //     name VARCHAR(32),
-  //     UID VARCHAR(32),
-  //     balance INTEGER(32),
-  //     FOREIGN KEY (UID) REFERENCES User(ID)
-  //   );
-  //   create table Goal(
-  //     gID INTEGER PRIMARY KEY AUTOINCREMENT,
-  //     name VARCHAR(32),
-  //     target INTEGER(32),
-  //     amount INTEGER(32),
-  //     UID VARCHAR(32),
-  //     deadline DATE,
-  //     FOREIGN KEY (UID) REFERENCES User(ID)
-  //   );
-  //   create table Transactions(
-  //     tID INTEGER PRIMARY KEY AUTOINCREMENT,
-  //     wID VARCHAR(32),
-  //     type VARCHAR(32),
-  //     memo VARCHAR(100),
-  //     amount INTEGER,
-  //     tag VARCHAR(32),
-  //     gID VARCHAR(3),
-  //     date DATE,
-  //     FOREIGN KEY (wID) REFERENCES Wallet(WltID)
-  //   );
-  //   create table Session(
-  //     ID VARCHAR(32) PRIMARY KEY
-  //   );
+    // create table User(
+    // ID VARCHAR(32) PRIMARY KEY, 
+    // PW VARCHAR(32),
+    // name VARCHAR(32),
+    // picUrl VARCHAR
+    // );
+    // create table Wallet(
+    //   wID INTEGER PRIMARY KEY AUTOINCREMENT,
+    //   name VARCHAR(32),
+    //   UID VARCHAR(32),
+    //   balance INTEGER(32),
+    //   FOREIGN KEY (UID) REFERENCES User(ID)
+    // );
+    // create table Goal(
+    //   gID INTEGER PRIMARY KEY AUTOINCREMENT,
+    //   name VARCHAR(32),
+    //   target INTEGER(32),
+    //   amount INTEGER(32),
+    //   UID VARCHAR(32),
+    //   deadline DATE,
+    //   FOREIGN KEY (UID) REFERENCES User(ID)
+    // );
+    // create table Transactions(
+    //   tID INTEGER PRIMARY KEY AUTOINCREMENT,
+    //   wID VARCHAR(32),
+    //   type VARCHAR(32),
+    //   memo VARCHAR(100),
+    //   amount INTEGER,
+    //   tag VARCHAR(32),
+    //   gID VARCHAR(3),
+    //   date DATE,
+    //   FOREIGN KEY (wID) REFERENCES Wallet(WltID)
+    // );
+    // create table Session(
+    //   ID VARCHAR(32) PRIMARY KEY
+    // );
   // `, [])
   //     .then(() => console.log('Executed SQL'))
   //     .catch(e => console.log(e));
@@ -320,30 +319,65 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
-  insertTable(transaction: any) {
-    console.log("insertTable (sql)  #2")
-    let type = transaction.type;
-    let tag = transaction.tag;
-    let amount = transaction.amount;
-    let memo = transaction.memo;
-    let date = transaction.date;
-    console.log(type, tag, amount, memo);
-    this.db.executeSql(`
-    INSERT INTO Transactions(date,type,tag,amount,memo)
-    VALUES ("`+ date + `","` + type + `","` + tag + `",` + amount + `,"` + memo + `")
-    `, [])
-      .then(() => console.log('INSERT FINISHED'))
-      .catch(e => console.log(e));
-    return 'Inserted Table'
+  insertTable(data: any,table: string) {
+    console.log("insertTable (sql) #2")
+    switch(table){
+     case "Transactions":{
+      let { type,tag,amount,memo,date} = data;
+      this.db.executeSql(`
+      INSERT INTO Transactions(date,type,tag,amount,memo)
+      VALUES ("`+ date + `","` + type + `","` + tag + `",` + amount + `,"` + memo + `")
+      `, [])
+        .then(() => console.log('Inserted Transaction table'))
+        .catch(e => console.log(e));
+        break;
+     }
+     case "Users":{
+      let { ID,PW,name,picUrl} = data;
+      this.db.executeSql(`
+      INSERT INTO Users(ID,PW,name,picUrl)
+      VALUES ("`+ ID + `","` + PW + `","` + name + `","` + picUrl + `")
+      `, [])
+        .then(() => console.log('Inserted Users table'))
+        .catch(e => console.log(e));
+        break;
+     }
+     case "Wallet":{
+      let { wID, name, UID, balance} = data;
+      this.db.executeSql(`
+      INSERT INTO Wallet(wID,name,UID,balance)
+      VALUES (`+ wID + `,"` + name + `",` + UID + `,` + balance + `)
+      `, [])
+        .then(() => console.log('Inserted Wallet table'))
+        .catch(e => console.log(e));
+        break;
+     }
+     case "Goal":{
+      let { gID, name, target, amount, UID,deadline} = data;
+      this.db.executeSql(`
+      INSERT INTO Goal(gID,name,target,amount,UID,deadline)
+      VALUES (`+ gID + `,"` + name + `",` + target + `,` + amount + `,`+ UID +`,"`+ deadline +`")
+      `, [])
+        .then(() => console.log('Inserted Goal table'))
+        .catch(e => console.log(e));
+        break;
+     }
+     case "Session":{
+      let { ID } = data;
+      this.db.executeSql(`
+      INSERT INTO Session(ID)
+      VALUES (`+ ID +`)
+      `, [])
+        .then(() => console.log('Inserted Session table'))
+        .catch(e => console.log(e));
+        break;
+     }
+    }
   }
 
   updateTableByID(transaction: any, tID: number) {
     console.log("updating table")
-    let type = transaction.type;
-    let tag = transaction.tag;
-    let amount = transaction.amount;
-    let memo = transaction.memo;
-    let date = transaction.date;
+    let { date,type,tag,amount,memo} = transaction
     console.log("new data (sql) are ", type, tag, amount, memo);
     this.db.executeSql(`
     UPDATE Transactions
@@ -353,5 +387,4 @@ export class SqlProvider {
       .then(() => console.log('Transaction updated!'))
       .catch(e => console.log(e));
   }
-
 }

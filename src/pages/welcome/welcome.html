@@ -16,11 +16,12 @@
     <button ion-button>Login</button><br>
     <a>Login with other account</a>
 </div>
-<div *ngIf="!(sessionFlag)" >
+<div *ngIf="!(sessionFlag)" text-center>
   <h1>Login</h1>
   <h2>Username: _____________</h2>
   <h2>Password: _____________</h2>
-  <button ion-button (click)="addtable()" >add</button>
-  <button ion-button (click)="droptable()" >drop</button>
+  <a (click)="onCreateAccount()" >Don't have account, Signup!</a><br><br>
+  <!-- <button ion-button (click)="addtable()" >add</button>
+  <button ion-button (click)="droptable()" >drop</button> -->
 </div>
 </ion-content>

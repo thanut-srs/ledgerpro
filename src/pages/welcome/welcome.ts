@@ -1,6 +1,7 @@
+import { SignupPage } from './../signup/signup';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, ToastController } from 'ionic-angular';
 
 /**
  * Generated class for the WelcomePage page.
@@ -19,7 +20,10 @@ export class WelcomePage {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
-    public sql: SqlProvider) {
+    public sql: SqlProvider,
+    public modalCtrl: ModalController,
+    public toastCtrl: ToastController,
+    ) {
   }
 
   ionViewDidLoad() {
@@ -34,5 +38,23 @@ export class WelcomePage {
   }
   droptable(){
     this.sql.dropTables();
+  }
+  onCreateAccount(){
+    const modal = this.modalCtrl.create(SignupPage);
+    modal.onDidDismiss((data) => {
+      console.log("Modal is dismissed! #3");
+      if(data){
+        this.presentCreateAccToast();
+      }
+    });
+    modal.present();
+  }
+  presentCreateAccToast(){
+    let toast = this.toastCtrl.create({
+      message: 'Account created!',
+      duration: 1500,
+      position: 'bottom'
+    });
+    toast.present();
   }
 }

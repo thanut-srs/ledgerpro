@@ -1,3 +1,4 @@
+import { SignupPage } from './../pages/signup/signup';
 import { WelcomePage } from './../pages/welcome/welcome';
 import { LoginPage } from './../pages/login/login';
 import { TransactionDetailPage } from './../pages/transaction-detail/transaction-detail';
@@ -35,6 +36,7 @@ import { LoginProvider } from '../providers/login/login';
     EditTransactionPage,
     LoginPage,
     WelcomePage,
+    SignupPage,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +56,7 @@ import { LoginProvider } from '../providers/login/login';
     EditTransactionPage,
     LoginPage,
     WelcomePage,
+    SignupPage,
   ],
   providers: [
     StatusBar,

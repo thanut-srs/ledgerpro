@@ -23,8 +23,8 @@ export class SqlProviderMock {
     return 'Opened Database'
   }
 
-  dropTable() {
-    return 'Dropped Table'
+  dropTabls() {
+    return 'Dropped Tables'
   }
 
   selectTable() {
@@ -44,7 +44,13 @@ export class SqlProviderMock {
     return date
   }
 
-  
+  async selectTransactionTable(){
+    return 'SelectTransactiontable'
+  }
+
+  async selectTransactionTableById(){
+    return 'selectTransactionTableById'
+  }
 
   createTable() {
     return 'Created Table'
@@ -52,5 +58,38 @@ export class SqlProviderMock {
 
   createTable2() {
     return 'Inserted Table'
+  }
+  async selectDate() {
+    return 'Select date'
+  }
+  async createTables() {
+    return '###Created Tables###'
+  }
+  createUserTables(){
+    return 'User Tables created'
+  }
+  createWalletTables(){
+    return 'User Wallet created'
+  }
+  createGoalTables(){
+    return 'User Goal created'
+  }
+  createTransactionsTables(){
+    return 'User Transactions created'
+  }
+  createSessionTables(){
+    return 'User Session created'
+  }
+  async checkSession() {
+    return 'check login flag'
+  }
+  async selectSessionTable() {
+    return 'select session table for login' 
+  }
+  insertTable(data: any, table: string) {
+    return 'insert table'
+  }
+  updateTableByID(transaction: any, tID: number) {
+    return 'table updated'
   }
 }

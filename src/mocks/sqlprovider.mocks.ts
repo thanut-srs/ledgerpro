@@ -43,6 +43,9 @@ export class SqlProviderMock {
     let date = ['21-07-2019','22-07-2019','23-07-2019']
     return date
   }
+  insertTable(transaction: any) {
+    return 'INSERT FINISHED'
+  }
 
   async selectTransactionTable(){
     return 'SelectTransactiontable'

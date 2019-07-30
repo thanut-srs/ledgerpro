@@ -50,15 +50,36 @@ describe('Add Trasaction page', () => {
     expect(component.transaction.valid).toBeFalsy()
   })
 
-  it('button should clickable when there is value in formfield', () => {
-    //let btngoal = fixture.debugElement.query(By.css('#viewgoalbtn'));
+  it('button should invalid when there no value in formfield', () => {
+    let btnsubmit = fixture.debugElement.nativeElement.querySelector('#submitbtn').disabled;
+    expect(btnsubmit).toBeTruthy()
+  })
+
+  let setFormTruthValue = function () {
     component.transaction.controls['type'].setValue('Income')
     component.transaction.controls['tag'].setValue('Food')
     component.transaction.controls['amount'].setValue(30)
     component.transaction.controls['memo'].setValue('')
     component.transaction.controls['date'].setValue('2019-07-22')
+  }
 
+  it('form should valid when there is value in formfield', () => {
+    setFormTruthValue()    
     expect(component.transaction.valid).toBeTruthy()
+  })
+
+  // it('button should valid when there is value in formfield', () => {
+  //   let btnsubmit = fixture.debugElement.nativeElement.querySelector('#submitbtn').disabled;
+  //   setFormTruthValue()    
+  //   fixture.detectChanges()
+  //   expect(btnsubmit).toBeFalsy()
+  // })
+
+  it('submit form should call onInsertTable', () => {
+    spyOn(component,"onInsertTable")
+    let formsubmit = fixture.debugElement.query(By.css('#transactionForm'));
+    formsubmit.triggerEventHandler('ngSubmit', null); 
+    expect(component.onInsertTable).toHaveBeenCalledTimes(1);
   })
 
 

@@ -38,12 +38,15 @@ describe('HomePage', () => {
 
  
 
-  it('should have <h1> with id=date display date',async () => {
-    await component.updateTransaction()
-    let dateHeader: HTMLElement = fixture.debugElement.query(By.css('#date')).nativeElement;
-    console.info('date  ::::',component.date)
-    fixture.detectChanges();
-    expect(dateHeader.innerText).toEqual(component.date[0]);
+  it('should have <h1> with id=date display date', () => {
+
+    component.updateTransaction().then( () => {
+      console.info('date  ::::',component.date)
+      let dateHeader: HTMLElement = fixture.debugElement.query(By.css('#date')).nativeElement;
+      fixture.detectChanges();
+      expect(dateHeader.innerText).toEqual(component.date[0]);
+    })
+
   })
 
   it('should get user from service and update userlist',() => {
@@ -54,7 +57,7 @@ describe('HomePage', () => {
   it('should call ViewGoal when click button viewgoal ',() => {
     spyOn(component,"onViewGoal")
     let btngoal = fixture.debugElement.query(By.css('#viewgoalbtn'));
-    console.log('styles:::',btngoal)
+    //console.log('styles:::',btngoal)
     btngoal.triggerEventHandler('click',null);
      expect(component.onViewGoal).toHaveBeenCalledTimes(1);
 

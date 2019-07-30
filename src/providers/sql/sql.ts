@@ -16,6 +16,7 @@ export class SqlProvider {
   public result = [];
   public resultByID = [];
   public date = [];
+  public loginFlag = null;
   constructor(
     public sqlite: SQLite,
     public modalCtrl: ModalController,
@@ -39,7 +40,7 @@ export class SqlProvider {
   allowToCreateTable() {
     const modal = this.modalCtrl.create(FirstLoginPage);
     modal.onDidDismiss(() => {
-      this.createTable()
+      this.createTables()
     });
     modal.present();
 
@@ -51,17 +52,19 @@ export class SqlProvider {
       location: 'default'
     }).then((database: SQLiteObject) => {
       this.db = database;
-      this.checkFirstTime();
+      // this.checkFirstTime();
     });
   }
 
-  dropTable() {
-    this.db.executeSql(`
-  DROP TABLE Transactions;
-  `, [])
-      .then(() => console.log('DROP FINISHED'))
-      .catch(e => console.log(e));
-    return 'Dropped Table'
+  dropTables() {
+    let tablesName = ["Users", "Transactions", "Wallet", "Session", "Goal"]
+    for (let i = 0; i < tablesName.length; i++) {
+      this.db.executeSql(`
+      DROP TABLE `+ tablesName[i] + `;
+      `, [])
+        .then(() => console.log(tablesName[i] + ' is dropped!'))
+        .catch(e => console.log(e));
+    }
   }
 
   deleteRowById(tID: number) {
@@ -157,63 +160,164 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
-  createTable() {
-    console.log("H!!!!")
-    this.db.executeSql(`
-    CREATE TABLE Transactions(
-    tID INTEGER PRIMARY KEY AUTOINCREMENT,
-    date DATE,
-    type VARCHAR(32),
-    tag VARCHAR(32),
-    amount INTEGER,
-    memo VARCHAR(100)
-    );
-  `, [])
-      .then(() => console.log('TABLE CREATED'))
-      .catch(e => console.log(e));
-    return 'Created Table'
+  // createTable() {
+  //   console.log("Create dummy table")
+  //   this.db.executeSql(`
+  //   CREATE TABLE Transactions(
+  //   tID INTEGER PRIMARY KEY AUTOINCREMENT,
+  //   date DATE,
+  //   type VARCHAR(32),
+  //   tag VARCHAR(32),
+  //   amount INTEGER,
+  //   memo VARCHAR(100)
+  //   );
+  // `, [])
+  //     .then(() => console.log('TABLE CREATED'))
+  //     .catch(e => console.log(e));
+  //   return 'Created Table'
+  // }
+
+  async createTables() {
+    await this.createUserTables();
+    await this.createWalletTables();
+    await this.createTransactionsTables();
+    await this.createGoalTables();
+    await this.createSessionTables();
+    console.log("###Created Tables###")
   }
-  createTables() {
-    this.db.executeSql(`
-    create table User(
-    ID VARCHAR(32), 
+
+  createUserTables() {
+    return this.db.executeSql(`
+    create table Users(
+    ID VARCHAR(32) PRIMARY KEY, 
     PW VARCHAR(32),
     name VARCHAR(32),
-    picUrl VARCHAR,
-    PRIMARY KEY (ID)
-    );
+    picUrl VARCHAR
+    ); 
+    `, [])
+      .then(() => console.log('Created Users Table'))
+      .catch(e => console.log(e));
+  }
+  createWalletTables() {
+    return this.db.executeSql(`
     create table Wallet(
-      wID INTEGER PRIMARY KEY AUTOINCREMENT,
-      name VARCHAR(32),
-      UID VARCHAR(32),
-      balance INTEGER(32),
-      PRIMARY KEY (WltID),
-      FOREIGN KEY (UID) REFERENCES User(ID)
-    );
-    create table Goal(
-      gID INTEGER PRIMARY KEY AUTOINCREMENT,
-      name VARCHAR(32),
-      target INTEGER(32),
-      amount INTEGER(32),
-      UID VARCHAR(32),
-      deadline DATE,
-      PRIMARY KEY (ID),
-      FOREIGN KEY (UID) REFERENCES User(ID)
-    );
-    create table Transactions(
-      tID INTEGER PRIMARY KEY AUTOINCREMENT,
-      wID VARCHAR(32),
-      type VARCHAR(32),
-      memo VARCHAR(250),
-      tag VARCHAR(32),
-      gID VARCHAR(3),
-      date DATE,
-      FOREIGN KEY (wID) REFERENCES Wallet(WltID)
+    wID INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(32),
+    UID VARCHAR(32),
+    balance INTEGER(32),
+    FOREIGN KEY (UID) REFERENCES Users(ID)
     );
   `, [])
-      .then(() => console.log('Executed SQL'))
+      .then(() => console.log('Created Wallet Table'))
       .catch(e => console.log(e));
-    return 'Created Table'
+  }
+  createGoalTables() {
+    return this.db.executeSql(`
+    create table Goal(
+    gID INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(32),      
+    target INTEGER(32),
+    amount INTEGER(32),
+    UID VARCHAR(32),
+    deadline DATE,
+    FOREIGN KEY (UID) REFERENCES Users(ID)
+    );
+  `, [])
+      .then(() => console.log('Created Goal Table'))
+      .catch(e => console.log(e));
+  }
+
+  createTransactionsTables() {
+    return this.db.executeSql(`
+    create table Transactions(
+    tID INTEGER PRIMARY KEY AUTOINCREMENT,
+    wID VARCHAR(32),
+    type VARCHAR(32),
+    memo VARCHAR(100),
+    amount INTEGER,
+    tag VARCHAR(32),
+    gID VARCHAR(3),
+    date DATE,
+    FOREIGN KEY (wID) REFERENCES Wallet(WltID)
+    );
+  `, [])
+      .then(() => console.log('Created Transactions Table'))
+      .catch(e => console.log(e));
+  }
+  createSessionTables() {
+    return this.db.executeSql(`
+    create table Session(
+      ID VARCHAR(32) PRIMARY KEY
+    );
+  `, [])
+      .then(() => console.log('Created Session Table'))
+      .catch(e => console.log(e));
+  }
+
+  // createTables() {
+  //   this.db.executeSql(`
+  //   create table User(
+  //   ID VARCHAR(32) PRIMARY KEY, 
+  //   PW VARCHAR(32),
+  //   name VARCHAR(32),
+  //   picUrl VARCHAR,
+  //   );
+  //   create table Wallet(
+  //     wID INTEGER PRIMARY KEY AUTOINCREMENT,
+  //     name VARCHAR(32),
+  //     UID VARCHAR(32),
+  //     balance INTEGER(32),
+  //     FOREIGN KEY (UID) REFERENCES User(ID)
+  //   );
+  //   create table Goal(
+  //     gID INTEGER PRIMARY KEY AUTOINCREMENT,
+  //     name VARCHAR(32),
+  //     target INTEGER(32),
+  //     amount INTEGER(32),
+  //     UID VARCHAR(32),
+  //     deadline DATE,
+  //     FOREIGN KEY (UID) REFERENCES User(ID)
+  //   );
+  //   create table Transactions(
+  //     tID INTEGER PRIMARY KEY AUTOINCREMENT,
+  //     wID VARCHAR(32),
+  //     type VARCHAR(32),
+  //     memo VARCHAR(100),
+  //     amount INTEGER,
+  //     tag VARCHAR(32),
+  //     gID VARCHAR(3),
+  //     date DATE,
+  //     FOREIGN KEY (wID) REFERENCES Wallet(WltID)
+  //   );
+  //   create table Session(
+  //     ID VARCHAR(32) PRIMARY KEY
+  //   );
+  // `, [])
+  //     .then(() => console.log('Executed SQL'))
+  //     .catch(e => console.log(e));
+  //   return 'Created Table'
+  // }
+
+  async checkSession() {
+    await this.selectSessionTable();
+    console.log("checkSession, loginFalg is ", this.loginFlag);
+    return this.loginFlag
+  }
+
+  async selectSessionTable() {
+    console.log("selectSessionTable")
+    return this.db.executeSql(`
+    SELECT ID FROM Session ;
+    `, [])
+      .then((data) => {
+        console.log("data.rows is ", data.rows.length);
+        if (data.rows.length == 0) {
+          this.loginFlag = false;
+        } else {
+          this.loginFlag = true;
+        }
+      })
+      .catch(e => console.log(e));
   }
 
   insertTable(transaction: any) {
@@ -240,11 +344,11 @@ export class SqlProvider {
     let amount = transaction.amount;
     let memo = transaction.memo;
     let date = transaction.date;
-    console.log("new data (sql) are ",type, tag, amount, memo);
+    console.log("new data (sql) are ", type, tag, amount, memo);
     this.db.executeSql(`
     UPDATE Transactions
-    SET date = "`+date+`", type = "`+type+`", tag = "`+tag+`", amount = `+amount+`, memo = "`+memo+`"
-    WHERE tID = `+tID+`;
+    SET date = "`+ date + `", type = "` + type + `", tag = "` + tag + `", amount = ` + amount + `, memo = "` + memo + `"
+    WHERE tID = `+ tID + `;
     `, [])
       .then(() => console.log('Transaction updated!'))
       .catch(e => console.log(e));

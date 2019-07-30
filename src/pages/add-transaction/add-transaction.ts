@@ -62,9 +62,9 @@ export class AddTransactionPage {
       this.viewCtrl.dismiss(insertFlage);
   }
   onDeleteTable(){
-    this.sql.dropTable();
+    this.sql.dropTables();
   }
   onAddTable(){
-    this.sql.createTable();
+    this.sql.createTables();
   }
 }

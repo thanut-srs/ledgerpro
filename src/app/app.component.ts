@@ -1,3 +1,7 @@
+import { WelcomePage } from './../pages/welcome/welcome';
+import { SQLite } from '@ionic-native/sqlite';
+import { LoginPage } from './../pages/login/login';
+import { SqlProvider } from './../providers/sql/sql';
 import { ProfilePage } from './../pages/profile/profile';
 import { WalletPage } from './../pages/wallet/wallet';
 import { Component, ViewChild } from '@angular/core';
@@ -14,19 +18,23 @@ import { HomePage } from '../pages/home/home';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = HomePage;
+  rootPage: any;
 
-  pages: Array<{title: string, component: any}>;
+  pages: Array<{ title: string, component: any }>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+  constructor(public platform: Platform,
+    public statusBar: StatusBar,
+    public splashScreen: SplashScreen,
+    public sql: SqlProvider,
+    public sqlite: SQLite
+  ) {
     this.initializeApp();
-
+    this.rootPage = WelcomePage;
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Home', component: HomePage },
       { title: 'Wallet', component: WalletPage },
       { title: 'Profile', component: ProfilePage }
-      
     ];
 
   }

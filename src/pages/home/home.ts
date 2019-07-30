@@ -25,7 +25,6 @@ export class HomePage {
 
   }
   async ngOnInit() {
-    await this.sql.openDB();
     this.updateTransaction();
     console.log(this.date);
   }

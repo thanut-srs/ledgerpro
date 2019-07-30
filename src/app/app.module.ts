@@ -1,3 +1,5 @@
+import { WelcomePage } from './../pages/welcome/welcome';
+import { LoginPage } from './../pages/login/login';
 import { TransactionDetailPage } from './../pages/transaction-detail/transaction-detail';
 import { FirstLoginPage } from './../pages/first-login/first-login';
 import { SQLite } from '@ionic-native/sqlite';
@@ -18,6 +20,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { SqlProvider } from '../providers/sql/sql';
 import { DateProvider } from '../providers/date/date';
 import { EditTransactionPage } from '../pages/edit-transaction/edit-transaction';
+import { LoginProvider } from '../providers/login/login';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,9 @@ import { EditTransactionPage } from '../pages/edit-transaction/edit-transaction'
     GoalDetailPage,
     FirstLoginPage,
     TransactionDetailPage,
-    EditTransactionPage
+    EditTransactionPage,
+    LoginPage,
+    WelcomePage,
   ],
   imports: [
     BrowserModule,
@@ -46,7 +51,9 @@ import { EditTransactionPage } from '../pages/edit-transaction/edit-transaction'
     GoalDetailPage,
     FirstLoginPage,
     TransactionDetailPage,
-    EditTransactionPage
+    EditTransactionPage,
+    LoginPage,
+    WelcomePage,
   ],
   providers: [
     StatusBar,
@@ -54,6 +61,8 @@ import { EditTransactionPage } from '../pages/edit-transaction/edit-transaction'
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     SqlProvider,
     SQLite,
+    LoginProvider,
+    LoginProvider,
   
   
   ]

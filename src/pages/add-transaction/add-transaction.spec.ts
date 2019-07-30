@@ -1,10 +1,10 @@
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { SqlProvider } from '../../providers/sql/sql';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { AddTransactionPage } from './add-transaction';
-import { IonicModule, ViewController, NavController, NavParams } from 'ionic-angular';
+import { IonicModule, ViewController } from 'ionic-angular';
 import { SqlProviderMock } from '../../mocks/sqlprovider.mocks'
 //let component = undefined;
 
@@ -13,7 +13,7 @@ describe('Add Trasaction page', () => {
   let fixture: ComponentFixture<AddTransactionPage>;
   let de: DebugElement;
 
-  let viewCtrlSpy = jasmine.createSpyObj('ViewController', 
+  let viewCtrlSpy = jasmine.createSpyObj('ViewController',
                           ['data', 'readReady', 'writeReady', 'dismiss', '_setHeader', '_setNavbar', '_setIONContent', '_setIONContentRef'])
   viewCtrlSpy['readReady'] = {
     subscribe(){}
@@ -26,8 +26,9 @@ describe('Add Trasaction page', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AddTransactionPage],
-      imports: [IonicModule.forRoot(AddTransactionPage)],
-      providers: [{ provide : ViewController, useValue: viewCtrlSpy }, 
+      imports: [IonicModule.forRoot(AddTransactionPage),
+      ReactiveFormsModule],
+      providers: [{ provide : ViewController, useValue: viewCtrlSpy },
         { provide: SqlProvider, useValue: SqlProviderMock },
         FormBuilder],
 
@@ -48,12 +49,36 @@ describe('Add Trasaction page', () => {
 
   it('form should invalid when there no value in formfield', () => {
     expect(component.transaction.valid).toBeFalsy()
+    let errors = component.transaction.controls['amount'].errors
+    expect(errors['required']).toBeTruthy()
   })
 
-  it('button should invalid when there no value in formfield', () => {
-    let btnsubmit = fixture.debugElement.nativeElement.querySelector('#submitbtn').disabled;
-    expect(btnsubmit).toBeTruthy()
-  })
+  // it('button should invalid when there no value in formfield', () => {
+  //   let btnsubmit = fixture.debugElement.nativeElement.querySelector('#submitbtn').disabled;
+  //   expect(btnsubmit).toBeTruthy()
+  // })
+
+  // it('button should valid when there value in formfield', () => {
+    // let datepick = fixture.debugElement.query(By.css('#datepick'));
+    // let typeselect = fixture.debugElement.query(By.css('#typeselect'));
+    // let tagselect = fixture.debugElement.query(By.css('#tagselect'));
+    // let goalselect = fixture.debugElement.query(By.css('#goalselect'));
+    // let amountinput = fixture.debugElement.query(By.css('#amountinput'));
+    // datepick.nativeElement.value = '2019-07-22'
+    // typeselect.nativeElement.value = 'Income'
+    // tagselect.nativeElement.value = 'Food'
+    // amountinput.nativeElement.value = 30
+    // datepick.nativeElement.dispatchEvent(new Event('input'));
+    // typeselect.nativeElement.dispatchEvent(new Event('input'));
+    // tagselect.nativeElement.dispatchEvent(new Event('input'));
+    // amountinput.nativeElement.dispatchEvent(new Event('input'));
+    // setFormTruthValue();
+    // let btnsubmitDisable = fixture.debugElement.nativeElement.querySelector('#submitbtn').disabled;
+    // fixture.detectChanges()
+    // console.log('amtinput::',amountinput.nativeElement)
+    // expect(amountinput.nativeElement).toEqual( component.transaction.controls['amount'].value)
+    //expect(btnsubmitDisable).toBeFalsy()
+  // })
 
   let setFormTruthValue = function () {
     component.transaction.controls['type'].setValue('Income')
@@ -64,13 +89,13 @@ describe('Add Trasaction page', () => {
   }
 
   it('form should valid when there is value in formfield', () => {
-    setFormTruthValue()    
+    setFormTruthValue()
     expect(component.transaction.valid).toBeTruthy()
   })
 
   // it('button should valid when there is value in formfield', () => {
   //   let btnsubmit = fixture.debugElement.nativeElement.querySelector('#submitbtn').disabled;
-  //   setFormTruthValue()    
+  //   setFormTruthValue()
   //   fixture.detectChanges()
   //   expect(btnsubmit).toBeFalsy()
   // })
@@ -78,7 +103,7 @@ describe('Add Trasaction page', () => {
   it('submit form should call onInsertTable', () => {
     spyOn(component,"onInsertTable")
     let formsubmit = fixture.debugElement.query(By.css('#transactionForm'));
-    formsubmit.triggerEventHandler('ngSubmit', null); 
+    formsubmit.triggerEventHandler('ngSubmit', null);
     expect(component.onInsertTable).toHaveBeenCalledTimes(1);
   })
 

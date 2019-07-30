@@ -89,9 +89,7 @@ export class SqlProviderMock {
   async selectSessionTable() {
     return 'select session table for login' 
   }
-  insertTable(data: any, table: string) {
-    return 'insert table'
-  }
+
   updateTableByID(transaction: any, tID: number) {
     return 'table updated'
   }

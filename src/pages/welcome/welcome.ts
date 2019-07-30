@@ -1,7 +1,9 @@
 import { SignupPage } from './../signup/signup';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, ToastController, ViewController } from 'ionic-angular';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { LoginProvider } from '../../providers/login/login';
 
 /**
  * Generated class for the WelcomePage page.
@@ -17,13 +19,21 @@ import { IonicPage, NavController, NavParams, ModalController, ToastController }
 })
 export class WelcomePage {
   public sessionFlag = false;
+  public userLogin: FormGroup;
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
     public sql: SqlProvider,
     public modalCtrl: ModalController,
     public toastCtrl: ToastController,
+    public viewCtrl: ViewController,
+    private formBuilder: FormBuilder,
+    private login: LoginProvider,
     ) {
+      this.userLogin = this.formBuilder.group({
+        username: ['', Validators.required],
+        password: ['', Validators.required],
+      });
   }
 
   ionViewDidLoad() {
@@ -57,4 +67,14 @@ export class WelcomePage {
     });
     toast.present();
   }
+
+  checkLogin(){
+    console.log("onInsertTable #1")
+    let insertFlage = true;
+    let username = this.userLogin.controls['username'].value;
+    let password = this.userLogin.controls['password'].value;
+    console.log("Username is ",username);
+    console.log("Password is ",password);
+    this.login.checkLogin(username,password);
+  }  
 }

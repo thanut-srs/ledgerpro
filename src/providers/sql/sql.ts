@@ -17,6 +17,7 @@ export class SqlProvider {
   public resultByID = [];
   public date = [];
   public loginFlag = null;
+  public userPw = "";
   constructor(
     public sqlite: SQLite,
     public modalCtrl: ModalController,
@@ -87,6 +88,25 @@ export class SqlProvider {
     await this.selectTransactionTableById(tID);
     console.log('selectTransactionTableById(sql) result is ', this.resultByID)
     return this.resultByID
+  }
+
+  async selectUserTablebyID(username: string) {
+    console.log("Username  : ", username);
+    await this.selectUserTableByUsername(username);
+    console.log('selectUserTablebyID(sql) result is ', this.userPw)
+    return this.userPw
+  }
+
+  async selectUserTableByUsername(username: string){
+    return this.db.executeSql(`
+    SELECT * FROM Users WHERE ID="`+username+`" 
+    `, [])
+      .then((data) => {
+        for (let i = 0; i < data.rows.length; i++) {
+          this.userPw = data.rows.item(i).PW;
+        }
+      })
+      .catch(e => console.log(e));
   }
 
   async selectDistinctdate() {

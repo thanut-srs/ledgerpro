@@ -16,11 +16,23 @@
     <button ion-button>Login</button><br>
     <a>Login with other account</a>
 </div>
-<div *ngIf="!(sessionFlag)" >
+<div *ngIf="!(sessionFlag)" text-center>
   <h1>Login</h1>
-  <h2>Username: _____________</h2>
-  <h2>Password: _____________</h2>
-  <button ion-button (click)="addtable()" >add</button>
-  <button ion-button (click)="droptable()" >drop</button>
+  <form [formGroup]="userLogin" (ngSubmit)="checkLogin()">
+    <ion-item>
+      <ion-label>Username</ion-label>
+      <ion-input type="text" formControlName="username" placeholder=""></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Password</ion-label>
+      <ion-input type="password" formControlName="password" placeholder=""></ion-input>
+    </ion-item>
+    <div class="submitBtn">
+      <button ion-button type="submit" [disabled]="!userLogin.valid">Submit</button>
+    </div>
+  </form>
+  <a (click)="onCreateAccount()" >Don't have account, Signup!</a><br><br>
+  <!-- <button ion-button (click)="addtable()" >add</button>
+  <button ion-button (click)="droptable()" >drop</button> -->
 </div>
 </ion-content>

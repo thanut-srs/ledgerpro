@@ -58,7 +58,7 @@ export class AddTransactionPage {
        date: this.transaction.controls['date'].value,
       };
       console.log("Date is ",this.transaction.controls['date'].value);
-      this.sql.insertTable(transactionObj);
+      this.sql.insertTable(transactionObj,'Transactions');
       this.viewCtrl.dismiss(insertFlage);
   }
   onDeleteTable(){

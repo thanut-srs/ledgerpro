@@ -1,5 +1,4 @@
 import { SqlProvider } from './../sql/sql';
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 /*
@@ -20,8 +19,11 @@ export class LoginProvider {
  async checkLogin(username: string, password: string){
     if(await this.selectUsersTable(username, password)){
       console.log('correct username and password');
+      await this.createSession(username);
+      return true
     } else {
       console.log('incorrect username and password');
+      return false
     }
   }
 
@@ -34,4 +36,13 @@ export class LoginProvider {
       return true
     }
   }
+
+  async createSession(username: string){
+     this.sql.insertTable(username, 'Session')
+  }
+
+  logout(){
+    this.sql.deleteSession();
+  }
+
 }

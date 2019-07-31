@@ -7,9 +7,6 @@ export class SqlProviderMock {
   ) {
   }
 
-  checkFirstTime() {
-    return true
-  }
 
   allowToCreateTable() {
     return { modal : 'yes'}

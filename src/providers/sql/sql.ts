@@ -18,6 +18,8 @@ export class SqlProvider {
   public date = [];
   public loginFlag = null;
   public userPw = "";
+  public userNickName = "";
+  public uID = "";
   constructor(
     public sqlite: SQLite,
     public modalCtrl: ModalController,
@@ -25,20 +27,20 @@ export class SqlProvider {
     console.log('Hello SqlProvider Provider');
   }
 
-  checkFirstTime() {
+  checkWallet() {
     this.db.executeSql(`
-    SELECT * FROM Transactions 
+    SELECT * FROM Wallet 
     `, [])
       .then(() => {
-        console.log("Table existed !!!");
+        console.log("Wallet existed!!");
       }
       )
       .catch(() =>
-        this.allowToCreateTable()
+        this.createWallet()
       );
   }
 
-  allowToCreateTable() {
+  createWallet() {
     const modal = this.modalCtrl.create(FirstLoginPage);
     modal.onDidDismiss(() => {
       this.createTables()
@@ -52,7 +54,6 @@ export class SqlProvider {
       location: 'default'
     }).then((database: SQLiteObject) => {
       this.db = database;
-      // this.checkFirstTime();
     });
   }
 
@@ -72,6 +73,15 @@ export class SqlProvider {
   DELETE FROM Transactions WHERE tID = `+ tID + `;
   `, [])
       .then(() => console.log('Delete transaction (tID: ' + tID + ')'))
+      .catch(e => console.log(e));
+  }
+
+  deleteSession() {
+    return this.db.executeSql(`
+    DELETE FROM Session;
+    VACUUM;
+  `, [])
+      .then(() => console.log('Delete session!'))
       .catch(e => console.log(e));
   }
 
@@ -97,9 +107,9 @@ export class SqlProvider {
     return this.userPw
   }
 
-  async selectUserTableByUsername(username: string){
+  async selectUserTableByUsername(username: string) {
     return this.db.executeSql(`
-    SELECT * FROM Users WHERE ID="`+username+`" 
+    SELECT * FROM Users WHERE uID="`+ username + `" 
     `, [])
       .then((data) => {
         for (let i = 0; i < data.rows.length; i++) {
@@ -208,7 +218,7 @@ export class SqlProvider {
   createUserTables() {
     return this.db.executeSql(`
     create table Users(
-    ID VARCHAR(32) PRIMARY KEY, 
+    uID VARCHAR(32) PRIMARY KEY, 
     PW VARCHAR(32),
     name VARCHAR(32),
     picUrl VARCHAR
@@ -222,9 +232,9 @@ export class SqlProvider {
     create table Wallet(
     wID INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(32),
-    UID INTEGER,
+    uID INTEGER,
     balance INTEGER,
-    FOREIGN KEY (UID) REFERENCES Users(ID)
+    FOREIGN KEY (uID) REFERENCES Users(uID)
     );
   `, [])
       .then(() => console.log('Created Wallet Table'))
@@ -237,9 +247,9 @@ export class SqlProvider {
     name VARCHAR(32),      
     target INTEGER(32),
     amount INTEGER(32),
-    UID INTEGER,
+    uID INTEGER,
     deadline DATE,
-    FOREIGN KEY (UID) REFERENCES Users(ID)
+    FOREIGN KEY (uID) REFERENCES Users(uID)
     );
   `, [])
       .then(() => console.log('Created Goal Table'))
@@ -257,7 +267,7 @@ export class SqlProvider {
     tag VARCHAR(32),
     gID INTEGER,
     date DATE,
-    FOREIGN KEY (wID) REFERENCES Wallet(WltID)
+    FOREIGN KEY (wID) REFERENCES Wallet(wID)
     );
   `, [])
       .then(() => console.log('Created Transactions Table'))
@@ -266,56 +276,48 @@ export class SqlProvider {
   createSessionTables() {
     return this.db.executeSql(`
     create table Session(
-      ID VARCHAR(32) PRIMARY KEY
+      sID VARCHAR(32) PRIMARY KEY
     );
   `, [])
       .then(() => console.log('Created Session Table'))
       .catch(e => console.log(e));
   }
 
-  // createTables() {
-  //   this.db.executeSql(`
-    // create table User(
-    // ID VARCHAR(32) PRIMARY KEY, 
-    // PW VARCHAR(32),
-    // name VARCHAR(32),
-    // picUrl VARCHAR
-    // );
-    // create table Wallet(
-    //   wID INTEGER PRIMARY KEY AUTOINCREMENT,
-    //   name VARCHAR(32),
-    //   UID VARCHAR(32),
-    //   balance INTEGER(32),
-    //   FOREIGN KEY (UID) REFERENCES User(ID)
-    // );
-    // create table Goal(
-    //   gID INTEGER PRIMARY KEY AUTOINCREMENT,
-    //   name VARCHAR(32),
-    //   target INTEGER(32),
-    //   amount INTEGER(32),
-    //   UID VARCHAR(32),
-    //   deadline DATE,
-    //   FOREIGN KEY (UID) REFERENCES User(ID)
-    // );
-    // create table Transactions(
-    //   tID INTEGER PRIMARY KEY AUTOINCREMENT,
-    //   wID VARCHAR(32),
-    //   type VARCHAR(32),
-    //   memo VARCHAR(100),
-    //   amount INTEGER,
-    //   tag VARCHAR(32),
-    //   gID VARCHAR(3),
-    //   date DATE,
-    //   FOREIGN KEY (wID) REFERENCES Wallet(WltID)
-    // );
-    // create table Session(
-    //   ID VARCHAR(32) PRIMARY KEY
-    // );
-  // `, [])
-  //     .then(() => console.log('Executed SQL'))
-  //     .catch(e => console.log(e));
-  //   return 'Created Table'
-  // }
+  async getUIDfromSession(){
+    console.log("getUIDfromSession")
+    return this.db.executeSql(`
+    SELECT * FROM Session ;
+    `, [])
+    .then((data) => {
+      for (let i = 0; i < data.rows.length; i++) {
+        this.uID = data.rows.item(i).sID;
+        console.log("data.row.item(i).ID = ",data.rows.item(i).sID)
+      }
+      console.log("User's uid is ",this.uID);
+      console.log("data.rows.length = ",data.rows.length);
+    })
+    .catch(e => console.log(e));
+  }
+
+  async getNameFromUser(){
+    await this.getUIDfromSession();
+    console.log("getNickName")
+    return this.db.executeSql(`
+    SELECT name FROM Users WHERE ID = "`+this.uID+`" ;
+    `, [])
+    .then((data) => {
+      for (let i = 0; i < data.rows.length; i++) {
+        this.userNickName = data.rows.item(i).name;
+      }
+      console.log("User's nick name is ",this.userNickName);
+    })
+    .catch(e => console.log(e));
+  }
+
+  async getNickName(){
+    await this.getNameFromUser();
+    return this.userNickName
+  }
 
   async checkSession() {
     await this.selectSessionTable();
@@ -326,7 +328,7 @@ export class SqlProvider {
   async selectSessionTable() {
     console.log("selectSessionTable")
     return this.db.executeSql(`
-    SELECT ID FROM Session ;
+    SELECT sID FROM Session ;
     `, [])
       .then((data) => {
         console.log("data.rows is ", data.rows.length);
@@ -339,65 +341,65 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
-  insertTable(data: any,table: string) {
+  insertTable(data: any, table: string) {
     console.log("insertTable (sql) #2")
-    switch(table){
-     case "Transactions":{
-      let { type,tag,amount,memo,date} = data;
-      this.db.executeSql(`
+    switch (table) {
+      case "Transactions": {
+        let { type, tag, amount, memo, date } = data;
+        this.db.executeSql(`
       INSERT INTO Transactions(date,type,tag,amount,memo)
       VALUES ("`+ date + `","` + type + `","` + tag + `",` + amount + `,"` + memo + `")
       `, [])
-        .then(() => console.log('Inserted Transaction table'))
-        .catch(e => console.log(e));
+          .then(() => console.log('Inserted Transaction table'))
+          .catch(e => console.log(e));
         break;
-     }
-     case "Users":{
-      let { ID,PW,name,picUrl} = data;
-      this.db.executeSql(`
-      INSERT INTO Users(ID,PW,name,picUrl)
+      }
+      case "Users": {
+        let { ID, PW, name, picUrl } = data;
+        this.db.executeSql(`
+      INSERT INTO Users(uID,PW,name,picUrl)
       VALUES ("`+ ID + `","` + PW + `","` + name + `","` + picUrl + `")
       `, [])
-        .then(() => console.log('Inserted Users table'))
-        .catch(e => console.log(e));
+          .then(() => console.log('Inserted Users table'))
+          .catch(e => console.log(e));
         break;
-     }
-     case "Wallet":{
-      let { wID, name, UID, balance} = data;
-      this.db.executeSql(`
-      INSERT INTO Wallet(wID,name,UID,balance)
+      }
+      case "Wallet": {
+        let { wID, name, UID, balance } = data;
+        this.db.executeSql(`
+      INSERT INTO Wallet(wID,name,uID,balance)
       VALUES (`+ wID + `,"` + name + `",` + UID + `,` + balance + `)
       `, [])
-        .then(() => console.log('Inserted Wallet table'))
-        .catch(e => console.log(e));
+          .then(() => console.log('Inserted Wallet table'))
+          .catch(e => console.log(e));
         break;
-     }
-     case "Goal":{
-      let { gID, name, target, amount, UID,deadline} = data;
-      this.db.executeSql(`
+      }
+      case "Goal": {
+        let { gID, name, target, amount, UID, deadline } = data;
+        this.db.executeSql(`
       INSERT INTO Goal(gID,name,target,amount,UID,deadline)
-      VALUES (`+ gID + `,"` + name + `",` + target + `,` + amount + `,`+ UID +`,"`+ deadline +`")
+      VALUES (`+ gID + `,"` + name + `",` + target + `,` + amount + `,` + UID + `,"` + deadline + `")
       `, [])
-        .then(() => console.log('Inserted Goal table'))
-        .catch(e => console.log(e));
+          .then(() => console.log('Inserted Goal table'))
+          .catch(e => console.log(e));
         break;
-     }
-     case "Session":{
-      let { ID } = data;
-      this.db.executeSql(`
-      INSERT INTO Session(ID)
-      VALUES (`+ ID +`)
+      }
+      case "Session": {
+        let { ID } = data;
+        this.db.executeSql(`
+      INSERT INTO Session(sID)
+      VALUES ("`+ ID + `")
       `, [])
-        .then(() => console.log('Inserted Session table'))
-        .catch(e => console.log(e));
+          .then(() => console.log('Inserted Session table and ID : ', ID))
+          .catch(e => console.log(e));
         break;
-     }
+      }
     }
   }
 
   updateTableByID(transaction: any, tID: number) {
     console.log("updating table")
-    let { date,type,tag,amount,memo} = transaction
+    let { date, type, tag, amount, memo } = transaction
     console.log("new data (sql) are ", type, tag, amount, memo);
     this.db.executeSql(`
     UPDATE Transactions

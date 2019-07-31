@@ -1,7 +1,8 @@
+import { HomePage } from './../home/home';
 import { SignupPage } from './../signup/signup';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, ToastController, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, ToastController, ViewController, AlertController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoginProvider } from '../../providers/login/login';
 
@@ -20,6 +21,7 @@ import { LoginProvider } from '../../providers/login/login';
 export class WelcomePage {
   public sessionFlag = false;
   public userLogin: FormGroup;
+  public userNickName = "";
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -29,6 +31,7 @@ export class WelcomePage {
     public viewCtrl: ViewController,
     private formBuilder: FormBuilder,
     private login: LoginProvider,
+    private alertCtrl: AlertController
     ) {
       this.userLogin = this.formBuilder.group({
         username: ['', Validators.required],
@@ -42,6 +45,9 @@ export class WelcomePage {
   async ngOnInit() {
     await this.sql.openDB();
     this.sessionFlag = await this.sql.checkSession()
+    if(this.sessionFlag){
+      this.getName();
+    }
   }
   addtable(){
     this.sql.createTables();
@@ -55,6 +61,7 @@ export class WelcomePage {
       console.log("Modal is dismissed! #3");
       if(data){
         this.presentCreateAccToast();
+        this.userLogin.reset();
       }
     });
     modal.present();
@@ -68,13 +75,58 @@ export class WelcomePage {
     toast.present();
   }
 
-  checkLogin(){
+  async checkLogin(){
     console.log("onInsertTable #1")
-    let insertFlage = true;
     let username = this.userLogin.controls['username'].value;
     let password = this.userLogin.controls['password'].value;
     console.log("Username is ",username);
     console.log("Password is ",password);
-    this.login.checkLogin(username,password);
+    if(await this.login.checkLogin(username,password)){
+      this.navCtrl.setRoot(HomePage);
+    } else {
+      this.userLogin.reset();
+      this.presentIncorrectPassword();
+    }
+  }
+  
+ presentIncorrectPassword() {
+    let toast = this.toastCtrl.create({
+      message: 'Incorrect Password!',
+      duration: 3000,
+      position: 'bottom'
+    });
+    toast.present();
+  }
+
+  async getName(){
+    this.userNickName = await this.sql.getNickName();
   }  
+
+  logInWithOtherAcc(){
+    let delFalg = true;
+    let alert = this.alertCtrl.create({
+      title: 'Logout?',
+      message: 'You need to logout to login with other account, Are you sure?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.login.logout();
+            this.navCtrl.setRoot(WelcomePage);
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+  onGoHome(){
+    this.navCtrl.setRoot(HomePage)
+  }
 }

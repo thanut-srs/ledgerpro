@@ -1,3 +1,4 @@
+import { CreateWalletPage } from './../pages/create-wallet/create-wallet';
 import { SignupPage } from './../pages/signup/signup';
 import { WelcomePage } from './../pages/welcome/welcome';
 import { LoginPage } from './../pages/login/login';
@@ -37,6 +38,7 @@ import { LoginProvider } from '../providers/login/login';
     LoginPage,
     WelcomePage,
     SignupPage,
+    CreateWalletPage,
   ],
   imports: [
     BrowserModule,
@@ -57,6 +59,7 @@ import { LoginProvider } from '../providers/login/login';
     LoginPage,
     WelcomePage,
     SignupPage,
+    CreateWalletPage
   ],
   providers: [
     StatusBar,

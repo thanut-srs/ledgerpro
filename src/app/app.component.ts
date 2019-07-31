@@ -1,3 +1,4 @@
+import { LoginProvider } from './../providers/login/login';
 import { WelcomePage } from './../pages/welcome/welcome';
 import { SQLite } from '@ionic-native/sqlite';
 import { LoginPage } from './../pages/login/login';
@@ -26,7 +27,8 @@ export class MyApp {
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
     public sql: SqlProvider,
-    public sqlite: SQLite
+    public sqlite: SQLite,
+    public login: LoginProvider,
   ) {
     this.initializeApp();
     this.rootPage = WelcomePage;
@@ -52,5 +54,9 @@ export class MyApp {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     this.nav.setRoot(page.component);
+  }
+  logout(){
+    this.login.logout();
+    this.nav.setRoot(WelcomePage);
   }
 }

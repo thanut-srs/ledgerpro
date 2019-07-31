@@ -13,8 +13,8 @@
 <ion-content padding>
 <div *ngIf="(sessionFlag)" >
     <h1>Hi Jarvis.</h1>
-    <button ion-button>Login</button><br>
-    <a>Login with other account</a>
+    <button ion-button (click)="onGoHome()" >Login</button><br>
+    <a (click)="onLogout()" >Login with other account</a>
 </div>
 <div *ngIf="!(sessionFlag)" text-center>
   <h1>Login</h1>

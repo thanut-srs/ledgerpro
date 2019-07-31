@@ -82,6 +82,7 @@ export class WelcomePage {
     console.log("Username is ",username);
     console.log("Password is ",password);
     if(await this.login.checkLogin(username,password)){
+      this.sql.checkWallet();
       this.navCtrl.setRoot(HomePage);
     } else {
       this.userLogin.reset();
@@ -128,5 +129,9 @@ export class WelcomePage {
   }
   onGoHome(){
     this.navCtrl.setRoot(HomePage)
+  }
+  onLogout(){
+    this.login.logout();
+    this.onGoHome();
   }
 }

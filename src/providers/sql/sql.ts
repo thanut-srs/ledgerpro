@@ -1,3 +1,4 @@
+import { CreateWalletPage } from './../../pages/create-wallet/create-wallet';
 import { FirstLoginPage } from './../../pages/first-login/first-login';
 import { ModalController } from 'ionic-angular';
 
@@ -31,19 +32,18 @@ export class SqlProvider {
     this.db.executeSql(`
     SELECT * FROM Wallet 
     `, [])
-      .then(() => {
-        console.log("Wallet existed!!");
-      }
-      )
-      .catch(() =>
-        this.createWallet()
-      );
+      .then((data) => {
+        if (data.rows.length != 0) {
+          console.log("Wallet existed!!");
+        } else {
+          this.createWallet();
+        }
+      });
   }
 
   createWallet() {
-    const modal = this.modalCtrl.create(FirstLoginPage);
+    const modal = this.modalCtrl.create(CreateWalletPage);
     modal.onDidDismiss(() => {
-      this.createTables()
     });
     modal.present();
   }
@@ -283,38 +283,38 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
-  async getUIDfromSession(){
+  async getUIDfromSession() {
     console.log("getUIDfromSession")
     return this.db.executeSql(`
     SELECT * FROM Session ;
     `, [])
-    .then((data) => {
-      for (let i = 0; i < data.rows.length; i++) {
-        this.uID = data.rows.item(i).sID;
-        console.log("data.row.item(i).ID = ",data.rows.item(i).sID)
-      }
-      console.log("User's uid is ",this.uID);
-      console.log("data.rows.length = ",data.rows.length);
-    })
-    .catch(e => console.log(e));
+      .then((data) => {
+        for (let i = 0; i < data.rows.length; i++) {
+          this.uID = data.rows.item(i).sID;
+          console.log("data.row.item(i).ID = ", data.rows.item(i).sID)
+        }
+        console.log("User's uid is ", this.uID);
+        console.log("data.rows.length = ", data.rows.length);
+      })
+      .catch(e => console.log(e));
   }
 
-  async getNameFromUser(){
+  async getNameFromUser() {
     await this.getUIDfromSession();
     console.log("getNickName")
     return this.db.executeSql(`
-    SELECT name FROM Users WHERE ID = "`+this.uID+`" ;
+    SELECT name FROM Users WHERE ID = "`+ this.uID + `" ;
     `, [])
-    .then((data) => {
-      for (let i = 0; i < data.rows.length; i++) {
-        this.userNickName = data.rows.item(i).name;
-      }
-      console.log("User's nick name is ",this.userNickName);
-    })
-    .catch(e => console.log(e));
+      .then((data) => {
+        for (let i = 0; i < data.rows.length; i++) {
+          this.userNickName = data.rows.item(i).name;
+        }
+        console.log("User's nick name is ", this.userNickName);
+      })
+      .catch(e => console.log(e));
   }
 
-  async getNickName(){
+  async getNickName() {
     await this.getNameFromUser();
     return this.userNickName
   }

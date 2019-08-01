@@ -1,8 +1,7 @@
+import { HomePage } from './../../pages/home/home';
 import { CreateWalletPage } from './../../pages/create-wallet/create-wallet';
-import { FirstLoginPage } from './../../pages/first-login/first-login';
-import { ModalController } from 'ionic-angular';
-
-import { Injectable } from '@angular/core';
+import { ModalController, Nav } from 'ionic-angular';
+import { Injectable, ViewChild } from '@angular/core';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
 
 /*
@@ -13,6 +12,7 @@ import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
 */
 @Injectable()
 export class SqlProvider {
+  @ViewChild(Nav) nav: Nav;
   public db: SQLiteObject;
   public result = [];
   public resultByID = [];
@@ -28,24 +28,17 @@ export class SqlProvider {
     console.log('Hello SqlProvider Provider');
   }
 
-  checkWallet() {
-    this.db.executeSql(`
+  async checkWallet() {
+   return this.db.executeSql(`
     SELECT * FROM Wallet 
     `, [])
       .then((data) => {
         if (data.rows.length != 0) {
-          console.log("Wallet existed!!");
+          return true
         } else {
-          this.createWallet();
+          return false
         }
       });
-  }
-
-  createWallet() {
-    const modal = this.modalCtrl.create(CreateWalletPage);
-    modal.onDidDismiss(() => {
-    });
-    modal.present();
   }
 
   openDB() {

@@ -1,3 +1,4 @@
+import { CreateWalletPage } from './../create-wallet/create-wallet';
 import { HomePage } from './../home/home';
 import { SignupPage } from './../signup/signup';
 import { SqlProvider } from './../../providers/sql/sql';
@@ -82,8 +83,11 @@ export class WelcomePage {
     console.log("Username is ",username);
     console.log("Password is ",password);
     if(await this.login.checkLogin(username,password)){
-      this.sql.checkWallet();
-      this.navCtrl.setRoot(HomePage);
+      if(await this.sql.checkWallet()){
+        this.navCtrl.setRoot(HomePage);
+      } else {
+        this.navCtrl.push(CreateWalletPage);
+      }
     } else {
       this.userLogin.reset();
       this.presentIncorrectPassword();
@@ -104,7 +108,6 @@ export class WelcomePage {
   }  
 
   logInWithOtherAcc(){
-    let delFalg = true;
     let alert = this.alertCtrl.create({
       title: 'Logout?',
       message: 'You need to logout to login with other account, Are you sure?',

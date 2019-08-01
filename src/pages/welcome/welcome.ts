@@ -1,3 +1,4 @@
+import { CreateWalletPage } from './../create-wallet/create-wallet';
 import { HomePage } from './../home/home';
 import { SignupPage } from './../signup/signup';
 import { SqlProvider } from './../../providers/sql/sql';
@@ -23,7 +24,7 @@ export class WelcomePage {
   public userLogin: FormGroup;
   public userNickName = "";
   constructor(
-    public navCtrl: NavController, 
+    public navCtrl: NavController,
     public navParams: NavParams,
     public sql: SqlProvider,
     public modalCtrl: ModalController,
@@ -32,11 +33,11 @@ export class WelcomePage {
     private formBuilder: FormBuilder,
     private login: LoginProvider,
     private alertCtrl: AlertController
-    ) {
-      this.userLogin = this.formBuilder.group({
-        username: ['', Validators.required],
-        password: ['', Validators.required],
-      });
+  ) {
+    this.userLogin = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+    });
   }
 
   ionViewDidLoad() {
@@ -45,28 +46,28 @@ export class WelcomePage {
   async ngOnInit() {
     await this.sql.openDB();
     this.sessionFlag = await this.sql.checkSession()
-    if(this.sessionFlag){
+    if (this.sessionFlag) {
       this.getName();
     }
   }
-  addtable(){
+  addtable() {
     this.sql.createTables();
   }
-  droptable(){
+  droptable() {
     this.sql.dropTables();
   }
-  onCreateAccount(){
+  onCreateAccount() {
     const modal = this.modalCtrl.create(SignupPage);
     modal.onDidDismiss((data) => {
       console.log("Modal is dismissed! #3");
-      if(data){
+      if (data) {
         this.presentCreateAccToast();
         this.userLogin.reset();
       }
     });
     modal.present();
   }
-  presentCreateAccToast(){
+  presentCreateAccToast() {
     let toast = this.toastCtrl.create({
       message: 'Account created!',
       duration: 1500,
@@ -75,22 +76,27 @@ export class WelcomePage {
     toast.present();
   }
 
-  async checkLogin(){
+  async checkLogin() {
     console.log("onInsertTable #1")
     let username = this.userLogin.controls['username'].value;
     let password = this.userLogin.controls['password'].value;
-    console.log("Username is ",username);
-    console.log("Password is ",password);
-    if(await this.login.checkLogin(username,password)){
-      this.sql.checkWallet();
-      this.navCtrl.setRoot(HomePage);
+    console.log("Username is ", username);
+    console.log("Password is ", password);
+    if (await this.login.checkLogin(username, password)) {
+      if (await this.sql.checkWallet(username)) {
+        this.navCtrl.setRoot(HomePage);
+      } else {
+        let username = this.userLogin.controls['username'].value;
+        console.log('checkLogin username is ', username);
+        this.navCtrl.push(CreateWalletPage, { uID: username });
+      }
     } else {
       this.userLogin.reset();
       this.presentIncorrectPassword();
     }
   }
-  
- presentIncorrectPassword() {
+
+  presentIncorrectPassword() {
     let toast = this.toastCtrl.create({
       message: 'Incorrect Password!',
       duration: 3000,
@@ -99,12 +105,11 @@ export class WelcomePage {
     toast.present();
   }
 
-  async getName(){
+  async getName() {
     this.userNickName = await this.sql.getNickName();
-  }  
+  }
 
-  logInWithOtherAcc(){
-    let delFalg = true;
+  logInWithOtherAcc() {
     let alert = this.alertCtrl.create({
       title: 'Logout?',
       message: 'You need to logout to login with other account, Are you sure?',
@@ -127,11 +132,18 @@ export class WelcomePage {
     });
     alert.present();
   }
-  onGoHome(){
-    this.navCtrl.setRoot(HomePage)
+  async onGoHome() {
+    if (await this.sql.checkWallet(await this.sql.getCurrentUID())) {
+      this.navCtrl.setRoot(HomePage);
+    } else {
+      let username = await this.sql.getCurrentUID();
+      console.log('checkLogin username is (onGoHome) ', username);
+      this.navCtrl.push(CreateWalletPage, { uID: username });
+    }
   }
-  onLogout(){
+
+  onLogout() {
     this.login.logout();
-    this.onGoHome();
+    this.navCtrl.setRoot(WelcomePage);
   }
 }

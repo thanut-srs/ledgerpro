@@ -8,5 +8,14 @@
 </ion-header>
 
 <ion-content>
-  
+  <div *ngFor="let item of collection">
+    <ion-card *ngIf="item.uID == user"  tappable (click)="onDetail(item.wID)">
+      <ion-card-header>
+       Name : {{item.name}} 
+      </ion-card-header>
+      <ion-card-content>
+       Balance: {{item.balance}} Baht
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

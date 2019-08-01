@@ -16,6 +16,7 @@ export class HomePage {
   public collection = [];
   public date = [];
   public currentDate;
+  public currentUser = "";
   constructor(
     public navCtrl: NavController,
     public modalCtrl: ModalController,
@@ -27,7 +28,12 @@ export class HomePage {
   async ngOnInit() {
     this.updateTransaction();
     console.log(this.date);
+    this.getName();
   }
+
+  async getName(){
+    this.currentUser = await this.sql.getNickName();
+  }  
 
   onAddTransaction() {
     const modal = this.modalCtrl.create(AddTransactionPage);

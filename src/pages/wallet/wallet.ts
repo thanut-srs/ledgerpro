@@ -1,3 +1,4 @@
+import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
@@ -14,12 +15,34 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'wallet.html',
 })
 export class WalletPage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  public collection = [];
+  public user = "";
+  constructor(
+    private sql: SqlProvider,
+  ) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad WalletPage');
+  async ngOnInit() {
+    await this.updateWalletList();
+    await this.getCurrentUser();
+    console.log("Wallet collection is ",this.collection)
   }
 
+  async updateWalletList() {
+    let result = await this.sql.getWalletTable();
+    this.collection = [];
+    for (let i = 0; i < result.length; i++) {
+      this.collection.push(result[i]);
+    }
+    console.log('Update wallet list!');
+    console.log("THE RESULT IS ", result.length);
+  }
+
+  onDetail(wID: string){
+
+  }
+
+  async getCurrentUser(){
+    this.user = await this.sql.getCurrentUID();
+  }
 }

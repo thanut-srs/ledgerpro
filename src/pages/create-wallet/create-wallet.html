@@ -11,5 +11,17 @@
 </ion-header>
 
 <ion-content padding>
-
+  <form [formGroup]="wallet" (ngSubmit)="onCreateWallet()">
+  <ion-item>
+    <ion-label>Name</ion-label>
+    <ion-input  type="text" formControlName="name" placeholder="Wallet's name"></ion-input> 
+  </ion-item>
+  <ion-item>
+    <ion-label>Balance</ion-label>
+    <ion-input  type="number" formControlName="balance" placeholder="Wallet's balance"></ion-input>
+  </ion-item>
+  <div class="submitBtn" >
+    <button  right ion-button type="submit" [disabled]="!wallet.valid">Save</button> 
+  </div>
+</form>
 </ion-content>

@@ -28,9 +28,10 @@ export class SqlProvider {
     console.log('Hello SqlProvider Provider');
   }
 
-  async checkWallet() {
+  async checkWallet(uID: string) {
+    console.log('checkWallet uid is ',uID);
    return this.db.executeSql(`
-    SELECT * FROM Wallet 
+    SELECT * FROM Wallet where uID = "`+uID+`"
     `, [])
       .then((data) => {
         if (data.rows.length != 0) {
@@ -86,6 +87,28 @@ export class SqlProvider {
     return this.result
   }
 
+  async getWalletTable() {
+    await this.selectWalletTable();
+    return this.result
+  }
+  async selectWalletTable() {
+    return this.db.executeSql(`
+    SELECT * FROM Wallet 
+    `, [])
+      .then((data) => {
+        console.log(data)
+        console.log(data.rows.length);
+        this.result = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          let name = data.rows.item(i).name;
+          let balance = data.rows.item(i).balance;
+          let uID = data.rows.item(i).uID;
+          let resultObj = { name, balance, uID };
+          this.result.push(resultObj);
+        }
+      })
+      .catch(e => console.log(e));
+  }
   async selectTablebyID(tID: number) {
     console.log("Select transaction id : ", tID);
     await this.selectTransactionTableById(tID);
@@ -292,11 +315,16 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
+  async getCurrentUID(){
+    await this.getUIDfromSession();
+    return this.uID
+  }
+
   async getNameFromUser() {
     await this.getUIDfromSession();
     console.log("getNickName")
     return this.db.executeSql(`
-    SELECT name FROM Users WHERE ID = "`+ this.uID + `" ;
+    SELECT * FROM Users WHERE uID = "`+ this.uID + `" ;
     `, [])
       .then((data) => {
         for (let i = 0; i < data.rows.length; i++) {
@@ -358,10 +386,10 @@ export class SqlProvider {
         break;
       }
       case "Wallet": {
-        let { wID, name, UID, balance } = data;
+        let {  name, UID, balance } = data;
         this.db.executeSql(`
-      INSERT INTO Wallet(wID,name,uID,balance)
-      VALUES (`+ wID + `,"` + name + `",` + UID + `,` + balance + `)
+      INSERT INTO Wallet(name,uID,balance)
+      VALUES ("` + name + `","` + UID + `",` + balance + `)
       `, [])
           .then(() => console.log('Inserted Wallet table'))
           .catch(e => console.log(e));
@@ -378,7 +406,7 @@ export class SqlProvider {
         break;
       }
       case "Session": {
-        let { ID } = data;
+        let  ID  = data;
         this.db.executeSql(`
       INSERT INTO Session(sID)
       VALUES ("`+ ID + `")

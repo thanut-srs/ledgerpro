@@ -12,8 +12,8 @@
 
 <ion-content padding>
 <div *ngIf="(sessionFlag)" >
-    <h1>Hi Jarvis.</h1>
-    <button ion-button (click)="onGoHome()" >Login</button><br>
+    <h1>Hi {{userNickName}}.</h1>
+    <button ion-button (click)="onGoHome()" >Login</button>
     <a (click)="onLogout()" >Login with other account</a>
 </div>
 <div *ngIf="!(sessionFlag)" text-center>
@@ -32,7 +32,7 @@
     </div>
   </form>
   <a (click)="onCreateAccount()" >Don't have account, Signup!</a><br><br>
-  <!-- <button ion-button (click)="addtable()" >add</button>
-  <button ion-button (click)="droptable()" >drop</button> -->
+  <button ion-button (click)="addtable()" >add</button>
+  <button ion-button (click)="droptable()" >drop</button>
 </div>
 </ion-content>

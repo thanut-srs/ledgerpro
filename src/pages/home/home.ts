@@ -87,6 +87,7 @@ export class HomePage {
     });
     toast.present();
   }
+  
   presentAddToast() {
     let toast = this.toastCtrl.create({
       message: 'Transaction saved!',

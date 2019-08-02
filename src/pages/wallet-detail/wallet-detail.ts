@@ -18,6 +18,7 @@ import { EditWalletPage } from '../edit-wallet/edit-wallet';
 })
 export class WalletDetailPage {
   public wId: number;
+  public uId = "";
   public collection = [];
   constructor(
     public navCtrl: NavController,
@@ -36,8 +37,9 @@ export class WalletDetailPage {
   ionViewDidLoad() {
     console.log('wID in wallet detail page is ', this.wId);
   }
-  ngOnInit() {
+  async ngOnInit() {
     this.getWalletData();
+    this.uId = await this.sql.getCurrentUID();
   }
 
   async getWalletData() {
@@ -68,8 +70,12 @@ export class WalletDetailPage {
     });
     toast.present();
   }
-  onDeleteWallet() {
-    let delFalg = true;
+   async onDeleteWallet() {
+    let delFlag = true;
+    let singleFlag = null;
+    if(await this.sql.checkSingleWallet(this.uId)){
+      singleFlag = true;
+    }
     let alert = this.alertCtrl.create({
       title: 'Confirm delete',
       message: 'Do you want to delete this wallet?',
@@ -84,11 +90,11 @@ export class WalletDetailPage {
         {
           text: 'Delete',
           handler: () => {
-            this.sql.deleteRowById(this.wId);
-            if(this.sql.checkWallet){
-              this.viewCtrl.dismiss(delFalg);
+            this.sql.deleteWalletById(this.wId);
+            if(!singleFlag){
+              this.viewCtrl.dismiss(delFlag);
             } else {
-              this.navCtrl.setRoot(CreateWalletPage,{fromWallet: true});
+              this.navCtrl.setRoot(CreateWalletPage,{fromWallet: false});
             }
           }
         }

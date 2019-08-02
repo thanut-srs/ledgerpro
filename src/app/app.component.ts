@@ -59,7 +59,7 @@ export class MyApp {
         let nav = this.app.getActiveNavs()[0];
         let activeView = nav.getActive();
         // Checks if can go back before show up the alert
-        if (activeView.isFirst && !activeView.isOverlay) {
+        if (activeView.index == 0 && !activeView.isOverlay) {
           // if (nav.canGoBack()) {
           //   closeFlag = true;
           //   nav.pop();

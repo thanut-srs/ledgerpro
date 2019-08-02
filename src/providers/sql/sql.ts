@@ -33,8 +33,26 @@ export class SqlProvider {
     `, [])
       .then((data) => {
         if (data.rows.length != 0) {
+          console.log('YOU HAVE WALLETS!!!')
           return true
         } else {
+          console.log('YOU HAVE NO WALLETS!!!')
+          return false
+        }
+      });
+  }
+
+  async checkSingleWallet(uID: string) {
+    console.log('checkWallet uid is ', uID);
+    return this.db.executeSql(`
+    SELECT * FROM Wallet where uID = "`+ uID + `"
+    `, [])
+      .then((data) => {
+        if (data.rows.length == 1) {
+          console.log('YOU HAVE 1 WALLETS!!!')
+          return true
+        } else {
+          console.log('YOU HAVE MANY WALLETS!!!')
           return false
         }
       });
@@ -72,7 +90,7 @@ export class SqlProvider {
     this.db.executeSql(`
   DELETE FROM Wallet WHERE wID = `+ wID + `;
   `, [])
-      .then(() => console.log('Delete transaction (tID: ' + wID + ')'))
+      .then(() => console.log('Delete transaction (wID: ' + wID + ')'))
       .catch(e => console.log(e));
   }
 
@@ -123,7 +141,7 @@ export class SqlProvider {
   }
   async selectWalletTableByID(wID: number) {
     return this.db.executeSql(`
-    SELECT * FROM Wallet WHERE wID = `+wID+`
+    SELECT * FROM Wallet WHERE wID = `+ wID + `
     `, [])
       .then((data) => {
         console.log(data)
@@ -132,7 +150,7 @@ export class SqlProvider {
         for (let i = 0; i < data.rows.length; i++) {
           let name = data.rows.item(i).name;
           let balance = data.rows.item(i).balance;
-          let resultObj = { name, balance};
+          let resultObj = { name, balance };
           this.result.push(resultObj);
         }
       })

@@ -51,6 +51,10 @@ describe('Add Trasaction page', () => {
     expect(form).toBeDefined()
   })
 
+  it('should have 5 form', () => {
+    expect(Object.keys(component.transaction.controls).length).toEqual(5)
+  })
+
   it('should have add trasnaction button',() => {
     let btnsubmit = fixture.debugElement.query(By.css('#submitbtn'));
     console.log('submit======',btnsubmit)

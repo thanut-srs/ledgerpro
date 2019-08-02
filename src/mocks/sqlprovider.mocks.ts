@@ -40,8 +40,12 @@ export class SqlProviderMock {
     let date = ['21-07-2019','22-07-2019','23-07-2019']
     return date
   }
-  insertTable(transaction: any) {
+  insertTable(data: any, table: string) {
     return 'INSERT FINISHED'
+  }
+
+  getNickName(){
+    return 'fake nickname'
   }
 
   async selectTransactionTable(){

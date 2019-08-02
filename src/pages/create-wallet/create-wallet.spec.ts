@@ -1,3 +1,4 @@
+import { SqlProviderMock } from './../../mocks/sqlprovider.mocks';
 import { FormBuilder } from '@angular/forms';
 import { SqlProvider } from '../../providers/sql/sql';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
@@ -47,6 +48,15 @@ describe('create wallet page', () => {
   it('should create', () => {
     expect(component instanceof CreateWalletPage).toBeTruthy()
   });
+
+  it('should have this.uID',() => {
+    expect(this.uID).not.toEqual("")
+    console.log('createWalletPage---wallet--->',component.wallet)
+  })
+
+  it('should have formGroup', () => {
+    expect(Object.keys(component.wallet.controls).length).toBeGreaterThan(1)
+  })
 
   it('form should invalid when there no value in formfield', () => {
 

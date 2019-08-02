@@ -66,8 +66,22 @@ describe('HomePage', () => {
 
   it('should has message when no collection',() => {
     component.collection = []
-    let textNoCollection: HTMLElement = fixture.debugElement.query(By.css('h4')).nativeElement;
+    let textNoCollection: HTMLElement = fixture.debugElement.query(By.css('#noTransaction')).nativeElement;
     expect(textNoCollection.innerText).toEqual("There no transaction here, add one!");
+  })
+
+  it('should has no message when collection',() => {
+    component.collection = [{ tID: '1', date: '29-08-2019', type: 'Food', tag: 'Income', amount: 30, memo: '' }]
+    fixture.detectChanges()
+
+    let textNoCollection: DebugElement = fixture.debugElement.query(By.css('#noTransaction'));
+    expect(textNoCollection).toBeNull()
+  })
+
+  it('getName should set value to currentUser',() => {
+    component.getName().then( () => {
+      expect(component.currentUser).toEqual('fake nickname')
+    })
   })
   
 });

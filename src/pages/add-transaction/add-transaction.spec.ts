@@ -149,7 +149,10 @@ describe('Add Trasaction page', () => {
     expect(component.onInsertTable).toHaveBeenCalledTimes(1);
   })
 
-
+  it('set date should set come date',() => {
+    component.setDate()
+    expect(this.currentDate).not.toBeNull
+  })
 
 
 

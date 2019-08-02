@@ -2,7 +2,7 @@ import { HomePage } from './../home/home';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController,NavParams } from 'ionic-angular';
 
 /**
  * Generated class for the CreateWalletPage page.

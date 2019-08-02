@@ -1,12 +1,12 @@
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { SqlProvider } from '../../providers/sql/sql';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { CreateWalletPage } from './create-wallet';
-import { IonicModule, ViewController, NavController } from 'ionic-angular';
+import { IonicModule, ViewController, NavController, NavParams } from 'ionic-angular';
 import { SqlProviderMock } from '../../mocks/sqlprovider.mocks'
-//let component = undefined;
+import { NavParamsMock } from '../../mocks/navparam.mocks'
 
 describe('create wallet page', () => {
   let component: CreateWalletPage;
@@ -29,6 +29,7 @@ describe('create wallet page', () => {
       imports: [IonicModule.forRoot(CreateWalletPage)],
       providers: [{ provide: ViewController, useValue: viewCtrlSpy },
       { provide: SqlProvider, useValue: SqlProviderMock },
+      { provide: NavParams,useValue: NavParamsMock},
         FormBuilder,
         NavController],
 

@@ -44,39 +44,48 @@ export class MyApp {
   }
 
   initializeApp() {
+    let closeFlag = true;
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
+
     this.platform.registerBackButtonAction(() => {
       // Catches the active view
-      let nav = this.app.getActiveNavs()[0];
-      let activeView = nav.getActive();                
-      // Checks if can go back before show up the alert
-      if(activeView.isFirst) {
-          if (nav.canGoBack()){
-              nav.pop();
+      console.log('closeFlag is ',closeFlag);
+      if (closeFlag) {
+        closeFlag = false
+        let nav = this.app.getActiveNavs()[0];
+        let activeView = nav.getActive();
+
+        // Checks if can go back before show up the alert
+        if (activeView.isFirst) {
+          if (nav.canGoBack()) {
+            nav.pop();
           } else {
-              const alert = this.alertCtrl.create({
-                  title: 'Exit app?',
-                  message: 'Exit app?',
-                  buttons: [{
-                      text: 'Cancel',
-                      role: 'cancel',
-                      handler: () => {
-                        this.nav.setRoot('HomePage');
-                      }
-                  },{
-                      text: 'Exit',
-                      handler: () => {
-                        this.platform.exitApp();
-                      }
-                  }]
-              });
-              alert.present();
+            const alert = this.alertCtrl.create({
+              title: 'Exit app?',
+              message: 'Exit app?',
+              buttons: [{
+                text: 'Cancel',
+                role: 'cancel',
+                handler: () => {
+                  this.nav.setRoot('HomePage');
+                  closeFlag = true;
+                  console.log('closeFlag is ',closeFlag);
+                }
+              }, {
+                text: 'Exit',
+                handler: () => {
+                  this.platform.exitApp();
+                }
+              }]
+            });
+            alert.present();
           }
+        }
       }
     });
   }
@@ -86,7 +95,7 @@ export class MyApp {
     // we wouldn't want the back button to show in this scenario
     this.nav.setRoot(page.component);
   }
-  logout(){
+  logout() {
     this.login.logout();
     this.nav.setRoot(WelcomePage);
   }

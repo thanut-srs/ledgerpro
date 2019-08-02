@@ -19,7 +19,7 @@ export class TransactionDetailPage {
   public tID: number;
   public collection = [];
   constructor(
-    private viewCtrl: ViewController,
+    public viewCtrl: ViewController,
     private params: NavParams,
     private sql: SqlProvider,
     private alertCtrl: AlertController,

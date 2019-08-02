@@ -1,3 +1,5 @@
+import { WalletDetailPage } from './../wallet-detail/wallet-detail';
+import { CreateWalletPage } from './../create-wallet/create-wallet';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
@@ -19,6 +21,7 @@ export class WalletPage {
   public user = "";
   constructor(
     private sql: SqlProvider,
+    private navCtrl: NavController,
   ) {
   }
 
@@ -38,11 +41,16 @@ export class WalletPage {
     console.log("THE RESULT IS ", result.length);
   }
 
-  onDetail(wID: string){
-
+  onDetail(wID: number){
+    console.log("wID in wallet page is ",wID);
+    this.navCtrl.push(WalletDetailPage,{walletID : wID});
   }
 
   async getCurrentUser(){
     this.user = await this.sql.getCurrentUID();
+  }
+
+  onCreateWallet(){
+    this.navCtrl.push(CreateWalletPage,{uID: this.user, fromWallet: true});
   }
 }

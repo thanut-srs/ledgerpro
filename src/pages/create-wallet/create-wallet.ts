@@ -1,3 +1,4 @@
+import { WalletPage } from './../wallet/wallet';
 import { HomePage } from './../home/home';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { SqlProvider } from './../../providers/sql/sql';
@@ -19,6 +20,7 @@ import { IonicPage, NavController,NavParams } from 'ionic-angular';
 export class CreateWalletPage {
   public uID = "";
   public wallet: FormGroup;
+  public fromWallet = null;
   constructor(
     public navCtrl: NavController,
     public params: NavParams,
@@ -26,6 +28,7 @@ export class CreateWalletPage {
     public formBuilder: FormBuilder
   ) {
     this.uID = params.get('uID')
+    this.fromWallet = params.get('fromWallet')
     this.wallet = this.formBuilder.group({
       name: ['', Validators.required],
       balance: ['', Validators.required],
@@ -44,6 +47,11 @@ export class CreateWalletPage {
     };
     console.log('walletObj is ', walletObj);
     this.sql.insertTable(walletObj, 'Wallet');
-    this.navCtrl.setRoot(HomePage)
+    if(this.fromWallet){
+      this.navCtrl.setRoot(WalletPage)
+    } else {
+      this.navCtrl.setRoot(HomePage)
+    }
+    
   }
 }

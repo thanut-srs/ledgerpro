@@ -1,5 +1,3 @@
-import { HomePage } from './../../pages/home/home';
-import { CreateWalletPage } from './../../pages/create-wallet/create-wallet';
 import { ModalController, Nav } from 'ionic-angular';
 import { Injectable, ViewChild } from '@angular/core';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
@@ -29,9 +27,9 @@ export class SqlProvider {
   }
 
   async checkWallet(uID: string) {
-    console.log('checkWallet uid is ',uID);
-   return this.db.executeSql(`
-    SELECT * FROM Wallet where uID = "`+uID+`"
+    console.log('checkWallet uid is ', uID);
+    return this.db.executeSql(`
+    SELECT * FROM Wallet where uID = "`+ uID + `"
     `, [])
       .then((data) => {
         if (data.rows.length != 0) {
@@ -70,6 +68,14 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
+  deleteWalletById(wID: number) {
+    this.db.executeSql(`
+  DELETE FROM Wallet WHERE wID = `+ wID + `;
+  `, [])
+      .then(() => console.log('Delete transaction (tID: ' + wID + ')'))
+      .catch(e => console.log(e));
+  }
+
   deleteSession() {
     return this.db.executeSql(`
     DELETE FROM Session;
@@ -103,12 +109,36 @@ export class SqlProvider {
           let name = data.rows.item(i).name;
           let balance = data.rows.item(i).balance;
           let uID = data.rows.item(i).uID;
-          let resultObj = { name, balance, uID };
+          let wID = data.rows.item(i).wID;
+          let resultObj = { name, balance, uID, wID };
           this.result.push(resultObj);
         }
       })
       .catch(e => console.log(e));
   }
+
+  async getWalletTableByID(wID: number) {
+    await this.selectWalletTableByID(wID);
+    return this.result
+  }
+  async selectWalletTableByID(wID: number) {
+    return this.db.executeSql(`
+    SELECT * FROM Wallet WHERE wID = `+wID+`
+    `, [])
+      .then((data) => {
+        console.log(data)
+        console.log(data.rows.length);
+        this.result = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          let name = data.rows.item(i).name;
+          let balance = data.rows.item(i).balance;
+          let resultObj = { name, balance};
+          this.result.push(resultObj);
+        }
+      })
+      .catch(e => console.log(e));
+  }
+
   async selectTablebyID(tID: number) {
     console.log("Select transaction id : ", tID);
     await this.selectTransactionTableById(tID);
@@ -315,7 +345,7 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
-  async getCurrentUID(){
+  async getCurrentUID() {
     await this.getUIDfromSession();
     return this.uID
   }
@@ -386,7 +416,7 @@ export class SqlProvider {
         break;
       }
       case "Wallet": {
-        let {  name, UID, balance } = data;
+        let { name, UID, balance } = data;
         this.db.executeSql(`
       INSERT INTO Wallet(name,uID,balance)
       VALUES ("` + name + `","` + UID + `",` + balance + `)
@@ -406,7 +436,7 @@ export class SqlProvider {
         break;
       }
       case "Session": {
-        let  ID  = data;
+        let ID = data;
         this.db.executeSql(`
       INSERT INTO Session(sID)
       VALUES ("`+ ID + `")

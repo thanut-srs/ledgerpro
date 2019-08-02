@@ -88,7 +88,7 @@ export class WelcomePage {
       } else {
         let username = this.userLogin.controls['username'].value;
         console.log('checkLogin username is ', username);
-        this.navCtrl.push(CreateWalletPage, { uID: username });
+        this.navCtrl.setRoot(CreateWalletPage, { uID: username,fromWallet: false });
       }
     } else {
       this.userLogin.reset();
@@ -138,7 +138,7 @@ export class WelcomePage {
     } else {
       let username = await this.sql.getCurrentUID();
       console.log('checkLogin username is (onGoHome) ', username);
-      this.navCtrl.push(CreateWalletPage, { uID: username });
+      this.navCtrl.push(CreateWalletPage, { uID: username,fromWallet: false });
     }
   }
 

@@ -23,6 +23,7 @@ import { SqlProvider } from '../providers/sql/sql';
 import { DateProvider } from '../providers/date/date';
 import { EditTransactionPage } from '../pages/edit-transaction/edit-transaction';
 import { LoginProvider } from '../providers/login/login';
+import { WalletDetailPage } from '../pages/wallet-detail/wallet-detail';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { LoginProvider } from '../providers/login/login';
     WelcomePage,
     SignupPage,
     CreateWalletPage,
+    WalletDetailPage,
   ],
   imports: [
     BrowserModule,
@@ -59,7 +61,8 @@ import { LoginProvider } from '../providers/login/login';
     LoginPage,
     WelcomePage,
     SignupPage,
-    CreateWalletPage
+    CreateWalletPage,
+    WalletDetailPage
   ],
   providers: [
     StatusBar,

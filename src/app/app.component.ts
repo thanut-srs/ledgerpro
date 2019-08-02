@@ -63,6 +63,7 @@ export class MyApp {
         // Checks if can go back before show up the alert
         if (activeView.isFirst) {
           if (nav.canGoBack()) {
+            closeFlag = true;
             nav.pop();
           } else {
             const alert = this.alertCtrl.create({

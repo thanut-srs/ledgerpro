@@ -6,7 +6,7 @@ import { SqlProvider } from './../providers/sql/sql';
 import { ProfilePage } from './../pages/profile/profile';
 import { WalletPage } from './../pages/wallet/wallet';
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import { Nav, Platform, App, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -29,6 +29,8 @@ export class MyApp {
     public sql: SqlProvider,
     public sqlite: SQLite,
     public login: LoginProvider,
+    public app: App,
+    public alertCtrl: AlertController,
   ) {
     this.initializeApp();
     this.rootPage = WelcomePage;
@@ -47,6 +49,35 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+    });
+    this.platform.registerBackButtonAction(() => {
+      // Catches the active view
+      let nav = this.app.getActiveNavs()[0];
+      let activeView = nav.getActive();                
+      // Checks if can go back before show up the alert
+      if(activeView.isFirst) {
+          if (nav.canGoBack()){
+              nav.pop();
+          } else {
+              const alert = this.alertCtrl.create({
+                  title: 'Exit app?',
+                  message: 'Exit app?',
+                  buttons: [{
+                      text: 'Cancel',
+                      role: 'cancel',
+                      handler: () => {
+                        this.nav.setRoot('HomePage');
+                      }
+                  },{
+                      text: 'Exit',
+                      handler: () => {
+                        this.platform.exitApp();
+                      }
+                  }]
+              });
+              alert.present();
+          }
+      }
     });
   }
 

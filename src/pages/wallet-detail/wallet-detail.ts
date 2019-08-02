@@ -1,6 +1,8 @@
+import { CreateWalletPage } from './../create-wallet/create-wallet';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, ToastController, AlertController, ViewController } from 'ionic-angular';
+import { EditWalletPage } from '../edit-wallet/edit-wallet';
 
 /**
  * Generated class for the WalletDetailPage page.
@@ -21,6 +23,10 @@ export class WalletDetailPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public sql: SqlProvider,
+    public modalCtrl: ModalController,
+    public toastCtrl: ToastController,
+    public alertCtrl: AlertController,
+    public viewCtrl: ViewController,
   ) {
     this.wId = navParams.get('walletID');
     console.log('this.wId = navParams.get ', navParams.get('walletID'))
@@ -42,5 +48,52 @@ export class WalletDetailPage {
     }
     console.log('get wallet data!!');
     console.log("THE RESULT IS ", result);
+  }
+
+  onEditWallet() {
+    const modal = this.modalCtrl.create(EditWalletPage, { walletDetail: this.collection });
+    modal.onDidDismiss((data) => {
+      if (data) {
+        this.getWalletData();
+        this.presentEditToast();
+      }
+    });
+    modal.present();
+  }
+  presentEditToast() {
+    let toast = this.toastCtrl.create({
+      message: 'Transaction edited!',
+      duration: 1500,
+      position: 'bottom'
+    });
+    toast.present();
+  }
+  onDeleteWallet() {
+    let delFalg = true;
+    let alert = this.alertCtrl.create({
+      title: 'Confirm delete',
+      message: 'Do you want to delete this wallet?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.sql.deleteRowById(this.wId);
+            if(this.sql.checkWallet){
+              this.viewCtrl.dismiss(delFalg);
+            } else {
+              this.navCtrl.setRoot(CreateWalletPage,{fromWallet: true});
+            }
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 }

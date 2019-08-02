@@ -1,12 +1,11 @@
 import { LoginProvider } from './../providers/login/login';
 import { WelcomePage } from './../pages/welcome/welcome';
 import { SQLite } from '@ionic-native/sqlite';
-import { LoginPage } from './../pages/login/login';
 import { SqlProvider } from './../providers/sql/sql';
 import { ProfilePage } from './../pages/profile/profile';
 import { WalletPage } from './../pages/wallet/wallet';
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, App, AlertController } from 'ionic-angular';
+import { Nav, Platform, App, AlertController, ViewController, NavController, ModalController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -54,38 +53,38 @@ export class MyApp {
 
     this.platform.registerBackButtonAction(() => {
       // Catches the active view
-      console.log('closeFlag is ',closeFlag);
+      console.log('closeFlag is ', closeFlag);
       if (closeFlag) {
         closeFlag = false
         let nav = this.app.getActiveNavs()[0];
         let activeView = nav.getActive();
-
         // Checks if can go back before show up the alert
-        if (activeView.isFirst) {
-          if (nav.canGoBack()) {
-            closeFlag = true;
-            nav.pop();
-          } else {
-            const alert = this.alertCtrl.create({
-              title: 'Exit app?',
-              message: 'Exit app?',
-              buttons: [{
-                text: 'Cancel',
-                role: 'cancel',
-                handler: () => {
-                  this.nav.setRoot('HomePage');
-                  closeFlag = true;
-                  console.log('closeFlag is ',closeFlag);
-                }
-              }, {
-                text: 'Exit',
-                handler: () => {
-                  this.platform.exitApp();
-                }
-              }]
-            });
-            alert.present();
-          }
+        if (activeView.isFirst && !activeView.isOverlay) {
+          // if (nav.canGoBack()) {
+          //   closeFlag = true;
+          //   nav.pop();
+          // } else {
+          const alert = this.alertCtrl.create({
+            title: 'Exit app?',
+            message: 'Exit app?',
+            buttons: [{
+              text: 'Cancel',
+              role: 'cancel',
+              handler: () => {
+                closeFlag = true;
+                console.log('closeFlag is ', closeFlag);
+              }
+            }, {
+              text: 'Exit',
+              handler: () => {
+                this.platform.exitApp();
+              }
+            }]
+          });
+          alert.present();
+        } else {
+          closeFlag = true;
+          nav.pop();
         }
       }
     });

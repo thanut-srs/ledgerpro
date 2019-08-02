@@ -1,9 +1,7 @@
 import { CreateWalletPage } from './../pages/create-wallet/create-wallet';
 import { SignupPage } from './../pages/signup/signup';
 import { WelcomePage } from './../pages/welcome/welcome';
-import { LoginPage } from './../pages/login/login';
 import { TransactionDetailPage } from './../pages/transaction-detail/transaction-detail';
-import { FirstLoginPage } from './../pages/first-login/first-login';
 import { SQLite } from '@ionic-native/sqlite';
 import { GoalDetailPage } from './../pages/goal-detail/goal-detail';
 import { AddTransactionPage } from './../pages/add-transaction/add-transaction';
@@ -24,6 +22,7 @@ import { DateProvider } from '../providers/date/date';
 import { EditTransactionPage } from '../pages/edit-transaction/edit-transaction';
 import { LoginProvider } from '../providers/login/login';
 import { WalletDetailPage } from '../pages/wallet-detail/wallet-detail';
+import { EditWalletPage } from '../pages/edit-wallet/edit-wallet';
 
 @NgModule({
   declarations: [
@@ -33,14 +32,13 @@ import { WalletDetailPage } from '../pages/wallet-detail/wallet-detail';
     ProfilePage,
     AddTransactionPage,
     GoalDetailPage,
-    FirstLoginPage,
     TransactionDetailPage,
     EditTransactionPage,
-    LoginPage,
     WelcomePage,
     SignupPage,
     CreateWalletPage,
     WalletDetailPage,
+    EditWalletPage,
   ],
   imports: [
     BrowserModule,
@@ -55,14 +53,13 @@ import { WalletDetailPage } from '../pages/wallet-detail/wallet-detail';
     ProfilePage,
     AddTransactionPage,
     GoalDetailPage,
-    FirstLoginPage,
     TransactionDetailPage,
     EditTransactionPage,
-    LoginPage,
     WelcomePage,
     SignupPage,
     CreateWalletPage,
-    WalletDetailPage
+    WalletDetailPage,
+    EditWalletPage,
   ],
   providers: [
     StatusBar,

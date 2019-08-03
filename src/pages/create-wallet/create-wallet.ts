@@ -52,6 +52,5 @@ export class CreateWalletPage {
     } else {
       this.navCtrl.setRoot(HomePage)
     }
-    
   }
 }

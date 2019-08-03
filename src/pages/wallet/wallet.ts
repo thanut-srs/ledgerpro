@@ -50,6 +50,8 @@ export class WalletPage {
       this.updateWalletList();
       if (data) {
         this.presentDeleteToast();
+      } else {
+        this.navCtrl.setRoot(CreateWalletPage,{fromWallet: false});
       }
     });
     modal.present();

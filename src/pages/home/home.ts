@@ -47,6 +47,10 @@ export class HomePage {
     modal.present();
   }
 
+  onClick(){
+    console.log("Menu Clicked!");
+  }
+
   async updateTransaction() {
     console.log("Update Transaction #4");
     let result = await this.sql.selectTable();
@@ -87,7 +91,7 @@ export class HomePage {
     });
     toast.present();
   }
-  
+
   presentAddToast() {
     let toast = this.toastCtrl.create({
       message: 'Transaction saved!',

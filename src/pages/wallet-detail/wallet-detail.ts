@@ -94,7 +94,7 @@ export class WalletDetailPage {
             if(!singleFlag){
               this.viewCtrl.dismiss(delFlag);
             } else {
-              this.navCtrl.setRoot(CreateWalletPage,{fromWallet: false});
+              this.viewCtrl.dismiss();
             }
           }
         }

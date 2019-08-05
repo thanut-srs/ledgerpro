@@ -13,14 +13,19 @@
 </ion-header>
 
 <ion-content>
-  <div *ngFor="let item of collection">
-    <ion-card *ngIf="item.uID == user"  tappable (click)="onDetail(item.wID,item.name)">
-      <ion-card-header>
-       Name : {{item.name}} 
-      </ion-card-header>
-      <ion-card-content>
-       Balance: {{item.balance}} Baht
-      </ion-card-content>
-    </ion-card>
-  </div>
+  <ion-list>
+    <ion-item-sliding *ngFor="let item of collection">
+      <ion-item>
+        <div *ngIf="item.uID == user">
+             <h1>Name: {{item.name}} </h1>
+             <h1>Balance: {{item.balance}} Baht </h1>
+        </div>
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button (click)="onEditWallet(item.wID)">  Edit  </button>
+        <button ion-button color="danger" (click)="onDeleteWallet(item.wID,item.name)">Delete</button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
 </ion-content>

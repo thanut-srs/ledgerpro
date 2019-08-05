@@ -500,6 +500,19 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
+  updateWalletTableByID(wallet: any) {
+    console.log("updating table")
+    let { wID, name, balance} = wallet
+    console.log("new data (sql) are ", wallet);
+    this.db.executeSql(`
+    UPDATE Wallet
+    SET name = "`+ name + `", balance = ` + balance + `
+    WHERE wID = `+ wID + `;
+    `, [])
+      .then(() => console.log('Transaction updated!'))
+      .catch(e => console.log(e));
+  }
+
   async getBalanceByWalletName(walletName: string) {
     return this.db.executeSql(`
     SELECT * FROM Wallet WHERE name = "`+ walletName + `" ;
@@ -522,6 +535,25 @@ export class SqlProvider {
       this.currentBalance += parseInt(amount);
     } else if (type == 'Expense') {
       this.currentBalance -= parseInt(amount);
+    }
+    this.db.executeSql(`
+    UPDATE Wallet
+    SET balance = `+ this.currentBalance + `
+    WHERE name = "`+ walletName + `";
+    `, [])
+      .then(() => console.log('Transaction updated!'))
+      .catch(e => console.log(e));
+  }
+
+  async updateBalanceWhenDelTran(transaction: any){
+    console.log("## updateBalanceWhenDelTran ##")
+    let { type, amount, walletName } = transaction;
+    console.log("transaction obj is ", transaction);
+    await this.getBalanceByWalletName(walletName);
+    if (type == 'Income') {
+      this.currentBalance -= parseInt(amount);
+    } else if (type == 'Expense') {
+      this.currentBalance += parseInt(amount);
     }
     this.db.executeSql(`
     UPDATE Wallet

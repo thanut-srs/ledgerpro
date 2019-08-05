@@ -1,8 +1,8 @@
-import { WalletDetailPage } from './../wallet-detail/wallet-detail';
+import { Validators } from '@angular/forms';
 import { CreateWalletPage } from './../create-wallet/create-wallet';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, ModalController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, ModalController, ToastController, AlertController, ViewController } from 'ionic-angular';
 
 /**
  * Generated class for the WalletPage page.
@@ -17,19 +17,22 @@ import { IonicPage, NavController, ModalController, ToastController } from 'ioni
   templateUrl: 'wallet.html',
 })
 export class WalletPage {
+  public uId = "";
   public collection = [];
   public user = "";
   constructor(
     private sql: SqlProvider,
     private navCtrl: NavController,
-    private modalCtrl: ModalController,
     private toastCtrl: ToastController,
+    public alertCtrl: AlertController,
+    public viewCtrl: ViewController
   ) {
   }
 
   async ngOnInit() {
     await this.updateWalletList();
     await this.getCurrentUser();
+    this.uId = await this.sql.getCurrentUID();
     console.log("Wallet collection is ", this.collection)
   }
 
@@ -41,23 +44,6 @@ export class WalletPage {
     }
     console.log('Update wallet list!');
     console.log("THE RESULT IS ", result.length);
-  }
-
-  onDetail(wID: number,wName: string) {
-    const modal = this.modalCtrl.create(WalletDetailPage, {walletName: wName, walletID: wID });
-    modal.onDidDismiss((delFlag, singleFlag) => {
-      console.log("onDetail Modal is dismissed!");
-      console.log("delflag is ", delFlag, "singleFlag is ", singleFlag);
-      this.updateWalletList();
-      if (delFlag) {
-        if (singleFlag) {
-          this.navCtrl.setRoot(CreateWalletPage, { uID: this.user, fromWallet: false });
-        } else {
-          this.presentDeleteToast();
-        }
-      }
-    });
-    modal.present();
   }
 
   async getCurrentUser() {
@@ -75,5 +61,88 @@ export class WalletPage {
       position: 'bottom'
     });
     toast.present();
+  }
+
+  onEditWallet(wId: number) {
+    let alert = this.alertCtrl.create({
+      title: 'Edit Wallet',
+      inputs: [
+        {
+          name: 'name',
+          placeholder: 'New name',
+          type: 'text'
+        },
+        {
+          name: 'balance',
+          placeholder: 'Balance',
+          type: 'number'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Save',
+          handler: data => {
+            let wallet = {
+              wID:  wId,
+              name: data.name, 
+              balance: data.balance 
+            }
+            this.sql.updateWalletTableByID(wallet);
+            this.updateWalletList();
+            this.presentEditToast();
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  presentEditToast() {
+    let toast = this.toastCtrl.create({
+      message: 'Wallet Updated!',
+      duration: 1500,
+      position: 'bottom'
+    });
+    toast.present();
+  }
+
+  async onDeleteWallet(wId: number, walletName: string) {
+    let singleFlag = null;
+    if (await this.sql.checkSingleWallet(this.uId)) {
+      singleFlag = true;
+    }
+    let alert = this.alertCtrl.create({
+      title: 'Confirm delete',
+      message: 'Do you want to delete this wallet?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.sql.deleteWallet(wId, walletName);
+            if (singleFlag) {
+              this.navCtrl.setRoot(CreateWalletPage, { uID: this.user, fromWallet: false });
+            } else {
+              this.updateWalletList();
+              this.presentDeleteToast();
+            }
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 }

@@ -14,15 +14,12 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SqlProvider } from '../providers/sql/sql';
-import { DateProvider } from '../providers/date/date';
 import { EditTransactionPage } from '../pages/edit-transaction/edit-transaction';
 import { LoginProvider } from '../providers/login/login';
-import { WalletDetailPage } from '../pages/wallet-detail/wallet-detail';
-import { EditWalletPage } from '../pages/edit-wallet/edit-wallet';
+
 
 @NgModule({
   declarations: [
@@ -37,8 +34,7 @@ import { EditWalletPage } from '../pages/edit-wallet/edit-wallet';
     WelcomePage,
     SignupPage,
     CreateWalletPage,
-    WalletDetailPage,
-    EditWalletPage,
+    
   ],
   imports: [
     BrowserModule,
@@ -58,8 +54,7 @@ import { EditWalletPage } from '../pages/edit-wallet/edit-wallet';
     WelcomePage,
     SignupPage,
     CreateWalletPage,
-    WalletDetailPage,
-    EditWalletPage,
+    
   ],
   providers: [
     StatusBar,

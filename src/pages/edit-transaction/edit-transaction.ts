@@ -42,15 +42,14 @@ export class EditTransactionPage {
   //   this.month = monthList[this.month];
   //   this.day = dayList[this.day];
   // }
-
-  setDate() {
-    let date = new Date();
-    let year = date.getFullYear();
-    let month = ("0" + (date.getMonth() + 1)).slice(-2)
-    let day = ("0" + date.getDate()).slice(-2)
-    let currentDay = year+"-"+month+"-"+day;
-    this.currentDate = currentDay;
-  }
+  // setDate() {
+  //   let date = new Date();
+  //   let year = date.getFullYear();
+  //   let month = ("0" + (date.getMonth() + 1)).slice(-2)
+  //   let day = ("0" + date.getDate()).slice(-2)
+  //   let currentDay = year+"-"+month+"-"+day;
+  //   this.currentDate = currentDay;
+  // }
   ionViewDidLoad() {
     console.log('ionViewDidLoad EditTransactionPage');
   }

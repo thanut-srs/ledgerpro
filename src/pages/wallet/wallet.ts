@@ -43,15 +43,18 @@ export class WalletPage {
     console.log("THE RESULT IS ", result.length);
   }
 
-  onDetail(wID: number) {
-    const modal = this.modalCtrl.create(WalletDetailPage, { walletID: wID });
-    modal.onDidDismiss((data) => {
+  onDetail(wID: number,wName: string) {
+    const modal = this.modalCtrl.create(WalletDetailPage, {walletName: wName, walletID: wID });
+    modal.onDidDismiss((delFlag, singleFlag) => {
       console.log("onDetail Modal is dismissed!");
+      console.log("delflag is ", delFlag, "singleFlag is ", singleFlag);
       this.updateWalletList();
-      if (data) {
-        this.presentDeleteToast();
-      } else {
-        this.navCtrl.setRoot(CreateWalletPage,{fromWallet: false});
+      if (delFlag) {
+        if (singleFlag) {
+          this.navCtrl.setRoot(CreateWalletPage, { uID: this.user, fromWallet: false });
+        } else {
+          this.presentDeleteToast();
+        }
       }
     });
     modal.present();

@@ -15,6 +15,7 @@ export class HomePage {
   @ViewChild(Slides) slides: Slides;
   public collection = [];
   public date = [];
+  public walletlist = [];
   public currentDate;
   public currentUser = "";
   constructor(
@@ -28,13 +29,17 @@ export class HomePage {
   async ngOnInit() {
     this.updateTransaction();
     console.log(this.date);
-    this.getName();
+    await this.getName();
+    await this.getWalletList();
   }
 
   async getName(){
     this.currentUser = await this.sql.getNickName();
   }  
 
+  async getWalletList(){
+    this.walletlist = await this.sql.getWalletTable();
+  }
   onAddTransaction() {
     const modal = this.modalCtrl.create(AddTransactionPage);
     modal.onDidDismiss((data) => {

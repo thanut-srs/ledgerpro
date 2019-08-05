@@ -14,7 +14,7 @@
 
 <ion-content>
   <div *ngFor="let item of collection">
-    <ion-card *ngIf="item.uID == user"  tappable (click)="onDetail(item.wID)">
+    <ion-card *ngIf="item.uID == user"  tappable (click)="onDetail(item.wID,item.name)">
       <ion-card-header>
        Name : {{item.name}} 
       </ion-card-header>

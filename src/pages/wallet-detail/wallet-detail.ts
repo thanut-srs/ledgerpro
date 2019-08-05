@@ -18,6 +18,7 @@ import { EditWalletPage } from '../edit-wallet/edit-wallet';
 })
 export class WalletDetailPage {
   public wId: number;
+  public walletName: string;
   public uId = "";
   public collection = [];
   constructor(
@@ -30,6 +31,7 @@ export class WalletDetailPage {
     public viewCtrl: ViewController,
   ) {
     this.wId = navParams.get('walletID');
+    this.walletName = navParams.get('walletName');
     console.log('this.wId = navParams.get ', navParams.get('walletID'))
   }
 
@@ -70,10 +72,10 @@ export class WalletDetailPage {
     });
     toast.present();
   }
-   async onDeleteWallet() {
+  async onDeleteWallet() {
     let delFlag = true;
     let singleFlag = null;
-    if(await this.sql.checkSingleWallet(this.uId)){
+    if (await this.sql.checkSingleWallet(this.uId)) {
       singleFlag = true;
     }
     let alert = this.alertCtrl.create({
@@ -90,12 +92,8 @@ export class WalletDetailPage {
         {
           text: 'Delete',
           handler: () => {
-            this.sql.deleteWalletById(this.wId);
-            if(!singleFlag){
-              this.viewCtrl.dismiss(delFlag);
-            } else {
-              this.viewCtrl.dismiss();
-            }
+            this.sql.deleteWallet(this.wId, this.walletName);
+            this.viewCtrl.dismiss(delFlag, singleFlag);
           }
         }
       ]

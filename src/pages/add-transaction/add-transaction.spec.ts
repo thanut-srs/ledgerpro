@@ -51,15 +51,14 @@ describe('Add Trasaction page', () => {
     expect(form).toBeDefined()
   })
 
-  it('should have 5 form', () => {
-    expect(Object.keys(component.transaction.controls).length).toEqual(5)
+  it('should have 6 form', () => {
+    expect(Object.keys(component.transaction.controls).length).toEqual(6)
   })
 
-  it('should have add trasnaction button',() => {
+  it('should have add transaction button',() => {
     let btnsubmit = fixture.debugElement.query(By.css('#submitbtn'));
     console.log('submit======',btnsubmit)
     expect(btnsubmit.name).toEqual('button')
-
   })
 
   it('input amount should not disabled', () => {
@@ -76,6 +75,10 @@ describe('Add Trasaction page', () => {
   })
   it('tag should have no value when enter app' ,() => {
     expect(component.transaction.controls['tag'].value).toEqual('')
+  })
+
+  it('walletname should have no value when enter app' ,() => {
+    expect(component.transaction.controls['walletName'].value).toEqual('')
   })
 
   it('amount should have no value when enter app' ,() => {
@@ -125,26 +128,32 @@ describe('Add Trasaction page', () => {
   //   expect(btnsubmitDisable).toBeFalsy()
   // })
 
-  let setFormTruthValue = function () {
+  const setFormTruthValue = function() {
     component.transaction.controls['type'].setValue('Income')
     component.transaction.controls['tag'].setValue('Food')
     component.transaction.controls['amount'].setValue(30)
-    component.transaction.controls['memo'].setValue('')
+    component.transaction.controls['walletName'].setValue('abc')
+    component.transaction.controls['memo'].setValue('nonthing')
     component.transaction.controls['date'].setValue('2019-07-22')
   }
-
 
   it('form should valid when there is value in formfield', () => {
     setFormTruthValue()
     expect(component.transaction.valid).toBeTruthy()
   })
 
-  // it('button should valid when there is value in formfield', () => {
-  //   let btnsubmit = fixture.debugElement.nativeElement.querySelector('#submitbtn').disabled;
-  //   setFormTruthValue()
-  //   fixture.detectChanges()
-  //   expect(btnsubmit).toBeFalsy()
-  // })
+  it('button should disable when there is no value in formfield', () => {
+    let btnsubmit = fixture.debugElement.query(By.css('#submitbtn'))
+    expect(btnsubmit.properties['disabled']).toBeTruthy()
+  })
+
+  it('button should enable when there is value in formfield', () => {
+    let btnsubmit = fixture.debugElement.query(By.css('#submitbtn'))
+    setFormTruthValue();
+    fixture.detectChanges()
+    console.log('---- ---- btnsubmit after fill form ;;;; ', btnsubmit)
+    expect(btnsubmit.properties['disabled']).toBeFalsy()
+  })
 
   it('submit form should call onInsertTable', () => {
     spyOn(component,"onInsertTable")

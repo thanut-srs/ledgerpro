@@ -25,8 +25,10 @@ export class SqlProviderMock {
   }
 
   selectTable() {
-    let result = ['res'];
-    return result
+    let resultObj = [{ tID: 1, date:'21-07-2019', type:'Income', tag:'Food', amount:30, memo:'Morning'} ,
+    {tID: 2, date:'22-07-2019', type:'Income', tag:'Food', amount:30, memo:'Morning'} ,
+    {tID: 3, date:'23-07-2019', type:'Income', tag:'Food', amount:30, memo:'Morning' }];
+    return Promise.resolve(resultObj)
   }
 
   async selectTablebyID(tID: number) {
@@ -38,7 +40,7 @@ export class SqlProviderMock {
 
   selectDistinctdate() {
     let date = ['21-07-2019','22-07-2019','23-07-2019']
-    return date
+    return Promise.resolve(date)
   }
   insertTable(data: any, table: string) {
     return 'INSERT FINISHED'
@@ -73,7 +75,8 @@ export class SqlProviderMock {
     return 'User Tables created'
   }
   createWalletTables(){
-    return 'User Wallet created'
+    let result = [{name: 'A',balance: '20',uID: '2',wID:'2'}];
+    return result
   }
   createGoalTables(){
     return 'User Goal created'

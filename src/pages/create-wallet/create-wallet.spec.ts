@@ -30,7 +30,7 @@ describe('create wallet page', () => {
       imports: [IonicModule.forRoot(CreateWalletPage)],
       providers: [{ provide: ViewController, useValue: viewCtrlSpy },
       { provide: SqlProvider, useValue: SqlProviderMock },
-      { provide: NavParams,useValue: NavParamsMock},
+      { provide: NavParams, useValue: NavParamsMock },
         FormBuilder,
         NavController],
 
@@ -49,25 +49,37 @@ describe('create wallet page', () => {
     expect(component instanceof CreateWalletPage).toBeTruthy()
   });
 
-  it('should have this.uID',() => {
+  it('should have this.uID', () => {
     expect(this.uID).not.toEqual("")
-    console.log('createWalletPage---wallet--->',component.wallet)
+    console.log('createWalletPage---wallet--->', component.wallet)
   })
 
   it('should have formGroup', () => {
     expect(Object.keys(component.wallet.controls).length).toBeGreaterThan(1)
   })
 
-  it('form should invalid when there no value in formfield', () => {
+  it('name form should have no value when enter app', () => {
+    expect(component.wallet.controls['name'].value).toEqual('')
+  })
+  it('balance form should have no value when enter app', () => {
+    expect(component.wallet.controls['balance'].value).toEqual('')
+  })
 
+  it('form should invalid when there no value in formfield', () => {
+    expect(component.wallet.valid).toBeFalsy()
   })
 
   it('form should valid when there is value in formfield', () => {
-
+    component.wallet.controls['balance'].setValue(99)
+    component.wallet.controls['name'].setValue('TesterKung')
+    expect(component.wallet.valid).toBeTruthy()
   })
 
   it('submit form should call createwallet', () => {
-
+    spyOn(component,"onCreateWallet")
+    let formsubmit = fixture.debugElement.query(By.css('#createWalletForm'));
+    formsubmit.triggerEventHandler('ngSubmit',formsubmit);
+    expect(component.onCreateWallet).toHaveBeenCalledTimes(1);
   })
 
 

@@ -9,14 +9,9 @@
 </ion-header>
 
 <ion-content>
-    <!-- <ion-item>
-        <ion-select #wallet placeholder="Select..">
-          <ion-option *ngFor="let item of walletlist"  [value]="item.name">{{item.name}}</ion-option>
-        </ion-select>
-      </ion-item> -->
-  <div *ngFor="let day of date">
+  <div  *ngFor="let day of date" >
     <div class="dateBar">
-      <h1 class="date" id="date">{{day}}</h1>
+      <h1 class="date" id="dateid">{{day}}</h1>
     </div>
     <div class="slideDiv" *ngIf="collection.length != 0">
       <div *ngFor="let item of collection">

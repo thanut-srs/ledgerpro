@@ -11,7 +11,7 @@
 </ion-header>
 
 <ion-content padding>
-  <form [formGroup]="wallet" (ngSubmit)="onCreateWallet()">
+  <form id='createWalletForm' [formGroup]="wallet" (ngSubmit)="onCreateWallet()">
   <ion-item>
     <ion-label>Name</ion-label>
     <ion-input  type="text" formControlName="name" placeholder="Wallet's name"></ion-input> 

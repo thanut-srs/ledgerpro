@@ -42,9 +42,10 @@ describe('HomePage', () => {
 
     component.updateTransaction().then( () => {
       console.info('date  ::::',component.date)
-      let dateHeader: HTMLElement = fixture.debugElement.query(By.css('#date')).nativeElement;
-      fixture.detectChanges();
-      expect(dateHeader.innerText).toEqual(component.date[0]);
+      fixture.detectChanges()
+      let dateHeader = fixture.debugElement.query(By.css('#dateid'));
+      console.log('dateHeader ::: ',dateHeader)
+      expect(dateHeader.nativeElement.innerText).toEqual(component.date[0]);
     })
 
   })

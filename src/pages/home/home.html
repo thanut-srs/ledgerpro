@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <button ion-button menuToggle (click)="onClick()" >
+    <button ion-button menuToggle (click)="onClick()">
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title text-center>Hello {{currentUser}} <ion-icon name="person"></ion-icon>
@@ -16,10 +16,13 @@
     </div>
     <div class="slideDiv" *ngIf="collection.length != 0">
       <div *ngFor="let item of collection">
-        <ion-card *ngIf="(item.date) == day" tappable (click)="onDetail(item.tID)">
+        <ion-card *ngIf="(item.date) == day " tappable (click)="onDetail(item.tID)">
           <ion-card-header>
             {{item.date}} {{item.type}}
           </ion-card-header>
+          <ion-card-content>
+            Wallet : {{item.walletName}}
+          </ion-card-content>
           <ion-card-content>
             {{item.tag}} {{item.amount}} Baht {{item.memo}}
           </ion-card-content>

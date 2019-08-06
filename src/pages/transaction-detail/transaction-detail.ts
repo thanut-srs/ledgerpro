@@ -36,6 +36,7 @@ export class TransactionDetailPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad TransactionDetailPage');
+    
   }
 
   async updateTransaction() {
@@ -67,6 +68,13 @@ export class TransactionDetailPage {
   }
   onDeleteTransaction() {
     let delFalg = true;
+    let transaction = {
+      amount: this.collection[0].amount,
+      walletName: this.collection[0].walletName,
+      type: this.collection[0].type,
+    }
+    console.log("this transaction's amount is ",this.collection[0].amount);
+    console.log("this transaction's walletName is ",this.collection[0].walletName);
     let alert = this.alertCtrl.create({
       title: 'Confirm delete',
       message: 'Do you want to delete this transaction?',
@@ -82,6 +90,7 @@ export class TransactionDetailPage {
           text: 'Delete',
           handler: () => {
             this.sql.deleteRowById(this.tID);
+            this.sql.updateBalanceWhenDelTran(transaction);
             this.viewCtrl.dismiss(delFalg);
           }
         }

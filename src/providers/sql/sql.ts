@@ -19,6 +19,7 @@ export class SqlProvider {
   public userPw = "";
   public userNickName = "";
   public uID = "";
+  public currentBalance: number;
   constructor(
     public sqlite: SQLite,
     public modalCtrl: ModalController,
@@ -86,12 +87,29 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
-  deleteWalletById(wID: number) {
+  async deleteWalletById(wID: number) {
     this.db.executeSql(`
   DELETE FROM Wallet WHERE wID = `+ wID + `;
   `, [])
-      .then(() => console.log('Delete transaction (wID: ' + wID + ')'))
+      .then(() => {
+        console.log('Delete wallet (wID: ' + wID + ')')
+      })
       .catch(e => console.log(e));
+  }
+
+  async deleteTransactionBywName(wName: string) {
+    console.log('Welcome to delete transaction by wallet name!!!!');
+    console.log('Wallet name is ',wName);
+    this.db.executeSql(`
+  DELETE FROM Transactions WHERE walletName = "`+ wName + `";
+  `, [])
+      .then(() => console.log('Delete transaction (wID: ' + wName + ')'))
+      .catch(e => console.log(e));
+  }
+
+  async deleteWallet(wID: number, wName: string) {
+    await this.deleteWalletById(wID);
+    await this.deleteTransactionBywName(wName);
   }
 
   deleteSession() {
@@ -204,7 +222,8 @@ export class SqlProvider {
           let tag = data.rows.item(i).tag;
           let amount = data.rows.item(i).amount;
           let memo = data.rows.item(i).memo;
-          let resultObj = { tID, date, type, tag, amount, memo };
+          let walletName = data.rows.item(i).walletName;
+          let resultObj = { tID, date, type, tag, amount, memo, walletName };
           this.result.push(resultObj);
         }
         console.log("SelectTransactiontable is doing (sql) #6");
@@ -228,7 +247,8 @@ export class SqlProvider {
           let tag = data.rows.item(i).tag;
           let amount = data.rows.item(i).amount;
           let memo = data.rows.item(i).memo;
-          let resultObj = { tID, date, type, tag, amount, memo };
+          let walletName = data.rows.item(i).walletName;
+          let resultObj = { tID, date, type, tag, amount, memo, walletName };
           this.resultByID.push(resultObj);
         }
       })
@@ -324,14 +344,14 @@ export class SqlProvider {
     return this.db.executeSql(`
     create table Transactions(
     tID INTEGER PRIMARY KEY AUTOINCREMENT,
-    wID INTEGER,
+    walletName VARCHAR(32),
     type VARCHAR(32),
     memo VARCHAR(100),
     amount INTEGER,
     tag VARCHAR(32),
     gID INTEGER,
     date DATE,
-    FOREIGN KEY (wID) REFERENCES Wallet(wID)
+    FOREIGN KEY (walletName) REFERENCES Wallet(name)
     );
   `, [])
       .then(() => console.log('Created Transactions Table'))
@@ -414,10 +434,11 @@ export class SqlProvider {
     console.log("insertTable (sql) #2")
     switch (table) {
       case "Transactions": {
-        let { type, tag, amount, memo, date } = data;
+        let { type, tag, amount, memo, date, walletName } = data;
+        console.log("### this new transaction's walletName is ",walletName);
         this.db.executeSql(`
-      INSERT INTO Transactions(date,type,tag,amount,memo)
-      VALUES ("`+ date + `","` + type + `","` + tag + `",` + amount + `,"` + memo + `")
+      INSERT INTO Transactions(date,type,tag,amount,memo,walletName)
+      VALUES ("`+ date + `","` + type + `","` + tag + `",` + amount + `,"` + memo + `","` + walletName + `")
       `, [])
           .then(() => console.log('Inserted Transaction table'))
           .catch(e => console.log(e));
@@ -474,6 +495,70 @@ export class SqlProvider {
     UPDATE Transactions
     SET date = "`+ date + `", type = "` + type + `", tag = "` + tag + `", amount = ` + amount + `, memo = "` + memo + `"
     WHERE tID = `+ tID + `;
+    `, [])
+      .then(() => console.log('Transaction updated!'))
+      .catch(e => console.log(e));
+  }
+
+  updateWalletTableByID(wallet: any) {
+    console.log("updating table")
+    let { wID, name, balance} = wallet
+    console.log("new data (sql) are ", wallet);
+    this.db.executeSql(`
+    UPDATE Wallet
+    SET name = "`+ name + `", balance = ` + balance + `
+    WHERE wID = `+ wID + `;
+    `, [])
+      .then(() => console.log('Transaction updated!'))
+      .catch(e => console.log(e));
+  }
+
+  async getBalanceByWalletName(walletName: string) {
+    return this.db.executeSql(`
+    SELECT * FROM Wallet WHERE name = "`+ walletName + `" ;
+    `, [])
+      .then((data) => {
+        for (let i = 0; i < data.rows.length; i++) {
+          this.currentBalance = data.rows.item(i).balance;
+        }
+        console.log("Balance is ", this.currentBalance);
+      })
+      .catch(e => console.log(e));
+  }
+
+  async updateBalance(balance: any) {
+    console.log("updating balance")
+    let { type, amount, walletName } = balance
+    console.log("balance is ", balance);
+    await this.getBalanceByWalletName(walletName);
+    if (type == 'Income') {
+      this.currentBalance += parseInt(amount);
+    } else if (type == 'Expense') {
+      this.currentBalance -= parseInt(amount);
+    }
+    this.db.executeSql(`
+    UPDATE Wallet
+    SET balance = `+ this.currentBalance + `
+    WHERE name = "`+ walletName + `";
+    `, [])
+      .then(() => console.log('Transaction updated!'))
+      .catch(e => console.log(e));
+  }
+
+  async updateBalanceWhenDelTran(transaction: any){
+    console.log("## updateBalanceWhenDelTran ##")
+    let { type, amount, walletName } = transaction;
+    console.log("transaction obj is ", transaction);
+    await this.getBalanceByWalletName(walletName);
+    if (type == 'Income') {
+      this.currentBalance -= parseInt(amount);
+    } else if (type == 'Expense') {
+      this.currentBalance += parseInt(amount);
+    }
+    this.db.executeSql(`
+    UPDATE Wallet
+    SET balance = `+ this.currentBalance + `
+    WHERE name = "`+ walletName + `";
     `, [])
       .then(() => console.log('Transaction updated!'))
       .catch(e => console.log(e));

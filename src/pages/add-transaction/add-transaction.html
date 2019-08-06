@@ -28,7 +28,7 @@
 
       <ion-item>
           <ion-label>Type</ion-label>
-          <ion-select id="typeselect" #types formControlName="type" placeholder="Select">
+          <ion-select id="typeselect" #types formControlName="type" placeholder="Select...">
               <ion-option value="Income">Income</ion-option>
               <ion-option value="Expense">Expense</ion-option>
               <ion-option value="Saving">Saving</ion-option>
@@ -36,7 +36,7 @@
         </ion-item>
         <ion-item *ngIf="types.value =='Income' || types.value =='Expense' || types.value =='' " >
           <ion-label>Tag</ion-label>
-          <ion-select id="tagselect" formControlName="tag" placeholder="Select">
+          <ion-select id="tagselect" formControlName="tag" placeholder="Select...">
               <ion-option value="Food">Food</ion-option>
               <ion-option value="Shopping">Shopping</ion-option>
               <ion-option value="Drinks">Drinks</ion-option>
@@ -44,9 +44,15 @@
         </ion-item>
         <ion-item *ngIf="types.value =='Saving'" >
             <ion-label>Goal</ion-label>
-            <ion-select id="goalselect" formControlName="tag" placeholder="Select">
+            <ion-select id="goalselect" formControlName="tag" placeholder="Select...">
                 <ion-option value="Goal1">Playstation V</ion-option>
                 <ion-option value="Goal2">XBox 720</ion-option>
+              </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label>Wallet</ion-label>
+            <ion-select formControlName="walletName" placeholder="Select...">
+                <ion-option *ngFor="let item of collection" [value]="item.name">{{item.name}}</ion-option>
               </ion-select>
           </ion-item>
 

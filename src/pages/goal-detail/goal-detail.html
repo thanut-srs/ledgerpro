@@ -16,5 +16,23 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding>
-  <h1 *ngIf="!collection" >No goal? create one!</h1>
+  <div class="slideDiv" *ngIf="collection.length != 0">
+    <div *ngFor="let item of collection">
+      <ion-card *ngIf="(item.uID) == uid " tappable (click)="onDetail(item.gID)">
+        <ion-card-header>
+          Deadline : {{item.deadline}}
+        </ion-card-header>
+        <ion-card-content>
+          Name : {{item.name}}<br>
+          Amount : {{item.amount}} / {{item.target}} Baht
+        </ion-card-content>
+        <ion-card-content>
+          Memo : {{item.memo}}
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+  <div *ngIf="collection.length == 0">
+    <h4 text-center>No goal? create one!</h4>
+  </div>
 </ion-content>

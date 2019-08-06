@@ -18,58 +18,55 @@
 <ion-content padding>
 
   <form id="transactionForm" [formGroup]="transaction" (ngSubmit)="onInsertTable()">
-      <ion-item>
-          <ion-label>Date</ion-label>
-          <ion-datetime id="datepick" displayFormat="DDDD DD MMMM YYYY" formControlName="date" 
-          pickerFormat=" DD MMMM YYYY" min="2000" max="{{year}}" 
-         placeholder="Select date">
-          </ion-datetime>
-     </ion-item>
-
-      <ion-item>
-          <ion-label>Type</ion-label>
-          <ion-select id="typeselect" #types formControlName="type" placeholder="Select...">
-              <ion-option value="Income">Income</ion-option>
-              <ion-option value="Expense">Expense</ion-option>
-              <ion-option value="Saving">Saving</ion-option>
-            </ion-select>
-        </ion-item>
-        <ion-item *ngIf="types.value =='Income' || types.value =='Expense' || types.value =='' " >
-          <ion-label>Tag</ion-label>
-          <ion-select id="tagselect" formControlName="tag" placeholder="Select...">
-              <ion-option value="Food">Food</ion-option>
-              <ion-option value="Shopping">Shopping</ion-option>
-              <ion-option value="Drinks">Drinks</ion-option>
-            </ion-select>
-        </ion-item>
-        <ion-item *ngIf="types.value =='Saving'" >
-            <ion-label>Goal</ion-label>
-            <ion-select id="goalselect" formControlName="tag" placeholder="Select...">
-                <ion-option value="Goal1">Playstation V</ion-option>
-                <ion-option value="Goal2">XBox 720</ion-option>
-              </ion-select>
-          </ion-item>
-          <ion-item>
-            <ion-label>Wallet</ion-label>
-            <ion-select formControlName="walletName" placeholder="Select...">
-                <ion-option *ngFor="let item of collection" [value]="item.name">{{item.name}}</ion-option>
-              </ion-select>
-          </ion-item>
+    <ion-item>
+      <ion-label>Date : </ion-label>
+      <ion-datetime id="datepick" displayFormat="DDDD DD MMMM YYYY" formControlName="date" pickerFormat=" DD MMMM YYYY"
+        min="2000" max="{{year}}" placeholder="Select date">
+      </ion-datetime>
+    </ion-item>
 
     <ion-item>
-      <ion-label>Amount</ion-label>
+      <ion-label>Type : </ion-label>
+      <ion-select id="typeselect" #types formControlName="type" placeholder="Select..." 
+      (ionChange)="onChange($event)">
+        <ion-option value="Income">Income</ion-option>
+        <ion-option value="Expense">Expense</ion-option>
+        <ion-option value="Saving">Saving</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item *ngIf="types.value =='Income' || types.value =='Expense' || types.value =='' ">
+      <ion-label>Tag : </ion-label>
+      <ion-select id="tagselect" formControlName="tag" placeholder="Select...">
+        <ion-option value="Food">Food</ion-option>
+        <ion-option value="Shopping">Shopping</ion-option>
+        <ion-option value="Drinks">Drinks</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item *ngIf="types.value =='Saving'">
+        <ion-label>Goal : </ion-label>
+        <ion-select formControlName="goalID" placeholder="Select...">
+          <ion-option *ngFor="let item of goalList" [value]="item.gID">{{item.name}}</ion-option>
+        </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Wallet : </ion-label>
+      <ion-select formControlName="walletName" placeholder="Select...">
+        <ion-option *ngFor="let item of collection" [value]="item.name">{{item.name}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label>Amount : </ion-label>
       <ion-input id="amountinput" type="number" formControlName="amount" placeholder="Fill amount"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label>Memo</ion-label>
+      <ion-label>Memo : </ion-label>
       <ion-textarea formControlName="memo" placeholder="(Optional)"></ion-textarea>
     </ion-item>
-    <div class="submitBtn" >
-      <button  ion-button type="submit" id="submitbtn" [disabled]="!transaction.valid">Submit</button>
-      
+    <div class="submitBtn">
+      <button ion-button type="submit" id="submitbtn" [disabled]="!transaction.valid">Submit</button>
     </div>
-    <button  ion-button (click)="onAddTable()">Add Table</button>
-    <button  ion-button (click)="onDeleteTable()">Delete Table</button>
   </form>
 
 

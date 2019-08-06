@@ -2,6 +2,7 @@ import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
 import { IonicPage, ViewController } from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { S_IFREG } from 'constants';
 /**
  * Generated class for the AddTransactionPage page.
  *
@@ -19,23 +20,26 @@ export class AddTransactionPage {
   public currentDate = null;
   public year = null;
   public collection = [];
+  public goalList = [];
   constructor(
     public viewCtrl: ViewController,
     private formBuilder: FormBuilder,
     private sql: SqlProvider,
   ) {
     this.transaction = this.formBuilder.group({
-      date: [this.currentDate, Validators.required],
+      date: [this.currentDate, Validators.required ],
       amount: ['', Validators.required],
       tag: ['', Validators.required],
       walletName: ['', Validators.required],
       type: ['', Validators.required],
+      goalID: ['', Validators.required],
       memo: [''],
     });
   }
   async ngOnInit() {
     this.setDate();
     await this.getWalletList();
+    await this.getGoalList();
   }
 
   setDate() {
@@ -51,6 +55,9 @@ export class AddTransactionPage {
     console.log('ionViewDidLoad AddTransactionPage');
   }
   onInsertTable() {
+    let tType = this.transaction.controls['type'].value;
+    let gId = this.transaction.controls['goalID'].value;
+    let tAmount = this.transaction.controls['amount'].value;
     console.log("onInsertTable #1")
     let transactionObj = {
       type: this.transaction.controls['type'].value,
@@ -59,15 +66,18 @@ export class AddTransactionPage {
       memo: this.transaction.controls['memo'].value,
       date: this.transaction.controls['date'].value,
       walletName: this.transaction.controls['walletName'].value,
+      goalID: this.transaction.controls['goalID'].value,
     };
     let balanceObj = {
       type: this.transaction.controls['type'].value,
       amount: this.transaction.controls['amount'].value,
       walletName: this.transaction.controls['walletName'].value,
     };
-    console.log("Date is ", this.transaction.controls['date'].value);
     this.sql.insertTable(transactionObj, 'Transactions');
     this.sql.updateBalance(balanceObj);
+    if(tType = "Saving"){
+      this.sql.updateGoalTarget(gId, tAmount);
+    }
     this.viewCtrl.dismiss(true);
   }
 
@@ -87,5 +97,27 @@ export class AddTransactionPage {
     }
     console.log('get wallet list!');
     console.log("THE RESULT IS ", result.length);
+  }
+
+  async getGoalList() {
+    let result = await this.sql.getGoal();
+    this.goalList = [];
+    for (let i = 0; i < result.length; i++) {
+      this.goalList.push(result[i]);
+    }
+    console.log('get goal list!');
+    console.log("THE RESULT IS ", result);
+  }
+
+  onChange($event){
+    if(($event) =='Income' || ($event) =='Expense'){
+      console.log("You select income or expense!!")
+      this.transaction.controls['goalID'].disable()
+      this.transaction.controls['tag'].enable()
+    } else {
+      console.log("You select saving!!")
+      this.transaction.controls['tag'].disable()
+      this.transaction.controls['goalID'].enable()
+    }
   }
 }

@@ -1,5 +1,7 @@
+import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 /**
  * Generated class for the CreateGoalPage page.
@@ -14,12 +16,37 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'create-goal.html',
 })
 export class CreateGoalPage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  public goal: FormGroup;
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    public sql:SqlProvider,
+    public formBuilder: FormBuilder,
+    public viewCtrl: ViewController
+    ) {
+      this.goal = this.formBuilder.group({
+        date: ['', Validators.required],
+        gName: ['', Validators.required],
+        target: ['', Validators.required],
+        memo: [''],
+      });
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CreateGoalPage');
   }
 
+  async onCreateGoal(){
+    let uID = await this.sql.getCurrentUID();
+    let goalObj = {
+      deadline: this.goal.controls['date'].value,
+      name: this.goal.controls['gName'].value,
+      target: this.goal.controls['target'].value,
+      memo: this.goal.controls['memo'].value,
+      UID: uID
+    }
+    console.log("goalObj is ", goalObj);
+    this.sql.insertTable(goalObj, 'Goal');
+    this.viewCtrl.dismiss(true);
+  }
 }

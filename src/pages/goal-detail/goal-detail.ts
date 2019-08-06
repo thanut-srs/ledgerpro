@@ -1,3 +1,4 @@
+import { SqlProvider } from './../../providers/sql/sql';
 import { CreateGoalPage } from './../create-goal/create-goal';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, ToastController } from 'ionic-angular';
@@ -16,32 +17,55 @@ import { IonicPage, NavController, NavParams, ModalController, ToastController }
 })
 export class GoalDetailPage {
   public collection = [];
+  public uid: string;
   constructor(
-    public navCtrl: NavController, 
+    public navCtrl: NavController,
     public navParams: NavParams,
     public modalCtrl: ModalController,
-    public toastCtrl: ToastController) {
+    public toastCtrl: ToastController,
+    public sql: SqlProvider, ) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad GoalDetailPage');
   }
-  onCreateGoal(){
+
+  async ngOnInit() {
+    await this.updateGoal();
+    this.uid = await this.sql.getCurrentUID();
+  }
+
+  onCreateGoal() {
     const modal = this.modalCtrl.create(CreateGoalPage);
     modal.onDidDismiss((data) => {
       if (data) {
-        // this.updateTransaction();
+        this.updateGoal();
         this.presentCreateToast();
       }
     });
     modal.present();
   }
-  presentCreateToast(){
+
+  async updateGoal() {
+    let result = await this.sql.getGoal();
+    this.collection = [];
+    for (let i = 0; i < result.length; i++) {
+      this.collection.push(result[i]);
+    }
+    console.log('Update goal list!');
+    console.log("THE RESULT IS ", result);
+  }
+
+  presentCreateToast() {
     let toast = this.toastCtrl.create({
       message: 'Goal created!',
       duration: 1500,
       position: 'bottom'
     });
     toast.present();
+  }
+  
+  onDetail(){
+
   }
 }

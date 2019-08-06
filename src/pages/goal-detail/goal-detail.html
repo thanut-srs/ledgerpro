@@ -6,10 +6,15 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>GoalDetail</ion-title>
+    <ion-title text-center> Goal <ion-icon name="trophy"></ion-icon>
+    </ion-title>
+    <ion-buttons right>
+      <button ion-button icon-only (click)="onCreateGoal()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
-
 <ion-content padding>
-
+  <h1 *ngIf="!collection" >No goal? create one!</h1>
 </ion-content>

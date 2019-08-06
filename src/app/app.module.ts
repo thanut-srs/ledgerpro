@@ -19,6 +19,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { SqlProvider } from '../providers/sql/sql';
 import { EditTransactionPage } from '../pages/edit-transaction/edit-transaction';
 import { LoginProvider } from '../providers/login/login';
+import { CreateGoalPage } from '../pages/create-goal/create-goal';
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import { LoginProvider } from '../providers/login/login';
     WelcomePage,
     SignupPage,
     CreateWalletPage,
+    CreateGoalPage,
     
   ],
   imports: [
@@ -54,6 +56,7 @@ import { LoginProvider } from '../providers/login/login';
     WelcomePage,
     SignupPage,
     CreateWalletPage,
+    CreateGoalPage,
     
   ],
   providers: [

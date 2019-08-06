@@ -20,6 +20,8 @@ import { SqlProvider } from '../providers/sql/sql';
 import { EditTransactionPage } from '../pages/edit-transaction/edit-transaction';
 import { LoginProvider } from '../providers/login/login';
 import { CreateGoalPage } from '../pages/create-goal/create-goal';
+import { LocalNotifications } from '@ionic-native/local-notifications';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 
 @NgModule({
@@ -67,7 +69,8 @@ import { CreateGoalPage } from '../pages/create-goal/create-goal';
     SQLite,
     LoginProvider,
     LoginProvider,
-  
+    LocalNotifications,
+    Camera
   
   ]
 })

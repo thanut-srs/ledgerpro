@@ -26,7 +26,7 @@ export class SqlProviderMock {
 
   selectTable() {
     let resultObj = [{ tID: 1, date:'21-07-2019', type:'Income', tag:'Food', amount:30, memo:'Morning'} ,
-    {tID: 2, date:'22-07-2019', type:'Income', tag:'Food', amount:30, memo:'Morning}' ,
+    {tID: 2, date:'22-07-2019', type:'Income', tag:'Food', amount:30, memo:'Morning'} ,
     {tID: 3, date:'23-07-2019', type:'Income', tag:'Food', amount:30, memo:'Morning' }];
     return Promise.resolve(resultObj)
   }

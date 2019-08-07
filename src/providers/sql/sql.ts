@@ -1,3 +1,4 @@
+import { LocalNotifications } from '@ionic-native/local-notifications';
 import { ModalController, Nav } from 'ionic-angular';
 import { Injectable, ViewChild } from '@angular/core';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
@@ -20,11 +21,12 @@ export class SqlProvider {
   public userNickName = "";
   public uID = "";
   public currentBalance: number;
-  public gTarget: number;
-  public gAmount: number;
+  public gTarget: any;
+  public gAmount: any;
   constructor(
     public sqlite: SQLite,
     public modalCtrl: ModalController,
+    public localNotifications: LocalNotifications,
   ) {
     console.log('Hello SqlProvider Provider');
   }
@@ -185,6 +187,36 @@ export class SqlProvider {
   async selectGoalTable() {
     return this.db.executeSql(`
     SELECT * FROM Goal 
+    `, [])
+      .then((data) => {
+        console.log(data)
+        console.log(data.rows.length);
+        this.result = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          let gID = data.rows.item(i).gID;
+          let name = data.rows.item(i).name;
+          let target = data.rows.item(i).target;
+          let amount = data.rows.item(i).amount;
+          let uID = data.rows.item(i).uID;
+          let deadline = data.rows.item(i).deadline;
+          let memo = data.rows.item(i).memo;
+          let resultObj = { gID, name, target, amount, uID, deadline, memo };
+          this.result.push(resultObj);
+        }
+      })
+      .catch(e => console.log(e));
+  }
+
+  async getGoalById(gID: number) {
+    await this.selectGoalTableById(gID);
+    console.log("result from getGoalById is ",this.result)
+    return this.result
+  }
+
+  async selectGoalTableById(gID: number) {
+    console.log("gID in selectGoalTableById is ",gID);
+    return this.db.executeSql(`
+    SELECT * FROM Goal WHERE gID = `+gID+`
     `, [])
       .then((data) => {
         console.log(data)
@@ -527,6 +559,19 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
+  updateGoalTableByID(goal: any) {
+    console.log("updating table")
+    let { gID, name, target, memo, deadline } = goal
+    console.log("new data (sql) are ", goal);
+    this.db.executeSql(`
+    UPDATE Goal
+    SET name = "`+ name + `", target = ` + target + `, memo = "`+memo+`", deadline = "`+deadline+`"
+    WHERE gID = `+ gID + `;
+    `, [])
+      .then(() => console.log('Goal updated!'))
+      .catch(e => console.log(e));
+  }
+
   async getBalanceByWalletName(walletName: string) {
     return this.db.executeSql(`
     SELECT * FROM Wallet WHERE name = "`+ walletName + `" ;
@@ -547,9 +592,9 @@ export class SqlProvider {
     await this.getBalanceByWalletName(walletName);
     if (type == 'Income') {
       this.currentBalance += parseInt(amount);
-    } else if (type == 'Expense') {
+    } else if (type == 'Expense' || type == 'Saving') {
       this.currentBalance -= parseInt(amount);
-    }
+    } 
     this.db.executeSql(`
     UPDATE Wallet
     SET balance = `+ this.currentBalance + `
@@ -566,7 +611,7 @@ export class SqlProvider {
     await this.getBalanceByWalletName(walletName);
     if (type == 'Income') {
       this.currentBalance -= parseInt(amount);
-    } else if (type == 'Expense') {
+    } else if (type == 'Expense' || type == 'Saving') {
       this.currentBalance += parseInt(amount);
     }
     this.db.executeSql(`
@@ -592,9 +637,27 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
-  async updateGoalTarget(gID: number, amount: number) {
+  pushNotification(msg: string) {
+    this.localNotifications.schedule({
+      text: msg,
+      trigger: {at: new Date(new Date().getTime() + 2000)},
+      led: 'FF0000',
+      sound: null
+   });
+  }
+
+  async updateGoalTarget(gID: number, amount: any) {
+    let remainAmount = 0;
     await this.getGoalTargetAndAmountByID(gID);
-    this.gAmount += amount;
+    this.gAmount =  parseInt(this.gAmount) + parseInt(amount);
+    console.log("this.gAmount is ",this.gAmount)
+    remainAmount = this.gTarget - this.gAmount;
+    console.log("gTarget is ",this.gTarget," gAmount is ,",this.gAmount)
+    if (remainAmount > 0) {
+      this.pushNotification("Keep going! you still need to collect "+remainAmount+" more Baht.");
+    } else if (remainAmount == 0){
+      this.pushNotification("Congratulation! your goal is achieved.");
+    }
     this.db.executeSql(`
     UPDATE Goal
     SET amount = `+ this.gAmount + `

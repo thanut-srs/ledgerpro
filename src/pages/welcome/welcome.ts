@@ -25,7 +25,7 @@ export class WelcomePage {
   public sessionFlag = false;
   public userLogin: FormGroup;
   public userNickName = "";
-  public samplePic: string;
+  public samplePic =  "../assets/imgs/AvatarBoy.png";
   private win: any = window;
   constructor(
     public navCtrl: NavController,
@@ -48,6 +48,7 @@ export class WelcomePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WelcomePage');
+    console.log('samplePic is ', this.samplePic);
   }
   async ngOnInit() {
     await this.sql.openDB();

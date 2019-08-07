@@ -66,6 +66,7 @@ export class HomePage {
     for (let i = 0; i < result.length; i++) {
       this.collection.push(result[i]);
     }
+    this.collection.reverse();
     console.log('update transaction !');
     console.log("THE RESULT IS ", result.length);
     console.log('date list is ', date);

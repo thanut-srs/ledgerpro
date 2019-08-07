@@ -2,7 +2,6 @@ import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
 import { IonicPage, ViewController } from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { LocalNotifications } from '@ionic-native/local-notifications';
 /**
  * Generated class for the AddTransactionPage page.
  *
@@ -25,10 +24,9 @@ export class AddTransactionPage {
     public viewCtrl: ViewController,
     private formBuilder: FormBuilder,
     private sql: SqlProvider,
-    private localNotifications: LocalNotifications,
   ) {
     this.transaction = this.formBuilder.group({
-      date: [this.currentDate, Validators.required ],
+      date: [this.currentDate, Validators.required],
       amount: ['', Validators.required],
       tag: ['', Validators.required],
       walletName: ['', Validators.required],
@@ -41,20 +39,6 @@ export class AddTransactionPage {
     this.setDate();
     await this.getWalletList();
     await this.getGoalList();
-    this.pushNotification("Hi !!!!");
-  }
-
-  pushNotification(someTxt: string){
-    this.localNotifications.schedule({
-      text: someTxt,
-      trigger: {at: new Date(new Date().getTime() + 3000)},
-      led: 'FF0000',
-      sound: null,
-      lockscreen: true,
-      sticky: true,
-      wakeup: true,
-      vibrate: true,
-   });
   }
 
   setDate() {
@@ -90,7 +74,7 @@ export class AddTransactionPage {
     };
     this.sql.insertTable(transactionObj, 'Transactions');
     this.sql.updateBalance(balanceObj);
-    if(tType = "Saving"){
+    if (tType == "Saving") {
       this.sql.updateGoalTarget(gId, tAmount);
     }
     this.viewCtrl.dismiss(true);
@@ -124,8 +108,8 @@ export class AddTransactionPage {
     console.log("THE RESULT IS ", result);
   }
 
-  onChange($event){
-    if(($event) =='Income' || ($event) =='Expense'){
+  onChange($event) {
+    if (($event) == 'Income' || ($event) == 'Expense') {
       console.log("You select income or expense!!")
       this.transaction.controls['goalID'].disable()
       this.transaction.controls['tag'].enable()

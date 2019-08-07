@@ -1,3 +1,4 @@
+import { EditGoalPage } from './../edit-goal/edit-goal';
 import { SqlProvider } from './../../providers/sql/sql';
 import { CreateGoalPage } from './../create-goal/create-goal';
 import { Component } from '@angular/core';
@@ -40,7 +41,7 @@ export class GoalDetailPage {
     modal.onDidDismiss((data) => {
       if (data) {
         this.updateGoal();
-        this.presentCreateToast();
+        this.presentToast("Goal created");
       }
     });
     modal.present();
@@ -56,16 +57,25 @@ export class GoalDetailPage {
     console.log("THE RESULT IS ", result);
   }
 
-  presentCreateToast() {
+  presentToast(msg: string) {
     let toast = this.toastCtrl.create({
-      message: 'Goal created!',
+      message: msg,
       duration: 1500,
       position: 'bottom'
     });
     toast.present();
   }
   
-  onDetail(){
-
+  async onEditGoal(gID: number){
+    let goalData = await this.sql.getGoalById(gID);
+    console.log("goalData is ",goalData)
+    const modal = this.modalCtrl.create(EditGoalPage,{goalDetail: goalData});
+    modal.onDidDismiss((data) => {
+      if (data) {
+        this.updateGoal();
+        this.presentToast("Goal updated");
+      }
+    });
+    modal.present();
   }
 }

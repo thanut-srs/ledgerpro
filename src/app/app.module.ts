@@ -1,3 +1,4 @@
+import { EditGoalPage } from './../pages/edit-goal/edit-goal';
 import { CreateWalletPage } from './../pages/create-wallet/create-wallet';
 import { SignupPage } from './../pages/signup/signup';
 import { WelcomePage } from './../pages/welcome/welcome';
@@ -38,6 +39,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
     SignupPage,
     CreateWalletPage,
     CreateGoalPage,
+    EditGoalPage
     
   ],
   imports: [
@@ -59,6 +61,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
     SignupPage,
     CreateWalletPage,
     CreateGoalPage,
+    EditGoalPage
     
   ],
   providers: [

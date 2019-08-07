@@ -666,4 +666,15 @@ export class SqlProvider {
       .then(() => console.log('Goal updated!'))
       .catch(e => console.log(e));
   }
+
+  async checkGoalNewTarget(gID: number, newTarget: any){
+    let target = parseInt(newTarget);
+    await this.getGoalTargetAndAmountByID(gID);
+    if(target < this.gTarget && parseInt(this.gAmount) > target){
+      let remainAmount = this.gAmount - target;
+      return remainAmount
+    } else {
+      return false
+    }
+  }
 }

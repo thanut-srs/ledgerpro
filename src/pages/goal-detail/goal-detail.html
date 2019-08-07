@@ -22,7 +22,7 @@
   <ion-list>
     <ion-item-sliding *ngFor="let item of collection">
       <ion-item>
-        <div *ngIf="(item.uID) == uid " tappable (click)="onDetail(item.gID)">
+        <div *ngIf="(item.uID) == uid ">
           <h1>Deadline :{{item.deadline}} </h1>
           <h1>Name : {{item.name}}</h1>
           <h1>Amount :{{item.amount}} / {{item.target}} Baht </h1>

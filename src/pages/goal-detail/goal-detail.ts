@@ -65,11 +65,11 @@ export class GoalDetailPage {
     });
     toast.present();
   }
-  
-  async onEditGoal(gID: number){
+
+  async onEditGoal(gID: number) {
     let goalData = await this.sql.getGoalById(gID);
-    console.log("goalData is ",goalData)
-    const modal = this.modalCtrl.create(EditGoalPage,{goalDetail: goalData});
+    console.log("goalData is ", goalData)
+    const modal = this.modalCtrl.create(EditGoalPage, { goalDetail: goalData });
     modal.onDidDismiss((data) => {
       if (data) {
         this.updateGoal();

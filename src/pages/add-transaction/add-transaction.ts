@@ -75,6 +75,7 @@ export class AddTransactionPage {
     this.sql.insertTable(transactionObj, 'Transactions');
     this.sql.updateBalance(balanceObj);
     if (tType == "Saving") {
+      console.log("tType is saving!")
       this.sql.updateGoalTarget(gId, tAmount);
     }
     this.viewCtrl.dismiss(true);

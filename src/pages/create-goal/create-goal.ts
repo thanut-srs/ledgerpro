@@ -43,7 +43,8 @@ export class CreateGoalPage {
       name: this.goal.controls['gName'].value,
       target: this.goal.controls['target'].value,
       memo: this.goal.controls['memo'].value,
-      UID: uID
+      UID: uID,
+      gStatus: 'Inprogress'
     }
     console.log("goalObj is ", goalObj);
     this.sql.insertTable(goalObj, 'Goal');

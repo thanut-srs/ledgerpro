@@ -21,19 +21,20 @@
   </div>
   <ion-list>
     <ion-item-sliding *ngFor="let item of collection">
-      <ion-item>
-        <div *ngIf="(item.uID) == uid ">
+      <ion-item >
+        <div *ngIf="(item.uID) == uid  ">
           <h1>Deadline :{{item.deadline}} </h1>
-          <h1>Name : {{item.name}}</h1>
-          <h1>Amount :{{item.amount}} / {{item.target}} Baht </h1>
-          <h1>Memo : {{item.memo}}</h1>
+          <h2>Name : {{item.name}}</h2>
+          <h2>Amount :{{item.amount}} / {{item.target}} Baht </h2>
+          <h2>Status : {{item.gStatus}}</h2>
+          <h3>Memo : {{item.memo}}</h3>
         </div>
       </ion-item>
-      <ion-item-options side="right">
-        <button ion-button icon-only (click)="onEditGoal(item.gID)" >
+      <ion-item-options   side="right">
+        <button ion-button icon-only (click)="onEditGoal(item.gID)" *ngIf="(item.gStatus) != 'Achieved'">
           <ion-icon name="create"></ion-icon>
         </button>
-        <button ion-button icon-only color="danger" (click)="onDeleteWallet(item.wID,item.name)" >
+        <button ion-button icon-only color="danger" (click)="onDeleteGoal(item.gID)" >
           <ion-icon name="trash"></ion-icon>
         </button>
       </ion-item-options>

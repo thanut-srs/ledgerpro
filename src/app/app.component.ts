@@ -16,6 +16,7 @@ import { HomePage } from '../pages/home/home';
   templateUrl: 'app.html'
 })
 export class MyApp {
+  public nickName: string;
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any;
@@ -49,6 +50,7 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.getCurrentUserData();
     });
 
     this.platform.registerBackButtonAction(() => {
@@ -60,10 +62,6 @@ export class MyApp {
         let activeView = nav.getActive();
         // Checks if can go back before show up the alert
         if (activeView.index == 0 && !activeView.isOverlay) {
-          // if (nav.canGoBack()) {
-          //   closeFlag = true;
-          //   nav.pop();
-          // } else {
           const alert = this.alertCtrl.create({
             title: 'Exit app?',
             message: 'Exit app?',
@@ -98,5 +96,9 @@ export class MyApp {
   logout() {
     this.login.logout();
     this.nav.setRoot(WelcomePage);
+  }
+
+  async getCurrentUserData(){
+    this.nickName = await this.sql.getNickName();
   }
 }

@@ -29,6 +29,7 @@ export class EditGoalPage {
   }
 
   async onSaveGoal() {
+    // <-- create obj for update table -->
     let goal = {
       gID: this.goalDetail[0].gID,
       name: this.goal.controls['gName'].value,

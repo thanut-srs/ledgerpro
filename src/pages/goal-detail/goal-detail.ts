@@ -53,6 +53,7 @@ export class GoalDetailPage {
     for (let i = 0; i < result.length; i++) {
       this.collection.push(result[i]);
     }
+    this.collection.reverse();
     console.log('Update goal list!');
     console.log("THE RESULT IS ", result);
   }

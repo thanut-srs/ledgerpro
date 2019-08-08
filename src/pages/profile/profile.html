@@ -6,7 +6,16 @@
     <ion-title>Edit Profile</ion-title>
   </ion-navbar>
 </ion-header>
-<ion-img width="200" height="200" src="" ></ion-img>
+
 <ion-content>
+  <div text-center (click)="onEditName()" > 
+    <h1>
+      Name: {{collection[0].name}}
+    </h1>
+  </div>
   
+
+  <div text-center class="profilePic"> 
+      <ion-img alt="TAKE A PHOTO" [src]="samplePic" class="avatarPic" (click)="picAlert()" ></ion-img>
+    </div>
 </ion-content>

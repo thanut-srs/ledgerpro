@@ -1,6 +1,6 @@
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SqlProvider } from '../../providers/sql/sql';
 
@@ -25,7 +25,7 @@ export class SignupPage {
     private formBuilder: FormBuilder,
     private sql: SqlProvider,
     public camera: Camera,
-    
+    public alertCtrl: AlertController,
   ) {
     this.userInfo = this.formBuilder.group({
       username: ['', Validators.required],
@@ -70,5 +70,34 @@ export class SignupPage {
     }, (err) => {
       console.log(err);
     });
+  }
+
+  picAlert() {
+    let alert = this.alertCtrl.create({
+      title: 'Change Photo',
+      message: 'Do you want to change a new picture?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Take a photo',
+          handler: () => {
+            this.onOpenCamera(1);
+          }
+        },
+        {
+          text: 'Upload a pic',
+          handler: () => {
+            this.onOpenCamera(0);
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 }

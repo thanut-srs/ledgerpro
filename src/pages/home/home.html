@@ -4,7 +4,10 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title text-center>
-      Hello {{currentUser}}
+      <ion-select #wallet placeholder="Select...">
+        <ion-option selected value = 1 >1</ion-option>
+        <ion-option value = 2 >2</ion-option>
+      </ion-select>
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -16,7 +19,7 @@
     </div>
     <div class="slideDiv" *ngIf="collection.length != 0">
       <div *ngFor="let item of collection">
-        <ion-card *ngIf="(item.date) == day && (currentUser) == (item.uID) " tappable (click)="onDetail(item.tID)">
+        <ion-card *ngIf="(item.date) == day" tappable (click)="onDetail(item.tID)">
           <ion-card-header>
             {{item.date}} {{item.type}}
           </ion-card-header>

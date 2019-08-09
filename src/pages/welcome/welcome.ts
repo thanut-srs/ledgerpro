@@ -50,6 +50,9 @@ export class WelcomePage {
   }
   async ngOnInit() {
     await this.sql.openDB();
+    if (await this.sql.checkFirstTime()){
+      this.sql.createTables();
+    }
     this.sessionFlag = await this.sql.checkSession()
     if (this.sessionFlag) {
       this.getName();
@@ -93,7 +96,7 @@ export class WelcomePage {
       } else {
         let username = this.userLogin.controls['username'].value;
         console.log('checkLogin username is ', username);
-        this.navCtrl.setRoot(CreateWalletPage, { uID: username, fromWallet: false });
+        this.navCtrl.setRoot(CreateWalletPage, { fromWallet: false });
       }
     } else {
       this.userLogin.reset();

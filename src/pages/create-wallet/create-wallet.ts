@@ -27,12 +27,15 @@ export class CreateWalletPage {
     public sql: SqlProvider,
     public formBuilder: FormBuilder
   ) {
-    this.uID = params.get('uID')
     this.fromWallet = params.get('fromWallet')
     this.wallet = this.formBuilder.group({
       name: ['', Validators.required],
       balance: ['', Validators.required],
     });
+  }
+
+  async ngOnInit() {
+    this.uID = await this.sql.getCurrentUID();
   }
 
   ionViewDidLoad() {
@@ -41,7 +44,7 @@ export class CreateWalletPage {
   }
   onCreateWallet() {
     let walletObj = {
-      UID: this.uID,
+      uID: this.uID,
       name: this.wallet.controls['name'].value,
       balance: this.wallet.controls['balance'].value,
     };

@@ -8,14 +8,12 @@
 </ion-header>
 
 <ion-content>
-  <div text-center (click)="onEditName()" > 
+  <div text-center (click)="onEditName()">
     <h1>
       Name: {{name}}
     </h1>
   </div>
-  
-
-  <div text-center class="profilePic"> 
-      <ion-img alt="TAKE A PHOTO" [src]="samplePic" class="avatarPic" (click)="picAlert()" ></ion-img>
-    </div>
+  <div text-center class="profilePic">
+    <ion-img alt="TAKE A PHOTO" [src]="samplePic" class="avatarPic" (click)="picAlert()"></ion-img>
+  </div>
 </ion-content>

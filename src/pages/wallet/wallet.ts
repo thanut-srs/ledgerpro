@@ -17,7 +17,6 @@ import { IonicPage, NavController, ModalController, ToastController, AlertContro
   templateUrl: 'wallet.html',
 })
 export class WalletPage {
-  public uId = "";
   public collection = [];
   public user = "";
   constructor(
@@ -30,20 +29,21 @@ export class WalletPage {
   }
 
   async ngOnInit() {
-    await this.updateWalletList();
     await this.getCurrentUser();
-    this.uId = await this.sql.getCurrentUID();
+    await this.updateWalletList();
     console.log("Wallet collection is ", this.collection)
   }
 
   async updateWalletList() {
-    let result = await this.sql.getWalletTable();
+    let result = await this.sql.getWalletListByUid(this.user);
+    let allWList = await this.sql.getWalletTable();
     this.collection = [];
     for (let i = 0; i < result.length; i++) {
       this.collection.push(result[i]);
     }
     console.log('Update wallet list!');
-    console.log("THE RESULT IS ", result.length);
+    console.log("THE RESULT IS ", result);
+    console.log("THE WALLETS ARE ", allWList);
   }
 
   async getCurrentUser() {
@@ -115,7 +115,7 @@ export class WalletPage {
 
   async onDeleteWallet(wId: number, walletName: string) {
     let singleFlag = null;
-    if (await this.sql.checkSingleWallet(this.uId)) {
+    if (await this.sql.checkSingleWallet(this.user)) {
       singleFlag = true;
     }
     let alert = this.alertCtrl.create({

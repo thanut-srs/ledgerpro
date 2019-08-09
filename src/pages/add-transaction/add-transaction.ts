@@ -20,6 +20,7 @@ export class AddTransactionPage {
   public year = null;
   public collection = [];
   public goalList = [];
+  private uID: string;
   constructor(
     public viewCtrl: ViewController,
     private formBuilder: FormBuilder,
@@ -37,6 +38,7 @@ export class AddTransactionPage {
   }
   async ngOnInit() {
     this.setDate();
+    this.uID = await this.sql.getCurrentUID();
     await this.getWalletList();
     await this.getGoalList();
   }
@@ -64,7 +66,7 @@ export class AddTransactionPage {
       amount: this.transaction.controls['amount'].value,
       memo: this.transaction.controls['memo'].value,
       date: this.transaction.controls['date'].value,
-      walletID: this.transaction.controls['walletID'].value,
+      wID: this.transaction.controls['walletID'].value,
       goalID: this.transaction.controls['goalID'].value,
     };
     let balanceObj = {
@@ -90,13 +92,13 @@ export class AddTransactionPage {
   }
 
   async getWalletList() {
-    let result = await this.sql.getWalletTable();
+    let result = await this.sql.getWalletListByUid(this.uID);
     this.collection = [];
     for (let i = 0; i < result.length; i++) {
       this.collection.push(result[i]);
     }
     console.log('get wallet list!');
-    console.log("THE RESULT IS ", result.length);
+    console.log("THE RESULT IS ", result);
   }
 
   async getGoalList() {

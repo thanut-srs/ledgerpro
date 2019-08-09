@@ -92,7 +92,7 @@ export class ProfilePage {
           }
         },
         {
-          text: 'Up load a pic',
+          text: 'Upload a pic',
           handler: () => {
             this.onOpenCamera(0);
           }

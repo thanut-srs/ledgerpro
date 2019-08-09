@@ -71,16 +71,36 @@ export class SqlProvider {
       location: 'default'
     }).then((database: SQLiteObject) => {
       this.db = database;
-      if(this.checkFirstTime()){
-        this.createTables();
-      };
     });
   }
 
-  async checkFirstTime(){
-    await this.getUserTable()
-    console.log("YOU'VE COME INTO MORDOR FOR FIRST TIME!!!!!!!!!!!!!!!!!!");
-    return this.result.length == 0
+  async checkFirstTime() {
+    await this.checkTable()
+    console.log("the result is ",this.result);
+    if(this.result.length == 0){
+      console.log("YOU'VE COME INTO MORDOR FOR FIRST TIME!!!!!!!!!!!!!!!!!!");
+      return true
+    } else {
+      return false
+    }
+  }
+
+  checkTable() {
+    return this.db.executeSql(`
+    SELECT name FROM sqlite_master 
+    WHERE type ='table' AND name NOT LIKE 'sqlite_%';
+    `, [])
+      .then((data) => {
+        console.log(data)
+        console.log(data.rows.length);
+        this.result = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          let name = data.rows.item(i);
+          this.result.push(name);
+        }
+        console.log(this.result)
+      })
+      .catch(e => console.log(e));
   }
 
   dropTables() {
@@ -112,19 +132,19 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
-  async deleteTransactionBywName(wName: string) {
+  async deleteTransactionBywID(wID: number) {
     console.log('Welcome to delete transaction by wallet name!!!!');
-    console.log('Wallet name is ', wName);
+    console.log('Wallet name is ', wID);
     this.db.executeSql(`
-  DELETE FROM Transactions WHERE walletName = "`+ wName + `";
+  DELETE FROM Transactions WHERE wID = "`+ wID + `";
   `, [])
-      .then(() => console.log('Delete transaction (wID: ' + wName + ')'))
+      .then(() => console.log('Delete transaction (wID: ' + wID + ')'))
       .catch(e => console.log(e));
   }
 
   async deleteWallet(wID: number, wName: string) {
     await this.deleteWalletById(wID);
-    await this.deleteTransactionBywName(wName);
+    await this.deleteTransactionBywID(wID);
   }
 
   deleteSession() {
@@ -188,6 +208,30 @@ export class SqlProvider {
         }
       })
       .catch(e => console.log(e));
+  }
+
+  async getWalletListByUid(uID: string) {
+    await this.selectWalletListByUid(uID);
+    console.log("getWalletListByUid's result is ",this.result);
+    return this.result
+  }
+  async selectWalletListByUid(uID: string) {
+    console.log("uID(sql) is ",uID)
+    return this.db.executeSql(`
+    SELECT * FROM Wallet WHERE uID = "`+ uID + `"
+    `, [])
+      .then((data) => {
+        console.log(data)
+        this.result = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          let name = data.rows.item(i).name;
+          let wID = data.rows.item(i).wID;
+          let balance = data.rows.item(i).balance;
+          let resultObj = { name, wID, balance };
+          this.result.push(resultObj);
+        }
+      })
+      .catch(e => console.log("FAIL!!!!!!",e));
   }
 
   async getGoal() {
@@ -296,8 +340,8 @@ export class SqlProvider {
           let tag = data.rows.item(i).tag;
           let amount = data.rows.item(i).amount;
           let memo = data.rows.item(i).memo;
-          let walletName = data.rows.item(i).walletName;
-          let resultObj = { tID, date, type, tag, amount, memo, walletName };
+          let wID = data.rows.item(i).wID;
+          let resultObj = { tID, date, type, tag, amount, memo, wID };
           this.result.push(resultObj);
         }
         console.log("SelectTransactiontable is doing (sql) #6");
@@ -321,8 +365,8 @@ export class SqlProvider {
           let tag = data.rows.item(i).tag;
           let amount = data.rows.item(i).amount;
           let memo = data.rows.item(i).memo;
-          let walletName = data.rows.item(i).walletName;
-          let resultObj = { tID, date, type, tag, amount, memo, walletName };
+          let wID = data.rows.item(i).wID;
+          let resultObj = { tID, date, type, tag, amount, memo, wID };
           this.resultByID.push(resultObj);
         }
       })
@@ -449,6 +493,7 @@ export class SqlProvider {
 
   async getUserPicUrl() {
     await this.selectUserPicUrl();
+    console.log("picUrl is ",this.picUrl)
     return this.picUrl
   }
 
@@ -558,10 +603,10 @@ export class SqlProvider {
         break;
       }
       case "Wallet": {
-        let { name, UID, balance } = data;
+        let { name, uID, balance } = data;
         this.db.executeSql(`
       INSERT INTO Wallet(name,uID,balance)
-      VALUES ("` + name + `","` + UID + `",` + balance + `)
+      VALUES ("` + name + `","` + uID + `",` + balance + `)
       `, [])
           .then(() => console.log('Inserted Wallet table'))
           .catch(e => console.log(e));
@@ -728,7 +773,7 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
-  async getAmountByID(gID: number){
+  async getAmountByID(gID: number) {
     await this.getGoalTargetAndAmountByID(gID)
     return this.gAmount
   }

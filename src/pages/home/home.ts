@@ -68,7 +68,7 @@ export class HomePage {
     }
     this.collection.reverse();
     console.log('update transaction !');
-    console.log("THE RESULT IS ", result.length);
+    console.log("THE RESULT IS ", result);
     console.log('date list is ', date);
   }
 

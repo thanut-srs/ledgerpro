@@ -7,7 +7,6 @@ import { IonicPage, NavController, NavParams, ModalController, ToastController, 
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoginProvider } from '../../providers/login/login';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 /**
  * Generated class for the WelcomePage page.
@@ -38,7 +37,6 @@ export class WelcomePage {
     private login: LoginProvider,
     private alertCtrl: AlertController,
     private camera: Camera,
-    private sanitizer: DomSanitizer
   ) {
     this.userLogin = this.formBuilder.group({
       username: ['', Validators.required],

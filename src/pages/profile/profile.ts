@@ -18,7 +18,7 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 export class ProfilePage {
   public samplePic: string;
   private win: any = window;
-  public collection = [];
+  public name: string;
   public uID: string;
   constructor(
     public navCtrl: NavController,
@@ -70,7 +70,7 @@ export class ProfilePage {
   }
 
   async updateName(){
-    this.collection = await this.sql.getUserTable();
+    this.name = await this.sql.getNickName();
   }
 
   picAlert() {
@@ -86,22 +86,29 @@ export class ProfilePage {
           }
         },
         {
-          text: 'Yes',
+          text: 'Take a photo',
           handler: () => {
-            this.onOpenCamera();
+            this.onOpenCamera(1);
+          }
+        },
+        {
+          text: 'Up load a pic',
+          handler: () => {
+            this.onOpenCamera(0);
           }
         }
       ]
     });
     alert.present();
   }
-  onOpenCamera() {
+  onOpenCamera(sourceType: number) {
     const options: CameraOptions = {
       quality: 100,
       targetHeight: 400,
       destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE
+      mediaType: this.camera.MediaType.PICTURE,
+      sourceType:sourceType,
     }
     this.camera.getPicture(options).then((imageData) => {
       // imageData is either a base64 encoded string or a file URI

@@ -29,7 +29,7 @@ export class AddTransactionPage {
       date: [this.currentDate, Validators.required],
       amount: ['', Validators.required],
       tag: ['', Validators.required],
-      walletName: ['', Validators.required],
+      walletID: ['', Validators.required],
       type: ['', Validators.required],
       goalID: ['', Validators.required],
       memo: [''],
@@ -64,13 +64,13 @@ export class AddTransactionPage {
       amount: this.transaction.controls['amount'].value,
       memo: this.transaction.controls['memo'].value,
       date: this.transaction.controls['date'].value,
-      walletName: this.transaction.controls['walletName'].value,
+      walletID: this.transaction.controls['walletID'].value,
       goalID: this.transaction.controls['goalID'].value,
     };
     let balanceObj = {
       type: this.transaction.controls['type'].value,
       amount: this.transaction.controls['amount'].value,
-      walletName: this.transaction.controls['walletName'].value,
+      walletID: this.transaction.controls['walletID'].value,
     };
     this.sql.insertTable(transactionObj, 'Transactions');
     this.sql.updateBalance(balanceObj);
@@ -103,7 +103,9 @@ export class AddTransactionPage {
     let result = await this.sql.getGoal();
     this.goalList = [];
     for (let i = 0; i < result.length; i++) {
-      this.goalList.push(result[i]);
+      if (result[i].gStatus != 'Achieved') {
+        this.goalList.push(result[i]);
+      }
     }
     console.log('get goal list!');
     console.log("THE RESULT IS ", result);

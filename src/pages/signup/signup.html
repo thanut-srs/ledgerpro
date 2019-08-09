@@ -30,7 +30,10 @@
       <ion-label>Nickname</ion-label>
       <ion-input type="text" formControlName="nickname" placeholder=""></ion-input>
     </ion-item>
-    <ion-img alt="TAKE A PHOTO" [src]="samplePic" class="avatarPic" (click)="onOpenCamera()" ></ion-img>
+    <ion-img alt="TAKE A PHOTO" [src]="samplePic" class="avatarPic" ></ion-img>
+    <div>
+        <button ion-button (click)="onOpenCamera(0)">Upload a pic</button>
+        <button ion-button (click)="onOpenCamera(1)">Take a pic</button></div>
     <div class="submitBtn">
       <button ion-button type="submit" [disabled]="!userInfo.valid">Submit</button>
     </div>

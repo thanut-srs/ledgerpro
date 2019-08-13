@@ -35,7 +35,7 @@ export class AddTransactionPage {
   async ngOnInit() {
     let wID: any;
     this.setDate();
-    if (this.walletID == 'All-Wellet') {
+    if (this.walletID == 'All-Wallet') {
       wID = '';
     } else {
       wID = this.walletID;

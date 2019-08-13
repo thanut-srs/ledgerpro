@@ -32,6 +32,7 @@ export class HomePage {
   async ngOnInit() {
     await this.getUid();
     await this.updateTransaction();
+    await this.updateDate();
     console.log(this.date);
     await this.getName();
     await this.getWalletList();
@@ -123,11 +124,11 @@ export class HomePage {
   }
 
   async updateDate() {
-    if (this.selectedWallet != 'All-Wallet') {
-      console.log(this.sql.selectDistinctdateByWid(this.selectedWallet));
-      this.date = await this.sql.selectDistinctdateByWid(this.selectedWallet);
-    } else {
+    if (this.selectedWallet == 'All-Wallet' || this.selectedWallet == undefined) {
       this.date = await this.sql.selectDistinctdate();
+    } else {
+      console.log("##### in updateDate ",this.sql.selectDistinctdateByWid(this.selectedWallet));
+      this.date = await this.sql.selectDistinctdateByWid(this.selectedWallet);
     }
   }
 }

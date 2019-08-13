@@ -101,7 +101,7 @@ export class WalletPage {
               name: data.name,
               balance: parseInt(data.balance)
             }
-            if (data.name == "" || data.balance == "" || data.balance < 0)  {
+            if (data.name.trim() == "" || data.balance.trim() == "" || data.balance < 0)  {
               this.onEditWallet(walletDetail,'Invalid information, please fill again.');
             } else {
               this.sql.updateWalletTableByID(wallet);

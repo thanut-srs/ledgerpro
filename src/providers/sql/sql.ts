@@ -417,6 +417,7 @@ export class SqlProvider {
   }
 
   async selectDateByWid(wID: any) {
+    console.log("#### selectDateByWid's wID is ",wID);
     return this.db.executeSql(`
     SELECT DISTINCT date FROM Transactions WHERE wID = `+parseInt(wID)+`
     ORDER BY date DESC;

@@ -6,33 +6,36 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title text-center>Welcome</ion-title>
+    <ion-title text-center>Login</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-<div *ngIf="(sessionFlag)" >
+  <div *ngIf="(sessionFlag)" text-center class="loginDiv">
     <h1>Hi {{userNickName}}.</h1>
-    <button ion-button (click)="onGoHome()" >Login</button>
-    <a (click)="onLogout()" >Login with other account</a>
-</div>
-<div *ngIf="!(sessionFlag)" text-center>
-  <h1>Login</h1>
-  <form [formGroup]="userLogin" (ngSubmit)="checkLogin()">
-    <ion-item>
-      <ion-label>Username</ion-label>
-      <ion-input type="text" formControlName="username" placeholder=""></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label>Password</ion-label>
-      <ion-input type="password" formControlName="password" placeholder=""></ion-input>
-    </ion-item>
-    <div class="submitBtn">
-      <button ion-button type="submit" [disabled]="!userLogin.valid">Submit</button>
+    <button ion-button default (click)="onGoHome()" class="loginBtn">Login</button><br>
+    <a (click)="onLogout()">Login with other account</a>
+  </div>
+  <div *ngIf="!(sessionFlag)" text-center class="loginDiv">
+    <form [formGroup]="userLogin" (ngSubmit)="checkLogin()">
+      <ion-item>
+        <ion-label>Username</ion-label>
+        <ion-input type="text" formControlName="username" placeholder=""></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Password</ion-label>
+        <ion-input type="password" formControlName="password" placeholder=""></ion-input>
+      </ion-item>
+      <br>
+      <div class="submitBtn">
+        <button ion-button default type="submit" [disabled]="!userLogin.valid" class="loginBtn">Submit</button>
+      </div>
+    </form>
+    <br>
+    <div class="belowMsg">
+      <a (click)="onCreateAccount()" >Don't have account, Signup!</a>
     </div>
-  </form>
-  <a (click)="onCreateAccount()" >Don't have account, Signup!</a><br><br>
-  <button ion-button (click)="addtable()" >add</button>
-  <button ion-button (click)="droptable()" >drop</button>
-</div>
+    <!-- <button ion-button (click)="addtable()" >add</button>
+  <button ion-button (click)="droptable()" >drop</button> -->
+  </div>
 </ion-content>

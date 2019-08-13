@@ -6,10 +6,37 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>CreateGoalPage</ion-title>
+      <ion-buttons left>
+          <button ion-button icon-only (click)="viewCtrl.dismiss()">
+            <ion-icon name="close"></ion-icon>
+          </button>
+        </ion-buttons>
+    <ion-title text-center>Create Goal</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-
+  <form [formGroup]="goal" (ngSubmit)="onCreateGoal()">
+    <ion-item>
+      <ion-label>Deadline Date :</ion-label>
+      <ion-datetime id="datepick" displayFormat="DDDD DD MMMM YYYY" formControlName="date" pickerFormat=" DD MMMM YYYY"
+        min="2000"  placeholder="Select date">
+      </ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>Goal's name :</ion-label>
+      <ion-input type="text" formControlName="gName" placeholder="Fill name"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Target :</ion-label>
+      <ion-input type="number" formControlName="target" placeholder="Fill target"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Memo :</ion-label>
+      <ion-textarea formControlName="memo" placeholder="(Optional)"></ion-textarea>
+    </ion-item>
+    <div class="submitBtn">
+      <button ion-button type="submit" id="submitbtn" [disabled]="!goal.valid">Submit</button>
+    </div>
+  </form>
 </ion-content>

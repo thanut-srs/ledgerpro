@@ -2,7 +2,7 @@ import { Validators } from '@angular/forms';
 import { CreateWalletPage } from './../create-wallet/create-wallet';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, ModalController, ToastController, AlertController, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, ModalController, ToastController, AlertController, ViewController, MenuController } from 'ionic-angular';
 
 /**
  * Generated class for the WalletPage page.
@@ -17,7 +17,6 @@ import { IonicPage, NavController, ModalController, ToastController, AlertContro
   templateUrl: 'wallet.html',
 })
 export class WalletPage {
-  public uId = "";
   public collection = [];
   public user = "";
   constructor(
@@ -25,25 +24,28 @@ export class WalletPage {
     private navCtrl: NavController,
     private toastCtrl: ToastController,
     public alertCtrl: AlertController,
-    public viewCtrl: ViewController
-  ) {
-  }
+    public viewCtrl: ViewController,
+    public menuCtrl: MenuController,
+    ) {
+      this.menuCtrl.enable(true, 'myMenu');
+    }
 
   async ngOnInit() {
-    await this.updateWalletList();
     await this.getCurrentUser();
-    this.uId = await this.sql.getCurrentUID();
+    await this.updateWalletList();
     console.log("Wallet collection is ", this.collection)
   }
 
   async updateWalletList() {
-    let result = await this.sql.getWalletTable();
+    let result = await this.sql.getWalletListByUid(this.user);
+    let allWList = await this.sql.getWalletTable();
     this.collection = [];
     for (let i = 0; i < result.length; i++) {
       this.collection.push(result[i]);
     }
     console.log('Update wallet list!');
-    console.log("THE RESULT IS ", result.length);
+    console.log("THE RESULT IS ", result);
+    console.log("THE WALLETS ARE ", allWList);
   }
 
   async getCurrentUser() {
@@ -63,19 +65,24 @@ export class WalletPage {
     toast.present();
   }
 
-  onEditWallet(wId: number) {
+  onEditWallet(walletDetail: any,msg: string) {
     let alert = this.alertCtrl.create({
       title: 'Edit Wallet',
+      message: msg,
       inputs: [
         {
           name: 'name',
-          placeholder: 'New name',
-          type: 'text'
+          value: walletDetail.wName,
+          placeholder: "Wallet's name",
+          type: 'text',
+          max: 20
         },
         {
           name: 'balance',
-          placeholder: 'Balance',
-          type: 'number'
+          type: 'number',
+          placeholder: "Wallet's Balance",
+          value: '' + walletDetail.balance
+          
         }
       ],
       buttons: [
@@ -90,19 +97,25 @@ export class WalletPage {
           text: 'Save',
           handler: data => {
             let wallet = {
-              wID:  wId,
-              name: data.name, 
-              balance: data.balance 
+              wID: walletDetail.wID,
+              name: data.name,
+              balance: parseInt(data.balance)
             }
-            this.sql.updateWalletTableByID(wallet);
-            this.updateWalletList();
-            this.presentEditToast();
+            if (data.name == "" || data.balance == "" || data.balance < 0)  {
+              this.onEditWallet(walletDetail,'Invalid information, please fill again.');
+            } else {
+              this.sql.updateWalletTableByID(wallet);
+              this.updateWalletList();
+              this.presentEditToast();
+            }
           }
         }
       ]
     });
     alert.present();
   }
+
+  
 
   presentEditToast() {
     let toast = this.toastCtrl.create({
@@ -115,7 +128,7 @@ export class WalletPage {
 
   async onDeleteWallet(wId: number, walletName: string) {
     let singleFlag = null;
-    if (await this.sql.checkSingleWallet(this.uId)) {
+    if (await this.sql.checkSingleWallet(this.user)) {
       singleFlag = true;
     }
     let alert = this.alertCtrl.create({

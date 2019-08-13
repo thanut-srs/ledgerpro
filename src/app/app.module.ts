@@ -1,3 +1,4 @@
+import { EditGoalPage } from './../pages/edit-goal/edit-goal';
 import { CreateWalletPage } from './../pages/create-wallet/create-wallet';
 import { SignupPage } from './../pages/signup/signup';
 import { WelcomePage } from './../pages/welcome/welcome';
@@ -20,6 +21,8 @@ import { SqlProvider } from '../providers/sql/sql';
 import { EditTransactionPage } from '../pages/edit-transaction/edit-transaction';
 import { LoginProvider } from '../providers/login/login';
 import { CreateGoalPage } from '../pages/create-goal/create-goal';
+import { LocalNotifications } from '@ionic-native/local-notifications';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 
 @NgModule({
@@ -36,6 +39,7 @@ import { CreateGoalPage } from '../pages/create-goal/create-goal';
     SignupPage,
     CreateWalletPage,
     CreateGoalPage,
+    EditGoalPage
     
   ],
   imports: [
@@ -57,6 +61,7 @@ import { CreateGoalPage } from '../pages/create-goal/create-goal';
     SignupPage,
     CreateWalletPage,
     CreateGoalPage,
+    EditGoalPage
     
   ],
   providers: [
@@ -67,7 +72,8 @@ import { CreateGoalPage } from '../pages/create-goal/create-goal';
     SQLite,
     LoginProvider,
     LoginProvider,
-  
+    LocalNotifications,
+    Camera
   
   ]
 })

@@ -3,9 +3,10 @@ import { HomePage } from './../home/home';
 import { SignupPage } from './../signup/signup';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, ToastController, ViewController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, ToastController, ViewController, AlertController, MenuController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoginProvider } from '../../providers/login/login';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 /**
  * Generated class for the WelcomePage page.
@@ -23,6 +24,8 @@ export class WelcomePage {
   public sessionFlag = false;
   public userLogin: FormGroup;
   public userNickName = "";
+  public samplePic =  "../assets/imgs/AvatarBoy.png";
+  private win: any = window;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -32,8 +35,11 @@ export class WelcomePage {
     public viewCtrl: ViewController,
     private formBuilder: FormBuilder,
     private login: LoginProvider,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private camera: Camera,
+    private menuCtrl: MenuController,
   ) {
+    this.menuCtrl.enable(false, 'myMenu');
     this.userLogin = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
@@ -42,9 +48,13 @@ export class WelcomePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WelcomePage');
+    console.log('samplePic is ', this.samplePic);
   }
   async ngOnInit() {
     await this.sql.openDB();
+    if (await this.sql.checkFirstTime()){
+      this.sql.createTables();
+    }
     this.sessionFlag = await this.sql.checkSession()
     if (this.sessionFlag) {
       this.getName();
@@ -88,7 +98,7 @@ export class WelcomePage {
       } else {
         let username = this.userLogin.controls['username'].value;
         console.log('checkLogin username is ', username);
-        this.navCtrl.setRoot(CreateWalletPage, { uID: username,fromWallet: false });
+        this.navCtrl.setRoot(CreateWalletPage, { fromWallet: false });
       }
     } else {
       this.userLogin.reset();
@@ -138,12 +148,31 @@ export class WelcomePage {
     } else {
       let username = await this.sql.getCurrentUID();
       console.log('checkLogin username is (onGoHome) ', username);
-      this.navCtrl.push(CreateWalletPage, { uID: username,fromWallet: false });
+      this.navCtrl.push(CreateWalletPage, { uID: username, fromWallet: false });
     }
   }
 
   onLogout() {
     this.login.logout();
     this.navCtrl.setRoot(WelcomePage);
+  }
+
+  onOpenCamera() {
+    const options: CameraOptions = {
+      quality: 100,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
+    }
+    this.camera.getPicture(options).then((imageData) => {
+      // imageData is either a base64 encoded string or a file URI
+      // If it's base64 (DATA_URL):
+      let base64Image = 'data:image/jpeg;base64,' + imageData;
+      console.log(base64Image);
+      this.samplePic = this.win.Ionic.WebView.convertFileSrc(imageData);
+      console.log(this.samplePic);
+    }, (err) => {
+      console.log(err);
+    });
   }
 }

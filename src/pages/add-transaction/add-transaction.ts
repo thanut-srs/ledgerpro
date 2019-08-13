@@ -1,6 +1,6 @@
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, ViewController } from 'ionic-angular';
+import { IonicPage, ViewController, NavParams } from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 /**
  * Generated class for the AddTransactionPage page.
@@ -22,20 +22,29 @@ export class AddTransactionPage {
   public goalList = [];
   private uID: string;
   public type = 'Expense';
+  public walletID: any
   constructor(
+    public params: NavParams,
     public viewCtrl: ViewController,
     private formBuilder: FormBuilder,
     private sql: SqlProvider,
   ) {
+    this.walletID = this.params.get('wID');
     console.log("Contructor")
   }
   async ngOnInit() {
+    let wID: any;
     this.setDate();
+    if (this.walletID == 'All-Wellet') {
+      wID = '';
+    } else {
+      wID = this.walletID;
+    }
     this.transaction = this.formBuilder.group({
       date: [this.currentDate, Validators.required],
       amount: ['', Validators.required],
       tag: ['', Validators.required],
-      walletID: ['', Validators.required],
+      walletID: [wID, Validators.required],
       type: [this.type, Validators.required],
       goalID: ['', Validators.required],
       memo: [''],

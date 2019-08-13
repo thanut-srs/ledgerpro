@@ -4,14 +4,14 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title text-center>
-      <ion-select #wallet placeholder="Select...">
+      <ion-select text-center #wallet placeholder="Select..." [(ngModel)]="selectedWallet" 
+      (ionChange)="onChange($event)">
         <ion-option value="All-Wallet" selected>All wallet</ion-option>
         <ion-option *ngFor="let item of walletlist" [value]="item.wID">{{item.name}}</ion-option>
       </ion-select>
     </ion-title>
   </ion-navbar>
 </ion-header>
-
 <ion-content>
   <div *ngFor="let day of date">
       <div class="dateBar">
@@ -19,7 +19,6 @@
         </div>
     <div class="slideDiv" *ngIf="collection.length != 0">
       <div *ngFor="let item of collection">
-        
         <ion-card *ngIf="(item.date) == day && ((wallet.value) == 'All-Wallet' || (wallet.value) == item.wID) " tappable
           (click)="onDetail(item.tID)">
           <ion-card-header>
@@ -32,7 +31,6 @@
             {{item.tag}} {{item.amount}} Baht {{item.memo}}
           </ion-card-content>
         </ion-card>
-        
       </div>
     </div>
   </div>
@@ -41,7 +39,7 @@
   </div>
 
   <ion-fab center bottom>
-    <button ion-fab (click)="onAddTransaction()">
+    <button ion-fab (click)="onAddTransaction(wallet.value)">
       <ion-icon name="add-circle"></ion-icon>
     </button>
   </ion-fab>

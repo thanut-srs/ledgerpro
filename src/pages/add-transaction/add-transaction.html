@@ -56,17 +56,15 @@
         </ion-select>
     </ion-item>
     <ion-item>
-      <ion-label>Wallet : </ion-label>
-      <ion-select formControlName="walletID" placeholder="Select...">
-        <ion-option *ngFor="let item of collection" [value]="item.wID">{{item.name}}</ion-option>
-      </ion-select>
-    </ion-item>
-
-
-    <ion-item>
       <ion-label>Amount : </ion-label>
       <ion-input id="amountinput" type="number" formControlName="amount" placeholder="Fill amount"></ion-input>
     </ion-item>
+    <ion-item>
+        <ion-label>Wallet : </ion-label>
+        <ion-select formControlName="walletID" placeholder="Select...">
+          <ion-option *ngFor="let item of collection" [value]="item.wID">{{item.name}}</ion-option>
+        </ion-select>
+      </ion-item>
     <ion-item>
       <ion-label>Memo : </ion-label>
       <ion-textarea formControlName="memo" placeholder="(Optional)"></ion-textarea>

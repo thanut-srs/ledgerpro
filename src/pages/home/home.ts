@@ -19,6 +19,7 @@ export class HomePage {
   public currentDate;
   public currentUser = "";
   public uID: string;
+  public selectedWallet: any;
   constructor(
     public navCtrl: NavController,
     public modalCtrl: ModalController,
@@ -36,30 +37,31 @@ export class HomePage {
     await this.getWalletList();
   }
 
-  async getName(){
+  async getName() {
     this.currentUser = await this.sql.getNickName();
-  }  
+  }
 
-  async getWalletList(){
+  async getWalletList() {
     this.walletlist = await this.sql.getWalletListByUid(this.uID);
   }
-async getUid(){
-  this.uID = await this.sql.getCurrentUID();
-}
+  async getUid() {
+    this.uID = await this.sql.getCurrentUID();
+  }
 
-  onAddTransaction() {
-    const modal = this.modalCtrl.create(AddTransactionPage);
-    modal.onDidDismiss((data) => {
+  onAddTransaction(walletID: any) {
+    const modal = this.modalCtrl.create(AddTransactionPage, { wID: walletID });
+    modal.onDidDismiss(async(data) => {
       console.log("Modal is dismissed! #3");
       if (data) {
-        this.updateTransaction();
+        await this.updateTransaction();
+        await this.updateDate();
         this.presentAddToast();
       }
     });
     modal.present();
   }
 
-  onClick(){
+  onClick() {
     console.log("Menu Clicked!");
   }
 
@@ -87,10 +89,11 @@ async getUid(){
   onDetail(tID: number) {
     console.log('item id is ', tID);
     const modal = this.modalCtrl.create(TransactionDetailPage, { tranID: tID });
-    modal.onDidDismiss((data) => {
+    modal.onDidDismiss(async (data) => {
       console.log("onDetail Modal is dismissed!");
-      this.updateTransaction();
+      await this.updateTransaction();
       if (data) {
+        await this.updateDate();
         this.presentDeleteToast();
       }
     });
@@ -114,4 +117,17 @@ async getUid(){
     toast.present();
   }
 
+  async onChange($event) {
+    console.log("selectedWallet is ", this.selectedWallet)
+    this.updateDate();
+  }
+
+  async updateDate() {
+    if (this.selectedWallet != 'All-Wallet') {
+      console.log(this.sql.selectDistinctdateByWid(this.selectedWallet));
+      this.date = await this.sql.selectDistinctdateByWid(this.selectedWallet);
+    } else {
+      this.date = await this.sql.selectDistinctdate();
+    }
+  }
 }

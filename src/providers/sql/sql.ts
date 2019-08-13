@@ -16,6 +16,7 @@ export class SqlProvider {
   public result = [];
   public resultByID = [];
   public date = [];
+  public eachDate = [];
   public loginFlag = null;
   public userPw = "";
   public userNickName = "";
@@ -403,6 +404,30 @@ export class SqlProvider {
         for (let i = 0; i < data.rows.length; i++) {
           let date = data.rows.item(i).date;
           this.date.push(date);
+        }
+        console.log("Select distinct date");
+      })
+      .catch(e => console.log(e));
+  }
+
+  async selectDistinctdateByWid(wID: any) {
+    await this.selectDateByWid(wID);
+    console.log('the distinct date are ', this.date);
+    return this.eachDate
+  }
+
+  async selectDateByWid(wID: any) {
+    return this.db.executeSql(`
+    SELECT DISTINCT date FROM Transactions WHERE wID = `+parseInt(wID)+`
+    ORDER BY date DESC;
+    `, [])
+      .then((data) => {
+        console.log(data)
+        console.log(data.rows.length);
+        this.eachDate = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          let date = data.rows.item(i).date;
+          this.eachDate.push(date);
         }
         console.log("Select distinct date");
       })

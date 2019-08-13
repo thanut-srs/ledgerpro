@@ -55,15 +55,15 @@ describe('HomePage', () => {
     expect(true).toBeTruthy()
   })
 
-  it('should call ViewGoal when click button viewgoal ',() => {
-    spyOn(component,"onViewGoal")
-    let btngoal = fixture.debugElement.query(By.css('#viewgoalbtn'));
-    //console.log('styles:::',btngoal)
-    btngoal.triggerEventHandler('click',null);
-     expect(component.onViewGoal).toHaveBeenCalledTimes(1);
+  // it('should call ViewGoal when click button viewgoal ',() => {
+  //   spyOn(component,"onViewGoal")
+  //   let btngoal = fixture.debugElement.query(By.css('#viewgoalbtn'));
+  //   //console.log('styles:::',btngoal)
+  //   btngoal.triggerEventHandler('click',null);
+  //    expect(component.onViewGoal).toHaveBeenCalledTimes(1);
 
     
-  })
+  // })
 
   it('should has message when no collection',() => {
     component.collection = []

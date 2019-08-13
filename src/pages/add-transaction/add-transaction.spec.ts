@@ -1,10 +1,11 @@
-import { FormBuilder, Validators } from '@angular/forms';
+import { NavParamsMock } from './../../mocks/navparam.mocks';
+import { FormBuilder } from '@angular/forms';
 import { SqlProvider } from '../../providers/sql/sql';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { AddTransactionPage } from './add-transaction';
-import { IonicModule, ViewController } from 'ionic-angular';
+import { IonicModule, ViewController, NavParams } from 'ionic-angular';
 import { SqlProviderMock } from '../../mocks/sqlprovider.mocks'
 //let component = undefined;
 
@@ -29,6 +30,7 @@ describe('Add Trasaction page', () => {
       imports: [IonicModule.forRoot(AddTransactionPage)],
       providers: [{ provide: ViewController, useValue: viewCtrlSpy },
       { provide: SqlProvider, useValue: SqlProviderMock },
+      { provide: NavParams, useValue: NavParamsMock },
         FormBuilder],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
@@ -50,8 +52,8 @@ describe('Add Trasaction page', () => {
     expect(form).toBeDefined()
   })
 
-  it('should have 6 form', () => {
-    expect(Object.keys(component.transaction.controls).length).toEqual(6)
+  it('should have 7 form', () => {
+    expect(Object.keys(component.transaction.controls).length).toEqual(7)
   })
 
   it('should have add transaction button', () => {
@@ -70,14 +72,14 @@ describe('Add Trasaction page', () => {
   })
 
   it('type should have no value when enter app', () => {
-    expect(component.transaction.controls['type'].value).toEqual('')
+    expect(component.transaction.controls['type'].value).toEqual('Expense')
   })
   it('tag should have no value when enter app', () => {
     expect(component.transaction.controls['tag'].value).toEqual('')
   })
 
-  it('walletname should have no value when enter app', () => {
-    expect(component.transaction.controls['walletName'].value).toEqual('')
+  it('walletID should have no value when enter app', () => {
+    expect(component.transaction.controls['walletID'].value).toEqual('default')
   })
 
   it('amount should have no value when enter app', () => {
@@ -98,14 +100,15 @@ describe('Add Trasaction page', () => {
   })
 
   it('component.currentDate should have no value when enter app', () => {
-    expect(component.transaction.controls['date'].value).toEqual(null)
+    component.setDate()
+    expect(component.transaction.controls['date'].value).toEqual(component.currentDate)
   })
 
   const setFormTruthValue = function () {
     component.transaction.controls['type'].setValue('Income')
     component.transaction.controls['tag'].setValue('Food')
     component.transaction.controls['amount'].setValue(30)
-    component.transaction.controls['walletName'].setValue('abc')
+    component.transaction.controls['walletID'].setValue('1')
     component.transaction.controls['memo'].setValue('nonthing')
     component.transaction.controls['date'].setValue('2019-07-22')
   }

@@ -21,28 +21,34 @@ export class AddTransactionPage {
   public collection = [];
   public goalList = [];
   private uID: string;
+  public type = 'Expense';
   constructor(
     public viewCtrl: ViewController,
     private formBuilder: FormBuilder,
     private sql: SqlProvider,
   ) {
+    console.log("Contructor")
+  }
+  async ngOnInit() {
+    this.setDate();
     this.transaction = this.formBuilder.group({
       date: [this.currentDate, Validators.required],
       amount: ['', Validators.required],
       tag: ['', Validators.required],
       walletID: ['', Validators.required],
-      type: ['', Validators.required],
+      type: [this.type, Validators.required],
       goalID: ['', Validators.required],
       memo: [''],
     });
-  }
-  async ngOnInit() {
-    this.setDate();
+    this.transaction.controls['goalID'].disable()
     this.uID = await this.sql.getCurrentUID();
     await this.getWalletList();
     await this.getGoalList();
   }
+  onPrint() {
+    console.log(this.transaction);
 
+  }
   setDate() {
     let date = new Date();
     let year = date.getFullYear();
@@ -51,6 +57,7 @@ export class AddTransactionPage {
     let day = ("0" + date.getDate()).slice(-2)
     let currentDay = year + "-" + month + "-" + day;
     this.currentDate = currentDay;
+    console.log("##### currectDate is ", this.currentDate, " ######")
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad AddTransactionPage');

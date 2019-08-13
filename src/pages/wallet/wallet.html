@@ -5,9 +5,9 @@
     </button>
     <ion-title>Wallet</ion-title>
     <ion-buttons right>
-    <button  ion-button icon-only (click)="onCreateWallet()">
-      <ion-icon name="add"></ion-icon>
-    </button>
+      <button ion-button icon-only (click)="onCreateWallet()">
+        <ion-icon name="add"></ion-icon>
+      </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -17,12 +17,16 @@
     <ion-item-sliding *ngFor="let item of collection">
       <ion-item>
         <div>
-             <h1>Name: {{item.name}} </h1>
-             <h1>Balance: {{item.balance}} Baht </h1>
+          <h1>Name: {{item.name}} </h1>
+          <h1>Balance: {{item.balance}} Baht </h1>
         </div>
       </ion-item>
       <ion-item-options side="right">
-        <button ion-button (click)="onEditWallet(item.wID)">  Edit  </button>
+        <button ion-button (click)="onEditWallet({
+          wID: item.wID,
+          wName: item.name,
+          balance: item.balance
+        },'Fill information')"> Edit </button>
         <button ion-button color="danger" (click)="onDeleteWallet(item.wID,item.name)">Delete</button>
       </ion-item-options>
     </ion-item-sliding>

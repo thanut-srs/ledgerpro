@@ -3,7 +3,7 @@ import { GoalDetailPage } from './../goal-detail/goal-detail';
 import { AddTransactionPage } from './../add-transaction/add-transaction';
 
 import { Component, ViewChild } from '@angular/core';
-import { NavController, ModalController, Slides, ToastController } from 'ionic-angular';
+import { NavController, ModalController, Slides, ToastController, MenuController } from 'ionic-angular';
 import { WalletPage } from '../wallet/wallet';
 import { SqlProvider } from '../../providers/sql/sql';
 
@@ -18,16 +18,19 @@ export class HomePage {
   public walletlist = [];
   public currentDate;
   public currentUser = "";
+  public uID: string;
   constructor(
     public navCtrl: NavController,
     public modalCtrl: ModalController,
     public sql: SqlProvider,
     public toastCtrl: ToastController,
+    public menuCtrl: MenuController
   ) {
-
+    this.menuCtrl.enable(true, 'myMenu');
   }
   async ngOnInit() {
-    this.updateTransaction();
+    await this.getUid();
+    await this.updateTransaction();
     console.log(this.date);
     await this.getName();
     await this.getWalletList();
@@ -38,8 +41,12 @@ export class HomePage {
   }  
 
   async getWalletList(){
-    this.walletlist = await this.sql.getWalletTable();
+    this.walletlist = await this.sql.getWalletListByUid(this.uID);
   }
+async getUid(){
+  this.uID = await this.sql.getCurrentUID();
+}
+
   onAddTransaction() {
     const modal = this.modalCtrl.create(AddTransactionPage);
     modal.onDidDismiss((data) => {

@@ -1,7 +1,7 @@
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, MenuController } from 'ionic-angular';
 
 /**
  * Generated class for the ProfilePage page.
@@ -26,8 +26,10 @@ export class ProfilePage {
     public sql: SqlProvider,
     public camera: Camera,
     public alertCtrl: AlertController,
-  ) {
-  }
+    public menuCtrl: MenuController,
+    ) {
+      this.menuCtrl.enable(true, 'myMenu');
+    }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ProfilePage');
@@ -39,9 +41,10 @@ export class ProfilePage {
     this.uID = await this.sql.getCurrentUID();
   }
 
-  onEditName() {
+  onEditName(msg: string) {
     let alert = this.alertCtrl.create({
       title: 'Edit Name',
+      message: msg,
       inputs: [
         {
           name: 'name',
@@ -60,8 +63,12 @@ export class ProfilePage {
         {
           text: 'Save',
           handler: data => {
-            this.sql.updateUserNameByID(data.name, this.uID);
-            this.updateName();
+            if (data.name.trim() != "") {
+              this.sql.updateUserNameByID(data.name, this.uID);
+              this.updateName();
+            } else {
+              this.onEditName('Invalid information, please fill inforamtion again.')
+            }
           }
         }
       ]
@@ -69,7 +76,7 @@ export class ProfilePage {
     alert.present();
   }
 
-  async updateName(){
+  async updateName() {
     this.name = await this.sql.getNickName();
   }
 
@@ -108,7 +115,7 @@ export class ProfilePage {
       destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
-      sourceType:sourceType,
+      sourceType: sourceType,
     }
     this.camera.getPicture(options).then((imageData) => {
       // imageData is either a base64 encoded string or a file URI

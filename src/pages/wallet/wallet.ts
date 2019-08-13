@@ -2,7 +2,7 @@ import { Validators } from '@angular/forms';
 import { CreateWalletPage } from './../create-wallet/create-wallet';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, ModalController, ToastController, AlertController, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, ModalController, ToastController, AlertController, ViewController, MenuController } from 'ionic-angular';
 
 /**
  * Generated class for the WalletPage page.
@@ -24,9 +24,11 @@ export class WalletPage {
     private navCtrl: NavController,
     private toastCtrl: ToastController,
     public alertCtrl: AlertController,
-    public viewCtrl: ViewController
-  ) {
-  }
+    public viewCtrl: ViewController,
+    public menuCtrl: MenuController,
+    ) {
+      this.menuCtrl.enable(true, 'myMenu');
+    }
 
   async ngOnInit() {
     await this.getCurrentUser();
@@ -63,19 +65,24 @@ export class WalletPage {
     toast.present();
   }
 
-  onEditWallet(wId: number) {
+  onEditWallet(walletDetail: any,msg: string) {
     let alert = this.alertCtrl.create({
       title: 'Edit Wallet',
+      message: msg,
       inputs: [
         {
           name: 'name',
-          placeholder: 'New name',
-          type: 'text'
+          value: walletDetail.wName,
+          placeholder: "Wallet's name",
+          type: 'text',
+          max: 20
         },
         {
           name: 'balance',
-          placeholder: 'Balance',
-          type: 'number'
+          type: 'number',
+          placeholder: "Wallet's Balance",
+          value: '' + walletDetail.balance
+          
         }
       ],
       buttons: [
@@ -90,19 +97,25 @@ export class WalletPage {
           text: 'Save',
           handler: data => {
             let wallet = {
-              wID:  wId,
-              name: data.name, 
-              balance: data.balance 
+              wID: walletDetail.wID,
+              name: data.name,
+              balance: parseInt(data.balance)
             }
-            this.sql.updateWalletTableByID(wallet);
-            this.updateWalletList();
-            this.presentEditToast();
+            if (data.name == "" || data.balance == "" || data.balance < 0)  {
+              this.onEditWallet(walletDetail,'Invalid information, please fill again.');
+            } else {
+              this.sql.updateWalletTableByID(wallet);
+              this.updateWalletList();
+              this.presentEditToast();
+            }
           }
         }
       ]
     });
     alert.present();
   }
+
+  
 
   presentEditToast() {
     let toast = this.toastCtrl.create({

@@ -17,7 +17,6 @@ import { GoalDetailPage } from '../pages/goal-detail/goal-detail';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  public nickName: string;
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any;
@@ -52,7 +51,6 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.getCurrentUserData();
     });
 
     this.platform.registerBackButtonAction(() => {
@@ -98,9 +96,5 @@ export class MyApp {
   logout() {
     this.login.logout();
     this.nav.setRoot(WelcomePage);
-  }
-
-  async getCurrentUserData(){
-    this.nickName = await this.sql.getNickName();
   }
 }

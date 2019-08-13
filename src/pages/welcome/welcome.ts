@@ -3,7 +3,7 @@ import { HomePage } from './../home/home';
 import { SignupPage } from './../signup/signup';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, ToastController, ViewController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, ToastController, ViewController, AlertController, MenuController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoginProvider } from '../../providers/login/login';
 import { Camera, CameraOptions } from '@ionic-native/camera';
@@ -37,7 +37,9 @@ export class WelcomePage {
     private login: LoginProvider,
     private alertCtrl: AlertController,
     private camera: Camera,
+    private menuCtrl: MenuController,
   ) {
+    this.menuCtrl.enable(false, 'myMenu');
     this.userLogin = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],

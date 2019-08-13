@@ -25,6 +25,7 @@ export class SqlProvider {
   public gAmount: any;
   public picUrl: string;
   public gStatus: string;
+  public walletName: string;
   constructor(
     public sqlite: SQLite,
     public modalCtrl: ModalController,
@@ -329,11 +330,12 @@ export class SqlProvider {
     return this.db.executeSql(`
     SELECT * FROM Transactions 
     `, [])
-      .then((data) => {
+      .then( async (data) => {
         console.log(data)
         console.log(data.rows.length);
         this.result = [];
         for (let i = 0; i < data.rows.length; i++) {
+          await this.getWalletNameByID(data.rows.item(i).wID);
           let tID = data.rows.item(i).tID;
           let date = data.rows.item(i).date;
           let type = data.rows.item(i).type;
@@ -341,10 +343,26 @@ export class SqlProvider {
           let amount = data.rows.item(i).amount;
           let memo = data.rows.item(i).memo;
           let wID = data.rows.item(i).wID;
-          let resultObj = { tID, date, type, tag, amount, memo, wID };
+          let wName = this.walletName;
+          let resultObj = { tID, date, type, tag, amount, memo, wID, wName };
           this.result.push(resultObj);
+          console.log("SelectTransactiontable resultObj is ",resultObj);
         }
         console.log("SelectTransactiontable is doing (sql) #6");
+      })
+      .catch(e => console.log(e));
+  }
+
+  async getWalletNameByID(walletID: number) {
+    console.log("walletID is ",walletID);
+    return this.db.executeSql(`
+    SELECT * FROM Wallet WHERE wID = `+ walletID + ` ;
+    `, [])
+      .then((data) => {
+        for (let i = 0; i < data.rows.length; i++) {
+          this.walletName = data.rows.item(i).name;
+        }
+        console.log("walletName is ", this.walletName);
       })
       .catch(e => console.log(e));
   }

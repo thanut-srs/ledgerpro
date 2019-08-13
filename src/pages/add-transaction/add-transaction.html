@@ -36,16 +36,23 @@
     </ion-item>
     <ion-item *ngIf="types.value =='Income' || types.value =='Expense' || types.value =='' ">
       <ion-label>Tag : </ion-label>
-      <ion-select id="tagselect" formControlName="tag" placeholder="Select...">
+      <ion-select *ngIf="types.value =='Expense'" id="tagselect" formControlName="tag" placeholder="Select...">
         <ion-option value="Food">Food</ion-option>
         <ion-option value="Shopping">Shopping</ion-option>
         <ion-option value="Drinks">Drinks</ion-option>
       </ion-select>
+      <ion-select *ngIf="types.value =='Income'" id="tagselect" formControlName="tag" placeholder="Select...">
+        <ion-option value="Salary">Salary</ion-option>
+        <ion-option value="Bonus">Bonus</ion-option>
+        <ion-option value="etc">Etc.</ion-option>
+      </ion-select>
     </ion-item>
     <ion-item *ngIf="types.value =='Saving'">
         <ion-label>Goal : </ion-label>
-        <ion-select formControlName="goalID" placeholder="Select...">
+        <ion-select *ngIf="goalList.length != 0"  formControlName="goalID" placeholder="Select...">
           <ion-option *ngFor="let item of goalList" [value]="item.gID">{{item.name}}</ion-option>
+        </ion-select>
+        <ion-select *ngIf="goalList.length == 0" disabled formControlName="goalID" placeholder="No goals">
         </ion-select>
     </ion-item>
     <ion-item>
@@ -69,5 +76,5 @@
     </div>
   </form>
 
-
+<!-- <button ion-button (click)="onPrint()">Click me</button> -->
 </ion-content>

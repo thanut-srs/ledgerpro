@@ -2,7 +2,7 @@ import { EditGoalPage } from './../edit-goal/edit-goal';
 import { SqlProvider } from './../../providers/sql/sql';
 import { CreateGoalPage } from './../create-goal/create-goal';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, ToastController, AlertController, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, ToastController, AlertController, ViewController, MenuController } from 'ionic-angular';
 
 /**
  * Generated class for the GoalDetailPage page.
@@ -28,7 +28,10 @@ export class GoalDetailPage {
     public sql: SqlProvider,
     public alertCtrl: AlertController,
     public viewCtrl: ViewController,
-  ) { }
+    public menuCtrl: MenuController,
+    ) {
+      this.menuCtrl.enable(true, 'myMenu');
+    }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad GoalDetailPage');

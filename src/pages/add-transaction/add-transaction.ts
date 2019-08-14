@@ -1,6 +1,6 @@
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, ViewController, NavParams } from 'ionic-angular';
+import { IonicPage, ViewController, NavParams, AlertController } from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 /**
  * Generated class for the AddTransactionPage page.
@@ -28,6 +28,7 @@ export class AddTransactionPage {
     public viewCtrl: ViewController,
     private formBuilder: FormBuilder,
     private sql: SqlProvider,
+    private alertCtrl: AlertController,
   ) {
     this.walletID = this.params.get('wID');
     console.log("Contructor")
@@ -71,10 +72,13 @@ export class AddTransactionPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad AddTransactionPage');
   }
-  onInsertTable() {
+  async onInsertTable() {
     let tType = this.transaction.controls['type'].value;
     let gId = this.transaction.controls['goalID'].value;
     let tAmount = this.transaction.controls['amount'].value;
+    if(tType != 'Saving'){
+      gId = null;
+    }
     console.log("onInsertTable #1")
     let transactionObj = {
       type: this.transaction.controls['type'].value,
@@ -83,13 +87,15 @@ export class AddTransactionPage {
       memo: this.transaction.controls['memo'].value,
       date: this.transaction.controls['date'].value,
       wID: this.transaction.controls['walletID'].value,
-      goalID: this.transaction.controls['goalID'].value,
+      goalID: gId,
     };
     let balanceObj = {
       type: this.transaction.controls['type'].value,
       amount: this.transaction.controls['amount'].value,
       walletID: this.transaction.controls['walletID'].value,
     };
+    console.log("#### onInsertTable transactionObj is ",transactionObj," ####!!")
+
     this.sql.insertTable(transactionObj, 'Transactions');
     this.sql.updateBalance(balanceObj);
     if (tType == "Saving") {

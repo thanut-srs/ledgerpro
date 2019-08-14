@@ -14,7 +14,9 @@
   <div *ngIf="(sessionFlag)" text-center class="loginDiv">
     <h1>Hi {{userNickName}}.</h1>
     <button ion-button default (click)="onGoHome()" class="loginBtn">Login</button><br>
-    <a (click)="onLogout()">Login with other account</a>
+    <div class="belowMsg">
+      <a (click)="onLogout()">Login with other account</a>
+    </div>
   </div>
   <div *ngIf="!(sessionFlag)" text-center class="loginDiv">
     <form [formGroup]="userLogin" (ngSubmit)="checkLogin()">
@@ -28,12 +30,12 @@
       </ion-item>
       <br>
       <div class="submitBtn">
-        <button ion-button default type="submit" [disabled]="!userLogin.valid" class="loginBtn">Submit</button>
+        <button ion-button default type="submit" [disabled]="!userLogin.valid" class="loginBtn">Login</button>
       </div>
     </form>
     <br>
     <div class="belowMsg">
-      <a (click)="onCreateAccount()" >Don't have account, Signup!</a>
+      <a (click)="onCreateAccount()">Don't have account, Signup!</a>
     </div>
     <!-- <button ion-button (click)="addtable()" >add</button>
   <button ion-button (click)="droptable()" >drop</button> -->

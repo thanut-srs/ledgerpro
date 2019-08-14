@@ -19,29 +19,43 @@
     <ion-item>
       <ion-label>Date</ion-label>
       <ion-datetime displayFormat="DDDD DD MMMM YYYY" formControlName="date" pickerFormat=" DD MMMM YYYY" min="2000"
-        max="{{year}}" placeholder="Select date">
+       placeholder="Select date">
       </ion-datetime>
     </ion-item>
     <ion-item>
       <ion-label>Type</ion-label>
-      <ion-select formControlName="type" placeholder="Select type">
-        <ion-option value="Income">Income</ion-option>
-        <ion-option value="Expense">Expense</ion-option>
-        <ion-option value="Saving">Saving</ion-option>
+      <ion-select formControlName="type" placeholder="{{currentType}}" disabled>
       </ion-select>
     </ion-item>
-    <ion-item>
-      <ion-label>Tag</ion-label>
-      <ion-select formControlName="tag" placeholder="Select tag">
-        <ion-option value="Food">Food</ion-option>
-        <ion-option value="Shopping">Shopping</ion-option>
-        <ion-option value="Drinks">Drinks</ion-option>
-      </ion-select>
-    </ion-item>
+    <ion-item *ngIf="(currentType) =='Income' || (currentType) =='Expense'">
+        <ion-label>Tag : </ion-label>
+        <ion-select *ngIf="(currentType) =='Expense'" id="tagselect" formControlName="tag" placeholder="Select...">
+          <ion-option value="Food">Food</ion-option>
+          <ion-option value="Shopping">Shopping</ion-option>
+          <ion-option value="Drinks">Drinks</ion-option>
+        </ion-select>
+        <ion-select *ngIf="(currentType) =='Income'" id="tagselect" formControlName="tag" placeholder="Select...">
+          <ion-option value="Salary">Salary</ion-option>
+          <ion-option value="Bonus">Bonus</ion-option>
+          <ion-option value="etc">Etc.</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="(currentType) =='Saving'">
+          <ion-label>Goal : </ion-label>
+          <ion-select formControlName="goalID" placeholder="{{currentGoal}}">
+            <ion-option *ngFor="let item of goalList" [value]="item.gID">{{item.name}}</ion-option>
+          </ion-select>
+      </ion-item>
     <ion-item>
       <ion-label>Amount</ion-label>
       <ion-input type="number" formControlName="amount" placeholder="Fill amount"></ion-input>
     </ion-item>
+    <ion-item>
+        <ion-label>Wallet : </ion-label>
+        <ion-select formControlName="walletID" placeholder="{{walletName}}">
+          <ion-option *ngFor="let item of walletList" [value]="item.wID">{{item.name}}</ion-option>
+        </ion-select>
+      </ion-item>
     <ion-item>
       <ion-label>Memo</ion-label>
       <ion-textarea formControlName="memo" placeholder="(Optional)"></ion-textarea>
@@ -51,4 +65,5 @@
       <button right ion-button type="submit" [disabled]="!transaction.valid">Save</button>
     </div>
   </form>
+  <button ion-button (click)="onPrint()">Click me</button>
 </ion-content>

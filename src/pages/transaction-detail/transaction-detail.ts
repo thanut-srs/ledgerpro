@@ -26,9 +26,11 @@ export class TransactionDetailPage {
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
   ) {
-    this.tID = params.get('tranID')
+    
   }
-
+ionViewCanEnter(){
+  this.tID = this.params.get('tranID')
+}
   ngOnInit() {
     console.log('In modal ID is ', this.tID);
     this.updateTransaction();
@@ -70,7 +72,7 @@ export class TransactionDetailPage {
     let delFalg = true;
     let transaction = {
       amount: this.collection[0].amount,
-      walletName: this.collection[0].walletName,
+      wID: this.collection[0].wID,
       type: this.collection[0].type,
     }
     console.log("this transaction's amount is ",this.collection[0].amount);

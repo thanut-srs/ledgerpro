@@ -23,6 +23,7 @@ import { LoginProvider } from '../providers/login/login';
 import { CreateGoalPage } from '../pages/create-goal/create-goal';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { ImageResizer, ImageResizerOptions } from '@ionic-native/image-resizer';
 
 
 @NgModule({
@@ -73,7 +74,8 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
     LoginProvider,
     LoginProvider,
     LocalNotifications,
-    Camera
+    Camera,
+    ImageResizer
   
   ]
 })

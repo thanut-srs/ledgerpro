@@ -111,7 +111,7 @@ export class ProfilePage {
   onOpenCamera(sourceType: number) {
     const options: CameraOptions = {
       quality: 100,
-      targetHeight: 400,
+      saveToPhotoAlbum: true,
       destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,

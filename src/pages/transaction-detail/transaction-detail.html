@@ -6,12 +6,11 @@
 -->
 <ion-header>
   <ion-navbar>
-      <ion-buttons left>
-          <button ion-button icon-only (click)="viewCtrl.dismiss()">
-            <ion-icon name="close"></ion-icon>
-          </button>
-        </ion-buttons>
-    <ion-title>Transaction Detail</ion-title>
+    <ion-buttons left>
+      <button ion-button icon-only (click)="viewCtrl.dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
     <ion-buttons right>
       <button ion-button icon-only (click)="onEditTransaction()">
         <ion-icon name="create"></ion-icon>
@@ -25,12 +24,29 @@
 
 <ion-content padding>
   <div *ngFor="let item of collection">
-        <h1> Date : {{item.date}} </h1><br>
-        <h3>Type : {{item.type}}</h3><br>
-        <h4>Tag : {{item.tag}}</h4><br>
-        <h4>Amount : {{item.amount}} Baht</h4>
-        <div>
-          Memo : {{item.memo}}
-        </div>
+    <div *ngIf="(item.type)=='Income' || (item.type)=='Expense'">
+      <h1> Date : {{item.date}} </h1><br>
+      <h3>Type : {{item.type}}</h3><br>
+      <h4>Tag : {{item.tag}}</h4><br>
+      <h4>Amount : {{item.amount}} Baht</h4>
+      <div *ngIf="(item.memo)">
+        Memo : {{item.memo}}
+      </div>
+      <div *ngIf="!(item.memo)">
+        No memo.
+      </div>
+    </div>
+    <div *ngIf="(item.type)=='Saving'">
+      <h1> Date : {{item.date}} </h1><br>
+      <h3>Type : {{item.type}}</h3><br>
+      <h4>Goal : {{item.goalName}}</h4><br>
+      <h4>Amount : {{item.amount}} Baht</h4>
+      <div *ngIf="(item.memo)">
+        Memo : {{item.memo}}
+      </div>
+      <div *ngIf="!(item.memo)">
+        No memo.
+      </div>
+    </div>
   </div>
 </ion-content>

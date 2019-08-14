@@ -19,21 +19,21 @@
 
   <form [formGroup]="userInfo" (ngSubmit)="onInsertTable()">
     <ion-item>
-      <ion-label>Username</ion-label>
+      <ion-label  >Username</ion-label>
       <ion-input type="text" formControlName="username" placeholder=""></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label>Password</ion-label>
+      <ion-label  >Password</ion-label>
       <ion-input type="password" formControlName="password" placeholder=""></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label>Nickname</ion-label>
+      <ion-label  >Nickname</ion-label>
       <ion-input type="text" formControlName="nickname" placeholder=""></ion-input>
     </ion-item>
-    <div text-center class="profilePic">
-        <ion-img alt="TAKE A PHOTO" [src]="samplePic" class="avatarPic" (click)="picAlert()"></ion-img>
-      </div>
-    <div class="submitBtn">
+    <div text-center >
+      <ion-img width="50%" height="50%" class="pImg" alt="TAKE A PHOTO" [src]="samplePic" class="avatarPic" (click)="picAlert()"></ion-img>
+    </div>
+    <div class="submitBtn" text-center>
       <button ion-button type="submit" [disabled]="!userInfo.valid">Submit</button>
     </div>
   </form>

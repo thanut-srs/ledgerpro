@@ -1,26 +1,42 @@
 page-home {
   h1.date {
-    color: red;
-    margin: 0 auto
+    color: rgb(29, 127, 255);
+    margin: 0 auto;
   }
   div.dateBar {
-      padding-top: 30px;
-      text-align: center;
-  }
-//   ion-slides.tranSlide {
-//     text-align: center;
-//   }
-//   .slideDiv{
-//     position: fixed;
-//     top:75px;
-//     text-align: center;
-//   }
-  ion-slide {
-   padding: auto;
+    padding-top: 8px;
+    padding-bottom: 8px;
     text-align: center;
-    color: blue;
   }
-  button{
+  .tranDiv {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-right: 20px;
+  }
+  button {
     border: 2px solid rgb(185, 185, 185);
+  }
+  .inTypeColor{
+    width:15%;
+    background-color: rgb(103, 253, 110);
+  }
+  .exTypeColor{
+    width:15%;
+    background-color: rgb(255, 56, 56);
+  }
+  .saTypeColor{
+    width:15%;
+    background-color: rgb(68, 127, 255);
+  }
+  .card{
+    width: 100%;
+    border: .5px solid rgb(0, 0, 0);
+    
+  }
+  .detail{
+    text-align: left;
+  }
+  .content{
+    padding-top: 40px; 
   }
 }

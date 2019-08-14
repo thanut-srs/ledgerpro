@@ -4,8 +4,8 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title text-center>
-      <ion-select text-center #wallet placeholder="Select..." [(ngModel)]="selectedWallet" 
-      (ionChange)="onChange($event)">
+      <ion-select text-center #wallet placeholder="Select..." [(ngModel)]="selectedWallet"
+        (ionChange)="onChange($event)">
         <ion-option value="All-Wallet" selected>All wallet</ion-option>
         <ion-option *ngFor="let item of walletlist" [value]="item.wID">{{item.name}}</ion-option>
       </ion-select>
@@ -13,31 +13,47 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <div *ngFor="let day of date">
+  <div class="content">
+    <div *ngFor="let day of date">
       <div class="dateBar">
-          <h1 class="date" id="dateid">{{day}}</h1>
+        <h1 class="date" id="dateid">{{day}}</h1>
+      </div>
+      <div class="tranDiv" *ngIf="collection.length != 0">
+        <div *ngFor="let item of collection">
+          <ion-card *ngIf="(item.date) == day && ((wallet.value) == 'All-Wallet' || (wallet.value) == item.wID) "
+            tappable (click)="onDetail(item.tID)">
+            <table class="card">
+              <tr>
+                <th class="inTypeColor" *ngIf="(item.type)=='Income'">
+                </th>
+                <th class="exTypeColor" *ngIf="(item.type)=='Expense'">
+                </th>
+                <th class="saTypeColor" *ngIf="(item.type)=='Saving'">
+                </th>
+                <th class="detail">
+                  <ion-card-header>
+                    {{item.type}} ({{item.wName}})
+                  </ion-card-header>
+                  <ion-card-content *ngIf="(item.type)=='Income' || (item.type)=='Expense'" >
+                    {{item.tag}}
+                  </ion-card-content>
+                  <ion-card-content *ngIf="(item.type)=='Saving'" >
+                    {{item.goalName}}
+                    </ion-card-content>
+                  <ion-card-content>
+                    {{item.amount}} Baht
+                  </ion-card-content>
+                </th>
+              </tr>
+            </table>
+          </ion-card>
         </div>
-    <div class="slideDiv" *ngIf="collection.length != 0">
-      <div *ngFor="let item of collection">
-        <ion-card *ngIf="(item.date) == day && ((wallet.value) == 'All-Wallet' || (wallet.value) == item.wID) " tappable
-          (click)="onDetail(item.tID)">
-          <ion-card-header>
-            {{item.date}} {{item.type}} {{wallet.value}}
-          </ion-card-header>
-          <ion-card-content>
-            Wallet : {{item.wName}}
-          </ion-card-content>
-          <ion-card-content>
-            {{item.tag}} {{item.amount}} Baht {{item.memo}}
-          </ion-card-content>
-        </ion-card>
       </div>
     </div>
+    <div *ngIf="collection.length == 0">
+      <h4 id="noTransaction" text-center>There no transaction here, add one!</h4>
+    </div>
   </div>
-  <div *ngIf="collection.length == 0">
-    <h4 id="noTransaction" text-center>There no transaction here, add one!</h4>
-  </div>
-
   <ion-fab center bottom>
     <button ion-fab (click)="onAddTransaction(wallet.value)">
       <ion-icon name="add-circle"></ion-icon>

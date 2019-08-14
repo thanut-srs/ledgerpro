@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { SqlProvider } from './sql';
 import { SQLite } from '@ionic-native/sqlite';
 import { ModalController } from 'ionic-angular';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 
 
@@ -19,7 +20,8 @@ describe('sql service',() => {
     beforeEach(() => {
         TestBed.configureTestingModule({ 
             providers: [SqlProvider,SQLite,
-              {provide: ModalController , useValue: modalCtrlSpy}],
+              {provide: ModalController , useValue: modalCtrlSpy},
+             LocalNotifications],
         });
         sqlprov = TestBed.get(SqlProvider)
       });

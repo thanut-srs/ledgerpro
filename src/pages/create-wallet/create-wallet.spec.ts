@@ -1,4 +1,3 @@
-import { SqlProviderMock } from './../../mocks/sqlprovider.mocks';
 import { FormBuilder } from '@angular/forms';
 import { SqlProvider } from '../../providers/sql/sql';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';

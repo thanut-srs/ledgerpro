@@ -75,7 +75,7 @@ import { ImageResizer, ImageResizerOptions } from '@ionic-native/image-resizer';
     LoginProvider,
     LocalNotifications,
     Camera,
-    ImageResizer
+    ImageResizer,
   
   ]
 })

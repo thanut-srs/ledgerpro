@@ -25,15 +25,12 @@
 <ion-content padding>
   <div *ngFor="let item of collection">
     <div *ngIf="(item.type)=='Income' || (item.type)=='Expense'">
-      <h1> Date : {{item.date}} </h1><br>
-      <h3>Type : {{item.type}}</h3><br>
+      <h2> Date : {{item.date}} </h2><br>
+      <h4>Type : {{item.type}}</h4><br>
       <h4>Tag : {{item.tag}}</h4><br>
-      <h4>Amount : {{item.amount}} Baht</h4>
+      <h4>Amount : {{item.amount}} Baht</h4><br>
       <div *ngIf="(item.memo)">
         Memo : {{item.memo}}
-      </div>
-      <div *ngIf="!(item.memo)">
-        No memo.
       </div>
     </div>
     <div *ngIf="(item.type)=='Saving'">

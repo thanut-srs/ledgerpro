@@ -27,8 +27,7 @@
 
     <ion-item>
       <ion-label>Type : </ion-label>
-      <ion-select id="typeselect" #types formControlName="type" placeholder="Select..." 
-      (ionChange)="onChange($event)">
+      <ion-select id="typeselect" #types formControlName="type" placeholder="Select..." (ionChange)="onChange($event)">
         <ion-option value="Income">Income</ion-option>
         <ion-option value="Expense">Expense</ion-option>
         <ion-option value="Saving">Saving</ion-option>
@@ -48,31 +47,38 @@
       </ion-select>
     </ion-item>
     <ion-item *ngIf="types.value =='Saving'">
-        <ion-label>Goal : </ion-label>
-        <ion-select *ngIf="goalList.length != 0"  formControlName="goalID" placeholder="Select...">
-          <ion-option *ngFor="let item of goalList" [value]="item.gID">{{item.name}}</ion-option>
-        </ion-select>
-        <ion-select *ngIf="goalList.length == 0" disabled formControlName="goalID" placeholder="No goals">
-        </ion-select>
+      <ion-label>Goal : </ion-label>
+      <ion-select *ngIf="goalList.length != 0" formControlName="goalID" placeholder="Select..."
+        (ionChange)="onChangeGoal($event)">
+        <ion-option *ngFor="let item of goalList" [value]="item.gID">{{item.name}}</ion-option>
+      </ion-select>
+      <ion-select *ngIf="goalList.length == 0" disabled formControlName="goalID" placeholder="No goals">
+      </ion-select>
     </ion-item>
     <ion-item>
       <ion-label>Amount : </ion-label>
-      <ion-input id="amountinput" type="number" formControlName="amount" placeholder="Fill amount"></ion-input>
+      <ion-input *ngIf="types.value !='Saving'" id="amountinput" type="number" formControlName="amount"
+        placeholder="Fill amount" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? 
+        null : event.charCode >= 48 && event.charCode <= 57"></ion-input>
+      <ion-input [(ngModel)]="gAmount" (ionChange)="onAmountChange($event)" *ngIf="types.value =='Saving'" id="amountinput" type="number" formControlName="amount"
+        placeholder="{{remain}} Baht left." onkeypress="return (event.charCode == 8 || event.charCode == 0) ? 
+        null : event.charCode >= 48 && event.charCode <= 57"></ion-input>
     </ion-item>
     <ion-item>
-        <ion-label>Wallet : </ion-label>
-        <ion-select formControlName="walletID" placeholder="Select...">
-          <ion-option *ngFor="let item of collection" [value]="item.wID">{{item.name}}</ion-option>
-        </ion-select>
-      </ion-item>
+      <ion-label>Wallet : </ion-label>
+      <ion-select formControlName="walletID" placeholder="Select...">
+        <ion-option *ngFor="let item of collection" [value]="item.wID">{{item.name}}</ion-option>
+      </ion-select>
+    </ion-item>
     <ion-item>
       <ion-label>Memo : </ion-label>
       <ion-textarea formControlName="memo" placeholder="(Optional)"></ion-textarea>
     </ion-item>
+    <p text-center *ngIf="error" style="color:red;"> You filled amount more target!</p>
     <div class="submitBtn">
       <button ion-button type="submit" id="submitbtn" [disabled]="!transaction.valid">Submit</button>
     </div>
   </form>
 
-<!-- <button ion-button (click)="onPrint()">Click me</button> -->
+  <!-- <button ion-button (click)="onPrint()">Click me</button> -->
 </ion-content>

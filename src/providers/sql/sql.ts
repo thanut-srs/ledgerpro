@@ -2,6 +2,7 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 import { ModalController, Nav } from 'ionic-angular';
 import { Injectable, ViewChild } from '@angular/core';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
+import * as moment from 'moment';
 
 /*
   Generated class for the SqlProvider provider.
@@ -243,10 +244,12 @@ export class SqlProvider {
   }
 
   async selectGoalTable() {
+    let now = moment().format('LLLL');
+    console.log("### moment test ", now, " ###")
     return this.db.executeSql(`
     SELECT * FROM Goal 
     `, [])
-      .then((data) => {
+      .then(async (data) => {
         console.log(data)
         console.log(data.rows.length);
         this.result = [];
@@ -259,7 +262,16 @@ export class SqlProvider {
           let deadline = data.rows.item(i).deadline;
           let memo = data.rows.item(i).memo;
           let gStatus = data.rows.item(i).gStatus;
-          let resultObj = { gID, name, target, amount, uID, deadline, memo, gStatus };
+          let dayLeft = Math.ceil((moment.duration(moment().diff(deadline))).asHours());
+          if (moment() > deadline) {
+            dayLeft = (-1) * dayLeft;
+          }
+          if (dayLeft > 0 && gStatus != 'Achieved') {
+            await this.pushNotification("Your goal is delayed.");
+            await this.changeGoalStatus("Delayed", gID);
+            gStatus = 'Delayed'
+          }
+          let resultObj = { gID, name, target, amount, uID, deadline, memo, gStatus, dayLeft };
           this.result.push(resultObj);
         }
       })
@@ -656,7 +668,7 @@ export class SqlProvider {
         console.log("### this new transaction's walletName is ", data);
         this.db.executeSql(`
       INSERT INTO Transactions(date,type,tag,amount,memo,wID,gID)
-      VALUES ("`+ date + `","` + type + `","` + tag + `",` + amount + `,"` + memo + `",`+ wID +`,`+goalID+`)
+      VALUES ("`+ date + `","` + type + `","` + tag + `",` + amount + `,"` + memo + `",` + wID + `,` + goalID + `)
       `, [])
           .then(() => console.log('Inserted Transaction table'))
           .catch(e => console.log(e));
@@ -708,26 +720,29 @@ export class SqlProvider {
   async updateWalletWhenEdit(transaction: any, oldTran: any) {
     let { date, type, tag, amount, memo, wID, gID } = transaction
     await this.getBalanceByWalletID(wID);
-    console.log("oldTran.amount is ",oldTran.amount)
-    console.log("amount is ",amount)
-    let remain = parseInt(oldTran.amount) - parseInt(amount);
+    console.log("oldTran.amount is ", oldTran[0].amount)
+    console.log("amount is ", amount)
+    let remain = parseInt(oldTran[0].amount) - parseInt(amount);
     console.log("###### UPDATE WALLET WHEN EDIT #######");
-    console.log('remain is ',remain);
-    console.log(' 1# current balance is ',this.currentBalance);
+    console.log('remain is ', remain);
+    console.log(' 1# current balance is ', this.currentBalance);
     if (type == 'Income') {
       if (remain < 0) {
-        this.currentBalance = this.currentBalance + (remain) * (-1)
+        this.currentBalance = this.currentBalance + (remain) * (-1);
       } else if (remain > 0) {
-        this.currentBalance = this.currentBalance - (remain)
+        this.currentBalance = this.currentBalance - (remain);
       }
-    } else if (type == 'Expense') {
+    } else if (type == 'Expense' || type == 'Saving') {
       if (remain < 0) {
-        this.currentBalance = this.currentBalance - (remain)
+        this.currentBalance = this.currentBalance + (remain);
       } else if (remain > 0) {
-        this.currentBalance = this.currentBalance + (remain) * (-1)
+        this.currentBalance = this.currentBalance - (remain) * (-1);
       }
-    } 
-    console.log('2# current balance is ',this.currentBalance);
+    }
+    if (type == 'Saving') {
+      this.updateTargetWhenEdit(remain, gID);
+    }
+    console.log('2# current balance is ', this.currentBalance);
     return this.db.executeSql(`
     UPDATE Wallet
     SET balance = `+ this.currentBalance + `
@@ -737,17 +752,46 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
+  async updateTargetWhenEdit(remain: number, gID: number) {
+    await this.getGoalTargetAndAmountByID(gID);
+    await this.getGoalStatusByID(gID);
+    if(this.gStatus != 'Achieved'){
+    if (remain < 0) {
+      this.gAmount = parseInt(this.gAmount) + (remain) * (-1);
+    } else if (remain > 0) {
+      this.gAmount = parseInt(this.gAmount) - remain;
+    }
+    this.db.executeSql(`
+    UPDATE Goal
+    SET amount = "` + this.gAmount + `"
+    WHERE gID = `+ gID + `;
+    `, [])
+      .then(async () => {
+        let remainAmount = 0;
+        remainAmount = this.gTarget - this.gAmount;
+        if (remainAmount > 0) {
+          this.pushNotification("Keep going! you still need to collect " + remainAmount + " more Baht.");
+        } else if (remainAmount == 0) {
+          this.pushNotification("Congratulation! your goal is achieved.");
+          this.changeGoalStatus("Achieved", gID);
+        }
+      })
+      .catch(e => console.log(e));
+  }
+}
+
+
   async updateTableByID(transaction: any, oldTran: any) {
     console.log("updating table")
     let { date, type, tag, amount, memo, wID, gID } = transaction
-    console.log("new data (sql) are ", oldTran);
+    console.log("new data (sql) are ", oldTran[0].amount);
     await this.updateWalletWhenEdit(transaction, oldTran);
     this.db.executeSql(`
     UPDATE Transactions
     SET date = "`+ date + `", type = "` + type + `",
      tag = "` + tag + `", amount = ` + amount + `, 
      memo = "` + memo + `", wID = ` + wID + `, gID =` + gID + `
-    WHERE tID = `+ oldTran.tID + `;
+    WHERE tID = `+ oldTran[0].tID + `;
     `, [])
       .then(() => console.log('Transaction updated!'))
       .catch(e => console.log(e));
@@ -768,6 +812,7 @@ export class SqlProvider {
 
   async updateWalletBalanceByID(wID: number, remain: any) {
     console.log("updating balance")
+    console.log("### updateWalletBalanceByID's wID is ",wID)
     await this.getBalanceByWalletID(wID);
     let balance = this.currentBalance + parseInt(remain);
     console.log(this.currentBalance, " + ", remain, " = ", balance)
@@ -884,7 +929,7 @@ export class SqlProvider {
     return this.gAmount
   }
 
-  pushNotification(msg: string) {
+  async pushNotification(msg: string) {
     this.localNotifications.schedule({
       text: msg,
       trigger: { at: new Date(new Date().getTime() + 2000) },
@@ -928,6 +973,7 @@ export class SqlProvider {
         this.pushNotification("Congratulation! your goal is achieved.");
         return remainAmount
       } else {
+        remainAmount = (-1)*(remainAmount);
         this.changeGoalStatus("Inprogress", gID);
         this.pushNotification("Keep going! you still need to collect " + remainAmount + " more Baht.");
         return false
@@ -937,7 +983,7 @@ export class SqlProvider {
   }
 
 
-  changeGoalStatus(gStatus: string, gID: number) {
+  async changeGoalStatus(gStatus: string, gID: number) {
     console.log("## gStatus in changeGoalStatus is ", gStatus)
     this.db.executeSql(`
     UPDATE Goal
@@ -976,4 +1022,8 @@ export class SqlProvider {
       .catch(e => console.log(e));
   }
 
+  async getGoalRemainByID(gID: number) {
+    await this.getGoalTargetAndAmountByID(gID)
+    return parseInt(this.gTarget) - parseInt(this.gAmount);
+  }
 }

@@ -1,7 +1,7 @@
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, MenuController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, MenuController, LoadingController } from 'ionic-angular';
 
 /**
  * Generated class for the ProfilePage page.
@@ -27,6 +27,7 @@ export class ProfilePage {
     public camera: Camera,
     public alertCtrl: AlertController,
     public menuCtrl: MenuController,
+    public loadingCtrl: LoadingController
     ) {
       this.menuCtrl.enable(true, 'myMenu');
     }
@@ -36,12 +37,17 @@ export class ProfilePage {
   }
 
   async ionViewCanEnter() {
+    let loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
+    loading.present();
     this.samplePic = await this.sql.getUserPicUrl();
     this.updateName();
     this.uID = await this.sql.getCurrentUID();
+    loading.dismiss();
   }
 
-  onEditName(msg: string) {
+  onEditName(oldName: string,msg: string) {
     let alert = this.alertCtrl.create({
       title: 'Edit Name',
       message: msg,
@@ -49,7 +55,8 @@ export class ProfilePage {
         {
           name: 'name',
           placeholder: 'New name',
-          type: 'text'
+          type: 'text',
+          value: oldName,
         }
       ],
       buttons: [
@@ -67,7 +74,7 @@ export class ProfilePage {
               this.sql.updateUserNameByID(data.name, this.uID);
               this.updateName();
             } else {
-              this.onEditName('Invalid information, please fill inforamtion again.')
+              this.onEditName(oldName,'Invalid information, please fill inforamtion again.')
             }
           }
         }

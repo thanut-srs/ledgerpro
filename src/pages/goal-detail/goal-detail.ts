@@ -2,7 +2,7 @@ import { EditGoalPage } from './../edit-goal/edit-goal';
 import { SqlProvider } from './../../providers/sql/sql';
 import { CreateGoalPage } from './../create-goal/create-goal';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, ToastController, AlertController, ViewController, MenuController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, ToastController, AlertController, ViewController, MenuController, LoadingController } from 'ionic-angular';
 
 /**
  * Generated class for the GoalDetailPage page.
@@ -29,6 +29,7 @@ export class GoalDetailPage {
     public alertCtrl: AlertController,
     public viewCtrl: ViewController,
     public menuCtrl: MenuController,
+    public loadingCtrl: LoadingController
     ) {
       this.menuCtrl.enable(true, 'myMenu');
     }
@@ -38,9 +39,14 @@ export class GoalDetailPage {
   }
 
   async ngOnInit() {
+    let loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
+    loading.present();
     await this.updateGoal();
     await this.getWalletID();
     this.uid = await this.sql.getCurrentUID();
+    loading.dismiss();
   }
 
   onCreateGoal() {
@@ -156,7 +162,7 @@ export class GoalDetailPage {
     });
   }
   async getWalletID() {
-    let wList = await this.sql.getWalletTable();
+    let wList = await this.sql.getWalletListByUid(await this.sql.getCurrentUID());
     console.log('wList is ', wList)
     for (let i = 0; i < wList.length; i++) {
       this.walletList.push({ wID: wList[i].wID, wName: wList[i].name });

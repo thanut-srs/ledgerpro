@@ -3,7 +3,7 @@ import { HomePage } from './../home/home';
 import { SignupPage } from './../signup/signup';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, ToastController, ViewController, AlertController, MenuController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, ToastController, ViewController, AlertController, MenuController, LoadingController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoginProvider } from '../../providers/login/login';
 import { Camera, CameraOptions } from '@ionic-native/camera';
@@ -38,6 +38,7 @@ export class WelcomePage {
     private alertCtrl: AlertController,
     private camera: Camera,
     private menuCtrl: MenuController,
+    private loadingCtrl: LoadingController
   ) {
     this.menuCtrl.enable(false, 'myMenu');
     this.userLogin = this.formBuilder.group({
@@ -51,6 +52,10 @@ export class WelcomePage {
     console.log('samplePic is ', this.samplePic);
   }
   async ngOnInit() {
+    let loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
+    loading.present();
     await this.sql.openDB();
     if (await this.sql.checkFirstTime()){
       this.sql.createTables();
@@ -59,6 +64,7 @@ export class WelcomePage {
     if (this.sessionFlag) {
       this.getName();
     }
+    loading.dismiss();
   }
   addtable() {
     this.sql.createTables();

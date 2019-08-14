@@ -35,13 +35,16 @@
                     {{item.type}} ({{item.wName}})
                   </ion-card-header>
                   <ion-card-content *ngIf="(item.type)=='Income' || (item.type)=='Expense'" >
-                    {{item.tag}}
+                    Tag : {{item.tag}}
                   </ion-card-content>
                   <ion-card-content *ngIf="(item.type)=='Saving'" >
-                    {{item.goalName}}
+                    Goal : {{item.goalName}}
                     </ion-card-content>
-                  <ion-card-content>
-                    {{item.amount}} Baht
+                  <ion-card-content  *ngIf="(item.memo)">
+                    Amount : {{item.amount}} Baht    <ion-icon name="clipboard"></ion-icon>
+                  </ion-card-content>
+                  <ion-card-content  *ngIf="!(item.memo)">
+                    Amount : {{item.amount}} Baht
                   </ion-card-content>
                 </th>
               </tr>

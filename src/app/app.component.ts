@@ -5,7 +5,7 @@ import { SqlProvider } from './../providers/sql/sql';
 import { ProfilePage } from './../pages/profile/profile';
 import { WalletPage } from './../pages/wallet/wallet';
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, App, AlertController, ViewController, NavController, ModalController } from 'ionic-angular';
+import { Nav, Platform, App, AlertController, ViewController, NavController, ModalController, LoadingController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -31,6 +31,7 @@ export class MyApp {
     public login: LoginProvider,
     public app: App,
     public alertCtrl: AlertController,
+    public loadingCtrl: LoadingController
   ) {
     this.initializeApp();
     this.rootPage = WelcomePage;
@@ -46,11 +47,16 @@ export class MyApp {
 
   initializeApp() {
     let closeFlag = true;
+    let loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
+    loading.present();
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      loading.dismiss();
     });
 
     this.platform.registerBackButtonAction(() => {
@@ -61,7 +67,7 @@ export class MyApp {
         let nav = this.app.getActiveNavs()[0];
         let activeView = nav.getActive();
         // Checks if can go back before show up the alert
-        if (activeView.index == 0 && !activeView.isOverlay) {
+        if (activeView.index == 0 && !activeView.isOverlay && activeView.name == 'HomePage') {
           const alert = this.alertCtrl.create({
             title: 'Exit app?',
             message: 'Exit app?',
@@ -80,6 +86,10 @@ export class MyApp {
             }]
           });
           alert.present();
+        } else if(activeView.index == 0 && !activeView.isOverlay && activeView.name != 'HomePage'){
+          nav.setRoot(HomePage);
+          activeView.dismiss();
+          closeFlag = true;
         } else {
           closeFlag = true;
           nav.pop();

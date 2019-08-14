@@ -3,7 +3,7 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Wallet</ion-title>
+    <ion-title text-center>Wallet</ion-title>
     <ion-buttons right>
       <button ion-button icon-only (click)="onCreateWallet()">
         <ion-icon name="add"></ion-icon>
@@ -14,11 +14,11 @@
 
 <ion-content>
   <ion-list>
-    <ion-item-sliding *ngFor="let item of collection">
+    <ion-item-sliding class="wallet" *ngFor="let item of collection">
       <ion-item>
         <div>
-          <h1>Name: {{item.name}} </h1>
-          <h1>Balance: {{item.balance}} Baht </h1>
+          <h2>Name : {{item.name}} </h2>
+          <h2>Balance : {{item.balance}} Baht </h2>
         </div>
       </ion-item>
       <ion-item-options side="right">

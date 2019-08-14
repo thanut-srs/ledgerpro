@@ -3,7 +3,7 @@ import { HomePage } from './../home/home';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController,NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 
 /**
  * Generated class for the CreateWalletPage page.
@@ -25,8 +25,10 @@ export class CreateWalletPage {
     public navCtrl: NavController,
     public params: NavParams,
     public sql: SqlProvider,
-    public formBuilder: FormBuilder
+    public formBuilder: FormBuilder,
+    public menuCtrl: MenuController
   ) {
+    this.menuCtrl.enable(false, 'myMenu');
     this.fromWallet = params.get('fromWallet')
     this.wallet = this.formBuilder.group({
       name: ['', Validators.required],

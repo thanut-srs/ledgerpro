@@ -3,17 +3,20 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Edit Profile</ion-title>
+    <ion-title text-center>Profile</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <div text-center (click)="onEditName('Please fill name')">
+  <div text-center (click)="onEditName(name,'Please fill name')">
     <h1>
       Name: {{name}}
     </h1>
   </div>
- 
-    <ion-img width="50%" height="50%" alt="TAKE A PHOTO" [src]="samplePic" class="avatarPic" (click)="picAlert()"></ion-img>
-  
+  <div text-center>
+    <ion-img width="50%" height="50%" alt="TAKE A PHOTO" [src]="samplePic" (click)="picAlert()"></ion-img>
+  </div>
+  <div text-center style="padding-top: 20px;">
+   <p>click to edit</p>
+  </div>
 </ion-content>

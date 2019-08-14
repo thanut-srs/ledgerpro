@@ -2,7 +2,7 @@ import { Validators } from '@angular/forms';
 import { CreateWalletPage } from './../create-wallet/create-wallet';
 import { SqlProvider } from './../../providers/sql/sql';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, ModalController, ToastController, AlertController, ViewController, MenuController } from 'ionic-angular';
+import { IonicPage, NavController, ModalController, ToastController, AlertController, ViewController, MenuController, LoadingController } from 'ionic-angular';
 
 /**
  * Generated class for the WalletPage page.
@@ -26,13 +26,19 @@ export class WalletPage {
     public alertCtrl: AlertController,
     public viewCtrl: ViewController,
     public menuCtrl: MenuController,
+    public loadingCtrl: LoadingController
     ) {
       this.menuCtrl.enable(true, 'myMenu');
     }
 
   async ngOnInit() {
+    let loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
+    loading.present();
     await this.getCurrentUser();
     await this.updateWalletList();
+    loading.dismiss();
     console.log("Wallet collection is ", this.collection)
   }
 

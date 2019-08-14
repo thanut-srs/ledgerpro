@@ -1,16 +1,21 @@
 <ion-menu id="myMenu" [content]="content" type="overlay">
   <ion-header>
     <ion-toolbar>
-      <ion-title><ion-icon name="home"></ion-icon> Menu </ion-title>
+      <ion-title> Menu </ion-title>
     </ion-toolbar>
   </ion-header>
 
   <ion-content>
     <ion-list>
       <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
+        <ion-icon *ngIf="p.title == 'Home'" name="home" ></ion-icon>
+        <ion-icon *ngIf="p.title == 'Profile'" name="person" ></ion-icon>
+        <ion-icon *ngIf="p.title == 'Wallet'" name="cash" ></ion-icon>
+        <ion-icon *ngIf="p.title == 'Goal'" name="trophy" ></ion-icon>
         {{p.title}}
       </button>
       <button menuClose ion-item (click)="logout()">
+      <ion-icon  name="log-out" ></ion-icon>
         Logout
       </button>
     </ion-list>

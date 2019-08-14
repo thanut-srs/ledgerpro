@@ -22,13 +22,15 @@ export class AddTransactionPage {
   public goalList = [];
   private uID: string;
   public type = 'Expense';
-  public walletID: any
+  public walletID: any;
+  public remain: number;
+  public gAmount: number;
+  public error: any;
   constructor(
     public params: NavParams,
     public viewCtrl: ViewController,
     private formBuilder: FormBuilder,
     private sql: SqlProvider,
-    private alertCtrl: AlertController,
   ) {
     this.walletID = this.params.get('wID');
     console.log("Contructor")
@@ -76,7 +78,7 @@ export class AddTransactionPage {
     let tType = this.transaction.controls['type'].value;
     let gId = this.transaction.controls['goalID'].value;
     let tAmount = this.transaction.controls['amount'].value;
-    if(tType != 'Saving'){
+    if (tType != 'Saving') {
       gId = null;
     }
     console.log("onInsertTable #1")
@@ -94,7 +96,7 @@ export class AddTransactionPage {
       amount: this.transaction.controls['amount'].value,
       walletID: this.transaction.controls['walletID'].value,
     };
-    console.log("#### onInsertTable transactionObj is ",transactionObj," ####!!")
+    console.log("#### onInsertTable transactionObj is ", transactionObj, " ####!!")
 
     this.sql.insertTable(transactionObj, 'Transactions');
     this.sql.updateBalance(balanceObj);
@@ -144,6 +146,18 @@ export class AddTransactionPage {
       console.log("You select saving!!")
       this.transaction.controls['tag'].disable()
       this.transaction.controls['goalID'].enable()
+    }
+  }
+  async onChangeGoal($event) {
+    this.remain = await this.sql.getGoalRemainByID($event)
+    console.log("#### REMAIN IS ,",this.remain," ####")
+  }
+  onAmountChange($event) {
+    this.error = false;
+    if(this.gAmount > this.remain){
+       this.transaction.setErrors({});
+       this.error = true;
+       console.log(this.error)
     }
   }
 }

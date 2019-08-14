@@ -10,7 +10,7 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title text-center>
-      <ion-icon name="trophy"></ion-icon>
+     Goal
     </ion-title>
     <ion-buttons right>
       <button ion-button icon-only (click)="onCreateGoal()">
@@ -24,16 +24,48 @@
     <h4 text-center>No goal? create one!</h4>
   </div>
   <ion-list>
-    <ion-item-sliding *ngFor="let item of collection">
-      <ion-item>
-        <div *ngIf="(item.uID) == uid && (item.gStatus) != 'Achieved'">
+    <ion-item-sliding class="slideDiv" *ngFor="let item of collection">
+      <ion-item *ngIf="(item.uID) == uid && (item.gStatus) == 'Delayed'" class="deDiv">
+        <div>
           <h1>Deadline :{{item.deadline}} </h1>
           <h2>Name : {{item.name}}</h2>
           <h2>Amount :{{item.amount}} / {{item.target}} Baht </h2>
           <h2>Status : {{item.gStatus}}</h2>
           <h3>Memo : {{item.memo}}</h3>
         </div>
-        <div *ngIf="(item.uID) == uid && (item.gStatus) == 'Achieved'">
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button icon-only (click)="onEditGoal(item.gID)" *ngIf="(item.gStatus) != 'Achieved'">
+          <ion-icon name="create"></ion-icon>
+        </button>
+        <button ion-button icon-only color="danger" (click)="onDeleteGoal(item.gID)">
+          <ion-icon name="trash"></ion-icon>
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+    <ion-item-sliding class="slideDiv" *ngFor="let item of collection">
+      <ion-item *ngIf="(item.uID) == uid && (item.gStatus) == 'Inprogress'" class="goalDiv">
+        <div>
+          <h1>Deadline :{{item.deadline}} </h1>
+          <h2>Ends in {{-item.dayLeft}} hrs</h2>
+          <h2>Name : {{item.name}}</h2>
+          <h2>Amount :{{item.amount}} / {{item.target}} Baht </h2>
+          <h2>Status : {{item.gStatus}}</h2>
+          <h3>Memo : {{item.memo}}</h3>
+        </div>
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button icon-only (click)="onEditGoal(item.gID)" *ngIf="(item.gStatus) != 'Achieved'">
+          <ion-icon name="create"></ion-icon>
+        </button>
+        <button ion-button icon-only color="danger" (click)="onDeleteGoal(item.gID)">
+          <ion-icon name="trash"></ion-icon>
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+    <ion-item-sliding class="slideDiv" *ngFor="let item of collection">
+      <ion-item *ngIf="(item.uID) == uid && (item.gStatus) == 'Achieved'" class="acDiv">
+        <div>
           <h1>Deadline :{{item.deadline}} </h1>
           <h2>Name : {{item.name}}</h2>
           <h2>Amount :{{item.target}} / {{item.target}} Baht </h2>

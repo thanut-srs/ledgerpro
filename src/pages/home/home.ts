@@ -3,7 +3,7 @@ import { GoalDetailPage } from './../goal-detail/goal-detail';
 import { AddTransactionPage } from './../add-transaction/add-transaction';
 
 import { Component, ViewChild } from '@angular/core';
-import { NavController, ModalController, Slides, ToastController, MenuController } from 'ionic-angular';
+import { NavController, ModalController, Slides, ToastController, MenuController, LoadingController } from 'ionic-angular';
 import { WalletPage } from '../wallet/wallet';
 import { SqlProvider } from '../../providers/sql/sql';
 
@@ -25,17 +25,23 @@ export class HomePage {
     public modalCtrl: ModalController,
     public sql: SqlProvider,
     public toastCtrl: ToastController,
-    public menuCtrl: MenuController
+    public menuCtrl: MenuController,
+    public loadingCtrl: LoadingController,
   ) {
     this.menuCtrl.enable(true, 'myMenu');
   }
   async ngOnInit() {
+    let loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
+    loading.present();
     await this.getUid();
     await this.updateTransaction();
     await this.updateDate();
     console.log(this.date);
     await this.getName();
     await this.getWalletList();
+    loading.dismiss();
   }
 
   async getName() {
@@ -54,9 +60,14 @@ export class HomePage {
     modal.onDidDismiss(async(data) => {
       console.log("Modal is dismissed! #3");
       if (data) {
+        let loading = this.loadingCtrl.create({
+          content: 'Please wait...'
+        });
+        loading.present();
         await this.updateTransaction();
         await this.updateDate();
         this.presentAddToast();
+        loading.dismiss();
       }
     });
     modal.present();
@@ -94,9 +105,15 @@ export class HomePage {
       console.log("onDetail Modal is dismissed!");
       await this.updateTransaction();
       if (data) {
+        let loading = this.loadingCtrl.create({
+          content: 'Please wait...'
+        });
+        loading.present();
         await this.updateDate();
         this.presentDeleteToast();
+        loading.dismiss();
       }
+      
     });
     modal.present();
   }

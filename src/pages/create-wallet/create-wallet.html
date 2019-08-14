@@ -5,7 +5,10 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-navbar hideBackButton>
+  <ion-navbar hideBackButton *ngIf="!fromWallet" >
+    <ion-title>Create Wallet</ion-title>
+  </ion-navbar>
+  <ion-navbar *ngIf="fromWallet" >
     <ion-title>Create Wallet</ion-title>
   </ion-navbar>
 </ion-header>
@@ -18,10 +21,11 @@
   </ion-item>
   <ion-item>
     <ion-label>Balance</ion-label>
-    <ion-input  type="number" formControlName="balance" placeholder="Wallet's balance"></ion-input>
+    <ion-input  type="number" formControlName="balance" placeholder="Wallet's balance" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? 
+    null : event.charCode >= 48 && event.charCode <= 57"></ion-input>
   </ion-item>
-  <div class="submitBtn" >
-    <button  right ion-button type="submit" [disabled]="!wallet.valid">Save</button> 
+  <div text-center class="saveDiv">
+    <button  class="loginBtn" right ion-button type="submit" [disabled]="!wallet.valid">Save</button> 
   </div>
 </form>
 </ion-content>

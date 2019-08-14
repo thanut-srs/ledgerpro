@@ -29,7 +29,8 @@
       </ion-item>
       <ion-item>
         <ion-label>Target :</ion-label>
-        <ion-input type="number" formControlName="target" placeholder="Fill target amount"></ion-input>
+        <ion-input type="number" formControlName="target" placeholder="Fill target amount" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? 
+        null : event.charCode >= 48 && event.charCode <= 57"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>Memo :</ion-label>

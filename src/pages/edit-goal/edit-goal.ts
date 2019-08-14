@@ -32,7 +32,7 @@ export class EditGoalPage {
 
   async ngOnInit() {
     await this.getWalletID();
-    console.log('this.walletList is ',this.walletList)
+    console.log('this.walletList is ', this.walletList)
   }
 
   async onSaveGoal() {
@@ -48,41 +48,9 @@ export class EditGoalPage {
     let remain = await this.sql.checkGoalNewTarget(goal.gID, goal.target)
     console.log("#### REMAIN IS ", remain, " ####")
     if (remain > 0) {
-      let options = {
-        title: 'Choose wallet',
-        message: `You have excess from editing wallet (`+remain+` Baht), 
-                  which wallet do you want to keep them ?`,
-        buttons: [
-          {
-            text: 'Cancel',
-            role: 'cancel',
-            handler: () => {
-              console.log('Cancel clicked');
-              this.viewCtrl.dismiss();
-            }
-          },
-          {
-            text: 'Ok',
-            handler: data => {
-              console.log(data);
-              this.sql.updateWalletBalanceByID(data,remain);
-            }
-          }
-        ],
-        inputs: []
-      };
-      options.inputs = [];
-      for (let i = 0; i < this.walletList.length; i++) {
-        options.inputs.push({
-          name: 'options',
-          value: this.walletList[i].wID,
-          label: this.walletList[i].wName,
-          type: 'radio'
-        });
-      }
-      let alert = this.alertCtrl.create(options);
-      alert.present();
-    } else if(remain === 0){
+      await this.alertBox(remain,`You have excess from editing wallet (` + remain + ` Baht), 
+      which wallet do you want to keep them ?`);
+    } else if (remain === 0) {
       this.sql.changeGoalStatus("Achieved", goal.gID)
       this.sql.pushNotification("Congratulation! your goal is achieved.");
     }
@@ -91,10 +59,42 @@ export class EditGoalPage {
   }
 
   async getWalletID() {
-    let wList = await this.sql.getWalletTable();
-    console.log('wList is ',wList)
+    let wList = await this.sql.getWalletListByUid(await this.sql.getCurrentUID());
+    console.log('wList is ', wList)
     for (let i = 0; i < wList.length; i++) {
       this.walletList.push({ wID: wList[i].wID, wName: wList[i].name });
     }
+  }
+
+  async alertBox(remain: any,msg: string) {
+    let options = {
+      title: 'Choose wallet',
+      message: msg,
+      enableBackdropDismiss: false,
+      buttons: [
+        {
+          text: 'Ok',
+          handler: data => {
+            if (data == "") {
+              this.alertBox(remain,'You have to choose wallet!');
+            }
+            console.log(data);
+            this.sql.updateWalletBalanceByID(data, remain);
+          }
+        }
+      ],
+      inputs: []
+    };
+    options.inputs = [];
+    for (let i = 0; i < this.walletList.length; i++) {
+      options.inputs.push({
+        name: 'options',
+        value: this.walletList[i].wID,
+        label: this.walletList[i].wName,
+        type: 'radio'
+      });
+    }
+    let alert = this.alertCtrl.create(options);
+    alert.present();
   }
 }
